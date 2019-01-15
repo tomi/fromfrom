@@ -18,7 +18,7 @@ describe("seqenum", () => {
             b: 2
           }).toArray()
         ).toEqual([["a", 1], ["b", 2]]);
-  });
+      });
 
       it("skips symbol properties", () => {
         expect(
@@ -224,6 +224,103 @@ describe("seqenum", () => {
           .flatMap(x => [x, x + 1])
           .toArray()
       ).toEqual([1, 2, 3, 4]);
+    });
+  });
+
+  describe("forEach", () => {
+    let callback: jest.Mock;
+
+    beforeEach(() => (callback = jest.fn()));
+
+    it("calls callback for each item", () => {
+      from([1, 2]).forEach(callback);
+
+      expect(callback).toBeCalledTimes(2);
+    });
+
+    it("passes item as a parameter to callback", () => {
+      from([1]).forEach(callback);
+
+      expect(callback).lastCalledWith(1);
+    });
+  });
+
+  describe("includes", () => {
+    it("returns true when sequence contains the item", () => {
+      expect(from([1, 2, 3]).includes(2)).toEqual(true);
+    });
+
+    it("returns false when sequence does not contain the item", () => {
+      expect(from([1, 2, 3]).includes(6)).toEqual(false);
+    });
+  });
+
+  describe("reduce", () => {
+    let callback: jest.Mock;
+
+    beforeEach(() => (callback = jest.fn((prev, curr) => [...prev, curr])));
+
+    it("calls callback for each item", () => {
+      from([1, 2]).reduce(callback, []);
+
+      expect(callback).toBeCalledTimes(2);
+    });
+
+    it("passes item as a parameter to callback", () => {
+      const initial: number[] = [];
+      from([1]).reduce(callback, initial);
+
+      expect(callback).lastCalledWith(initial, 1);
+    });
+
+    it("returns reduced value", () => {
+      expect(from([1, 2, 3]).reduce((prev, curr) => prev + curr, 0)).toEqual(6);
+    });
+  });
+
+  describe("reverse", () => {
+    it("reverses the sequence", () => {
+      expect(
+        from([1, 2, 3])
+          .reverse()
+          .toArray()
+      ).toEqual([3, 2, 1]);
+    });
+  });
+
+  describe("skip", () => {
+    it("skips the requested amount of items", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .skip(2)
+          .toArray()
+      ).toEqual([3, 4, 5]);
+    });
+
+    it("skips all the items", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .skip(10)
+          .toArray()
+      ).toEqual([]);
+    });
+  });
+
+  describe("take", () => {
+    it("takes the requested amount of items", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .take(2)
+          .toArray()
+      ).toEqual([1, 2]);
+    });
+
+    it("takes all the items", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .take(10)
+          .toArray()
+      ).toEqual([1, 2, 3, 4, 5]);
     });
   });
 });

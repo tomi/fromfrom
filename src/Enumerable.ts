@@ -8,26 +8,21 @@ export interface SelectorFn<TItem, TResult> {
   (item: TItem): TResult;
 }
 
+export interface Callback<TItem> {
+  (item: TItem): void;
+}
+
+export interface ReduceCallback<TPrevious, TCurrent> {
+  (previousValue: TPrevious, currentValue: TCurrent): TPrevious;
+}
+
 const identityFn = (x: any): boolean => x;
 
-export class Enumerable<T> implements Iterable<T>, Iterator<T> {
-  private _iterator: Iterator<T> | undefined;
-  protected _current: IteratorResult<T> | undefined;
-
+export class Enumerable<T> implements Iterable<T> {
   constructor(private _iterable: Iterable<T>) {}
 
   [Symbol.iterator](): Iterator<T> {
-    this._iterator = undefined;
-
-    return this;
-  }
-
-  next(): IteratorResult<T> {
-    if (!this._iterator) {
-      this._iterator = this._iterable[Symbol.iterator]();
-    }
-
-    return this._iterator.next();
+    return this._iterable[Symbol.iterator]();
   }
 
   /**
@@ -123,6 +118,38 @@ export class Enumerable<T> implements Iterable<T>, Iterator<T> {
   }
 
   /**
+   * Calls the given callback function with each item in the sequence.
+   *
+   * @example
+   * // Logs 1, 2 and 3 to console
+   * from([1, 2, 3]).forEach(i => console.log(i));
+   */
+  forEach(callback: Callback<T>): void {
+    for (const item of this._iterable) {
+      callback(item);
+    }
+  }
+
+  /**
+   * Determines whether the sequence includes the given element,
+   * returning true or false as appropriate. The check is done
+   * using '==='.
+   *
+   * @example
+   * // Returns true
+   * from([1, 2, 3]).includes(3);
+   */
+  includes(searchItem: T): boolean {
+    for (const item of this._iterable) {
+      if (item === searchItem) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Maps the sequence to a new sequence where each item is converted
    * to a new value using the given mapper function.
    *
@@ -139,6 +166,85 @@ export class Enumerable<T> implements Iterable<T>, Iterator<T> {
   ): IterableIterator<TResult> {
     for (const item of this._iterable) {
       yield mapFn(item);
+    }
+  }
+
+  /**
+   * Executes a reducer function on each item in the sequence resulting
+   * in a single output value.
+   */
+  reduce<U>(callback: ReduceCallback<U, T>, accumulator: U): U {
+    for (const item of this._iterable) {
+      accumulator = callback(accumulator, item);
+    }
+
+    return accumulator;
+  }
+
+  /**
+   * Reverses the order of the items in the sequence
+   *
+   * @example
+   * // Returns [3, 2, 1]
+   * from([1, 2, 3]).reverse().toArray();
+   */
+  reverse(): Enumerable<T> {
+    return from(this._reverse());
+  }
+
+  private *_reverse(): IterableIterator<T> {
+    const items = Array.from(this._iterable);
+
+    for (let i = items.length - 1; i >= 0; i--) {
+      yield items[i];
+    }
+  }
+
+  /**
+   * Skips the first N items in the sequence
+   *
+   * @example
+   * // Returns [3, 4]
+   * from([1, 2, 3, 4]).skip(2);
+   */
+  skip(howMany: number): Enumerable<T> {
+    return from(this._skip(howMany));
+  }
+
+  private *_skip(howMany: number): IterableIterator<T> {
+    let numSkipped = 0;
+
+    for (const item of this._iterable) {
+      if (numSkipped < howMany) {
+        numSkipped++;
+        continue;
+      }
+
+      yield item;
+    }
+  }
+
+  /**
+   * Takes the firt N items from the sequence
+   *
+   * @example
+   * // Returns [1, 2]
+   * from([1, 2, 3, 4]).take(2);
+   */
+  take(howMany: number): Enumerable<T> {
+    return from(this._take(howMany));
+  }
+
+  private *_take(howMany: number): IterableIterator<T> {
+    let numTaken = 0;
+
+    for (const item of this._iterable) {
+      if (numTaken < howMany) {
+        numTaken++;
+        yield item;
+      } else {
+        break;
+      }
     }
   }
 
