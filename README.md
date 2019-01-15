@@ -1,10 +1,9 @@
 # fromfrom
 
-<!-- [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![Greenkeeper badge](https://badges.greenkeeper.io/tomi/fromfrom.svg)](https://greenkeeper.io/)
 [![Travis](https://img.shields.io/travis/tomi/fromfrom.svg)](https://travis-ci.org/tomi/fromfrom)
 [![Coveralls](https://img.shields.io/coveralls/tomi/fromfrom.svg)](https://coveralls.io/github/tomi/fromfrom)
-[![Dev Dependencies](https://david-dm.org/tomi/fromfrom/dev-status.svg)](https://david-dm.org/tomi/fromfrom?type=dev) -->
+[![Dev Dependencies](https://david-dm.org/tomi/fromfrom/dev-status.svg)](https://david-dm.org/tomi/fromfrom?type=dev)
 
 fromfrom is a [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) inspired library to transform sequences of data.
 
