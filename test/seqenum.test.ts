@@ -9,6 +9,41 @@ describe("seqenum", () => {
     it("returns an enumerable", () => {
       expect(from([])).toBeInstanceOf(Enumerable);
     });
+
+    describe("object", () => {
+      it("returns keys and values as pairs", () => {
+        expect(
+          from({
+            a: 1,
+            b: 2
+          }).toArray()
+        ).toEqual([["a", 1], ["b", 2]]);
+  });
+
+      it("skips symbol properties", () => {
+        expect(
+          from({
+            a: 1,
+            b: 2,
+            [Symbol()]: 3
+          }).toArray()
+        ).toEqual([["a", 1], ["b", 2]]);
+      });
+
+      it("skips non-enumerable properties", () => {
+        const obj = {
+          a: 1,
+          b: 2
+        };
+
+        Object.defineProperty(obj, "c", {
+          value: 3,
+          enumerable: false
+        });
+
+        expect(from(obj).toArray()).toEqual([["a", 1], ["b", 2]]);
+      });
+    });
   });
 
   describe("toArray", () => {
