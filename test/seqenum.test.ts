@@ -329,4 +329,112 @@ describe("seqenum", () => {
       ).toEqual([1, 2, 3, 4, 5]);
     });
   });
+
+  describe("sortBy", () => {
+    it("sorts the sequence without key selector or comparer", () => {
+      expect(
+        from([5, 2, 3, 1, 4, 1])
+          .sortBy()
+          .toArray()
+      ).toEqual([1, 1, 2, 3, 4, 5]);
+    });
+
+    it("sorts the sequence with key selector", () => {
+      const items = [
+        { a: 5 },
+        { a: 2 },
+        { a: 1 },
+        { a: 3 },
+        { a: 1 },
+        { a: 4 }
+      ];
+
+      expect(
+        from(items)
+          .sortBy(item => item.a)
+          .toArray()
+      ).toEqual([{ a: 1 }, { a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }]);
+    });
+
+    it("sorts the sequence with key selector and comparer", () => {
+      const items = [
+        { a: 5, b: 1 },
+        { a: 2, b: 1 },
+        { a: 3, b: 1 },
+        { a: 1, b: 2 },
+        { a: 4, b: 2 }
+      ];
+
+      expect(
+        from(items)
+          .sortBy(
+            item => item,
+            (first, second) =>
+              // First by b desc, then by a desc
+              first.b === second.b ? second.a - first.a : second.b - first.b
+          )
+          .toArray()
+      ).toEqual([
+        { a: 4, b: 2 },
+        { a: 1, b: 2 },
+        { a: 5, b: 1 },
+        { a: 3, b: 1 },
+        { a: 2, b: 1 }
+      ]);
+    });
+  });
+
+  describe("sortByDescending", () => {
+    it("sorts the sequence without key selector or comparer", () => {
+      expect(
+        from([5, 2, 3, 1, 4, 1])
+          .sortByDescending()
+          .toArray()
+      ).toEqual([5, 4, 3, 2, 1, 1]);
+    });
+
+    it("sorts the sequence with key selector", () => {
+      const items = [
+        { a: 5 },
+        { a: 2 },
+        { a: 1 },
+        { a: 3 },
+        { a: 1 },
+        { a: 4 }
+      ];
+
+      expect(
+        from(items)
+          .sortByDescending(item => item.a)
+          .toArray()
+      ).toEqual([{ a: 5 }, { a: 4 }, { a: 3 }, { a: 2 }, { a: 1 }, { a: 1 }]);
+    });
+
+    it("sorts the sequence with key selector and comparer", () => {
+      const items = [
+        { a: 5, b: 1 },
+        { a: 2, b: 1 },
+        { a: 3, b: 1 },
+        { a: 1, b: 2 },
+        { a: 4, b: 2 }
+      ];
+
+      expect(
+        from(items)
+          .sortByDescending(
+            item => item,
+            (first, second) =>
+              // First by b desc, then by a desc
+              first.b === second.b ? second.a - first.a : second.b - first.b
+          )
+          .toArray()
+      ).toEqual([
+        { a: 2, b: 1 },
+        { a: 3, b: 1 },
+        { a: 5, b: 1 },
+        { a: 1, b: 2 },
+        { a: 4, b: 2 }
+      ]);
+    });
+  });
 });

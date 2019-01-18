@@ -16,10 +16,53 @@ export interface ReduceCallback<TPrevious, TCurrent> {
   (previousValue: TPrevious, currentValue: TCurrent): TPrevious;
 }
 
+export interface ComparerFn<TItem> {
+  (a: TItem, b: TItem): number;
+}
+
+export type KeySelectorFn<TItem, TKey> = SelectorFn<TItem, TKey>;
+
 const identityFn = (x: any): boolean => x;
 
+const defaultComparer = <TKey>(a: TKey, b: TKey) => {
+  if (a === b) {
+    return 0;
+  }
+
+  if (a < b) {
+    return -1;
+  }
+
+  return 1;
+};
+
+const getKeySelectorOrDefault = <TItem, TKey>(
+  keySelector?: KeySelectorFn<TItem, TKey>
+) =>
+  keySelector
+    ? keySelector
+    : ((((x: TItem) => x) as unknown) as KeySelectorFn<TItem, TKey>);
+
+const getComparerOrDefault = <TKey>(
+  descending: boolean,
+  comparer?: ComparerFn<TKey>
+): ComparerFn<TKey> => {
+  if (descending && comparer) {
+    return (a, b) => comparer(b, a);
+  } else if (descending) {
+    return (a, b) => defaultComparer(b, a);
+  } else if (comparer) {
+    return comparer;
+  } else {
+    return defaultComparer;
+  }
+};
+
+/**
+ * Enumerable sequence
+ */
 export class Enumerable<T> implements Iterable<T> {
-  constructor(private _iterable: Iterable<T>) {}
+  constructor(protected _iterable: Iterable<T>) {}
 
   [Symbol.iterator](): Iterator<T> {
     return this._iterable[Symbol.iterator]();
@@ -225,6 +268,34 @@ export class Enumerable<T> implements Iterable<T> {
   }
 
   /**
+   * Sorts the elements of a sequence in ascending order according to a key
+   * by using a specified comparer.
+   *
+   * @param keySelector  A function to extract a key from an element.
+   * @param comparer     A function to compare the keys
+   */
+  sortBy<TKey = T>(
+    keySelector?: KeySelectorFn<T, TKey>,
+    comparer?: ComparerFn<TKey>
+  ): OrderedEnumerable<T, TKey> {
+    return new OrderedEnumerable(this._iterable, keySelector, comparer);
+  }
+
+  /**
+   * Sorts the elements of a sequence in descending order according to a key
+   * by using a specified comparer.
+   *
+   * @param keySelector  A function to extract a key from an element.
+   * @param comparer     A function to compare the keys
+   */
+  sortByDescending<TKey = T>(
+    keySelector?: KeySelectorFn<T, TKey>,
+    comparer?: ComparerFn<TKey>
+  ): OrderedEnumerable<T, TKey> {
+    return new OrderedEnumerable(this._iterable, keySelector, comparer, true);
+  }
+
+  /**
    * Takes the firt N items from the sequence
    *
    * @example
@@ -298,5 +369,40 @@ export class Enumerable<T> implements Iterable<T> {
    */
   toSet(): Set<T> {
     return new Set(this);
+  }
+}
+
+/**
+ * Ordered sequence of elements
+ */
+export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
+  private _keySelector?: KeySelectorFn<TItem, TKey>;
+  private _comparer: ComparerFn<TKey>;
+
+  constructor(
+    iterable: Iterable<TItem>,
+    keySelector?: KeySelectorFn<TItem, TKey>,
+    comparer?: ComparerFn<TKey>,
+    descending: boolean = false
+  ) {
+    super(iterable);
+
+    this._keySelector = getKeySelectorOrDefault(keySelector);
+    this._comparer = getComparerOrDefault(descending, comparer);
+  }
+
+  [Symbol.iterator](): Iterator<TItem> {
+    const items = Array.from(this._iterable);
+
+    return items.sort(this.getComparerForSort())[Symbol.iterator]();
+  }
+
+  private getComparerForSort(): ComparerFn<TItem> | undefined {
+    if (this._keySelector) {
+      return (a, b) =>
+        this._comparer(this._keySelector!(a), this._keySelector!(b));
+    } else {
+      return undefined;
+    }
   }
 }
