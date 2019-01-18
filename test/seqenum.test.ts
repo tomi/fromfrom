@@ -10,6 +10,12 @@ describe("seqenum", () => {
       expect(from([])).toBeInstanceOf(Enumerable);
     });
 
+    it("returns the same enumerable if called with enumerable", () => {
+      const enumerable = from([]);
+
+      expect(from(enumerable)).toBe(enumerable);
+    });
+
     describe("object", () => {
       it("returns keys and values as pairs", () => {
         expect(
