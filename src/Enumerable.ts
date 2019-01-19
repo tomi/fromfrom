@@ -36,27 +36,18 @@ const defaultComparer = <TKey>(a: TKey, b: TKey) => {
   return 1;
 };
 
+const defaultKeySelector = <TItem>(item: TItem) => item;
+
 const getKeySelectorOrDefault = <TItem, TKey>(
   keySelector?: KeySelectorFn<TItem, TKey>
 ) =>
   keySelector
     ? keySelector
-    : ((((x: TItem) => x) as unknown) as KeySelectorFn<TItem, TKey>);
+    : ((defaultKeySelector as unknown) as KeySelectorFn<TItem, TKey>);
 
 const getComparerOrDefault = <TKey>(
-  descending: boolean,
   comparer?: ComparerFn<TKey>
-): ComparerFn<TKey> => {
-  if (descending && comparer) {
-    return (a, b) => comparer(b, a);
-  } else if (descending) {
-    return (a, b) => defaultComparer(b, a);
-  } else if (comparer) {
-    return comparer;
-  } else {
-    return defaultComparer;
-  }
-};
+): ComparerFn<TKey> => (comparer ? comparer : defaultComparer);
 
 /**
  * Enumerable sequence
@@ -274,11 +265,19 @@ export class Enumerable<T> implements Iterable<T> {
    * @param keySelector  A function to extract a key from an element.
    * @param comparer     A function to compare the keys
    */
-  sortBy<TKey = T>(
+  sortBy(): OrderedEnumerable<T, T>;
+  sortBy<TKey>(
+    keySelector: KeySelectorFn<T, TKey>,
+    comparer?: ComparerFn<TKey>
+  ): OrderedEnumerable<T, TKey>;
+  sortBy<TKey>(
     keySelector?: KeySelectorFn<T, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedEnumerable<T, TKey> {
-    return new OrderedEnumerable(this._iterable, keySelector, comparer);
+    return new OrderedEnumerable(
+      this._iterable,
+      createCompareFn(false, keySelector, comparer)
+    );
   }
 
   /**
@@ -292,7 +291,10 @@ export class Enumerable<T> implements Iterable<T> {
     keySelector?: KeySelectorFn<T, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedEnumerable<T, TKey> {
-    return new OrderedEnumerable(this._iterable, keySelector, comparer, true);
+    return new OrderedEnumerable(
+      this._iterable,
+      createCompareFn(true, keySelector, comparer)
+    );
   }
 
   /**
@@ -376,33 +378,75 @@ export class Enumerable<T> implements Iterable<T> {
  * Ordered sequence of elements
  */
 export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
-  private _keySelector?: KeySelectorFn<TItem, TKey>;
-  private _comparer: ComparerFn<TKey>;
-
-  constructor(
-    iterable: Iterable<TItem>,
-    keySelector?: KeySelectorFn<TItem, TKey>,
-    comparer?: ComparerFn<TKey>,
-    descending: boolean = false
-  ) {
+  constructor(iterable: Iterable<TItem>, private _comparer: ComparerFn<TItem>) {
     super(iterable);
-
-    this._keySelector = getKeySelectorOrDefault(keySelector);
-    this._comparer = getComparerOrDefault(descending, comparer);
   }
 
   [Symbol.iterator](): Iterator<TItem> {
     const items = Array.from(this._iterable);
 
-    return items.sort(this.getComparerForSort())[Symbol.iterator]();
+    return items.sort(this._comparer)[Symbol.iterator]();
   }
 
-  private getComparerForSort(): ComparerFn<TItem> | undefined {
-    if (this._keySelector) {
-      return (a, b) =>
-        this._comparer(this._keySelector!(a), this._keySelector!(b));
-    } else {
-      return undefined;
-    }
+  thenBy<TKey2>(
+    keySelector: KeySelectorFn<TItem, TKey2>,
+    comparer?: ComparerFn<TKey2>
+  ): OrderedEnumerable<TItem, TKey2> {
+    const thenComparer = createCompareFn(false, keySelector, comparer);
+
+    return new OrderedEnumerable(
+      this._iterable,
+      createChainedCompareFn(this._comparer, thenComparer)
+    );
+  }
+
+  thenByDescending<TKey2>(
+    keySelector: KeySelectorFn<TItem, TKey2>,
+    comparer?: ComparerFn<TKey2>
+  ): OrderedEnumerable<TItem, TKey2> {
+    const thenComparer = createCompareFn(true, keySelector, comparer);
+
+    return new OrderedEnumerable(
+      this._iterable,
+      createChainedCompareFn(this._comparer, thenComparer)
+    );
   }
 }
+
+/**
+ * Creates a compare function that sorts TItems either ascending or descending
+ * using the given key selector and comparer.
+ *
+ * @param descending  Sort descending or ascending
+ * @param keySelector Optional function to select the key that is used for sorting
+ * @param comparer    Optional comparer function to compare the keys
+ */
+const createCompareFn = <TItem, TKey>(
+  descending: boolean,
+  keySelector?: KeySelectorFn<TItem, TKey>,
+  comparer?: ComparerFn<TKey>
+) => (a: TItem, b: TItem) => {
+  keySelector = getKeySelectorOrDefault(keySelector);
+  comparer = getComparerOrDefault(comparer);
+
+  const aKey = keySelector(a);
+  const bKey = keySelector(b);
+
+  return descending ? comparer(bKey, aKey) : comparer(aKey, bKey);
+};
+
+/**
+ * Chains two compare functions. First sort by firstCompare. If items
+ * are equal, then sorts by secondCompare.
+ *
+ * @param firstCompare
+ * @param secondCompare
+ */
+const createChainedCompareFn = <TItem>(
+  firstCompare: ComparerFn<TItem>,
+  secondCompare: ComparerFn<TItem>
+) => (a: TItem, b: TItem) => {
+  const firstResult = firstCompare(a, b);
+
+  return firstResult === 0 ? secondCompare(a, b) : firstResult;
+};

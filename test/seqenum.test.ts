@@ -437,4 +437,102 @@ describe("seqenum", () => {
       ]);
     });
   });
+
+  describe("thenBy", () => {
+    it("sorts equal items using the thenBy comparer", () => {
+      const items = [
+        { name: "John", age: 20 },
+        { name: "Tony", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Jane", age: 20 },
+        { name: "Lisa", age: 30 }
+      ];
+
+      expect(
+        from(items)
+          .sortBy(item => item.age)
+          .thenBy(item => item.name)
+          .toArray()
+      ).toEqual([
+        { name: "Jane", age: 20 },
+        { name: "John", age: 20 },
+        { name: "Lisa", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Tony", age: 30 }
+      ]);
+    });
+
+    it("works with multiple thenBys", () => {
+      const items = [
+        { name: "John", age: 20, sex: "male" },
+        { name: "Jane", age: 20, sex: "female" },
+        { name: "Tony", age: 30, sex: "male" },
+        { name: "Mark", age: 30, sex: "male" },
+        { name: "Lisa", age: 30, sex: "female" }
+      ];
+
+      expect(
+        from(items)
+          .sortBy(item => item.sex)
+          .thenBy(item => item.age)
+          .thenBy(item => item.name)
+          .toArray()
+      ).toEqual([
+        { name: "Jane", age: 20, sex: "female" },
+        { name: "Lisa", age: 30, sex: "female" },
+        { name: "John", age: 20, sex: "male" },
+        { name: "Mark", age: 30, sex: "male" },
+        { name: "Tony", age: 30, sex: "male" }
+      ]);
+    });
+  });
+
+  describe("thenByDescending", () => {
+    it("sorts equal items using the thenByDescending comparer", () => {
+      const items = [
+        { name: "John", age: 20 },
+        { name: "Tony", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Jane", age: 20 },
+        { name: "Lisa", age: 30 }
+      ];
+
+      expect(
+        from(items)
+          .sortBy(item => item.age)
+          .thenByDescending(item => item.name)
+          .toArray()
+      ).toEqual([
+        { name: "John", age: 20 },
+        { name: "Jane", age: 20 },
+        { name: "Tony", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Lisa", age: 30 }
+      ]);
+    });
+
+    it("works with multiple thenByDescending", () => {
+      const items = [
+        { name: "John", age: 20, sex: "male" },
+        { name: "Jane", age: 20, sex: "female" },
+        { name: "Tony", age: 30, sex: "male" },
+        { name: "Mark", age: 30, sex: "male" },
+        { name: "Lisa", age: 30, sex: "female" }
+      ];
+
+      expect(
+        from(items)
+          .sortBy(item => item.sex)
+          .thenByDescending(item => item.age)
+          .thenByDescending(item => item.name)
+          .toArray()
+      ).toEqual([
+        { name: "Lisa", age: 30, sex: "female" },
+        { name: "Jane", age: 20, sex: "female" },
+        { name: "Tony", age: 30, sex: "male" },
+        { name: "Mark", age: 30, sex: "male" },
+        { name: "John", age: 20, sex: "male" }
+      ]);
+    });
+  });
 });
