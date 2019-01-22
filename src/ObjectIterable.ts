@@ -2,6 +2,10 @@ export interface Dictionary<T> {
   [index: string]: T;
 }
 
+export interface NumberDictionary<T> {
+  [index: number]: T;
+}
+
 /**
  * Creates an iterable from object, that iterates the object as key value
  * pairs.

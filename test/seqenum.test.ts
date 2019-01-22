@@ -5,6 +5,76 @@ import { Enumerable } from "../src/Enumerable";
  * Tests for the library
  */
 describe("seqenum", () => {
+  describe("concat", () => {
+    it("combines two arrays", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .toArray()
+      ).toEqual([1, 2, 3, 4]);
+    });
+  });
+
+  describe("every", () => {
+    let predicate: jest.Mock;
+
+    beforeEach(() => (predicate = jest.fn(() => true)));
+
+    it("calls every for each item", () => {
+      from([1, 2]).every(predicate);
+
+      expect(predicate).toBeCalledTimes(2);
+    });
+
+    it("passes item as a parameter to every", () => {
+      from([1]).every(predicate);
+
+      expect(predicate).lastCalledWith(1);
+    });
+
+    it("returns true when all pass the test", () => {
+      expect(from([1, 2, 3, 4]).every(x => x > 0)).toEqual(true);
+    });
+
+    it("returns false if some don't pass the test", () => {
+      expect(from([1, 2, 3, 4]).every(x => x < 4)).toEqual(false);
+    });
+
+    it("uses the item itself if predicate is not given", () => {
+      expect(from([true, true]).every()).toEqual(true);
+    });
+  });
+
+  describe("filter", () => {
+    let predicate: jest.Mock;
+
+    beforeEach(() => (predicate = jest.fn()));
+
+    it("calls filter for each item", () => {
+      from([1, 2])
+        .filter(predicate)
+        .toArray();
+
+      expect(predicate).toBeCalledTimes(2);
+    });
+
+    it("passes item as a parameter to filter", () => {
+      from([1])
+        .filter(predicate)
+        .toArray();
+
+      expect(predicate).lastCalledWith(1);
+    });
+
+    it("filters out items for which filter returns false", () => {
+      expect(
+        from([1, 2, 3, 4])
+          .filter(x => x > 2)
+          .toArray()
+      ).toEqual([3, 4]);
+    });
+  });
+
   describe("from", () => {
     it("returns an enumerable", () => {
       expect(from([])).toBeInstanceOf(Enumerable);
@@ -52,147 +122,6 @@ describe("seqenum", () => {
     });
   });
 
-  describe("toArray", () => {
-    it("returns an array", () => {
-      expect(from([1, 2]).toArray()).toEqual([1, 2]);
-    });
-
-    it("returns a copy of initial array", () => {
-      const array = [1, 2];
-
-      expect(from([array]).toArray()).not.toBe(array);
-    });
-
-    it("can be called multiple times", () => {
-      const enumerable = from([1, 2]);
-
-      expect(enumerable.toArray()).toEqual([1, 2]);
-      expect(enumerable.toArray()).toEqual([1, 2]);
-    });
-  });
-
-  describe("toSet", () => {
-    it("returns a Set", () => {
-      expect(from([1, 2]).toSet()).toEqual(new Set([1, 2]));
-    });
-  });
-
-  describe("toMap", () => {
-    it("returns a Map", () => {
-      expect(from([]).toMap(x => x)).toEqual(new Map());
-    });
-
-    it("returns a Map with keys mapped with key selector function", () => {
-      expect(from([1, 2]).toMap(x => x * 2)).toEqual(new Map([[2, 1], [4, 2]]));
-    });
-
-    it("returns a Map with values mapped with key selector function", () => {
-      expect(from([1, 2]).toMap(x => x * 2, y => y * 3)).toEqual(
-        new Map([[2, 3], [4, 6]])
-      );
-    });
-  });
-
-  describe("filter", () => {
-    let predicate: jest.Mock;
-
-    beforeEach(() => (predicate = jest.fn()));
-
-    it("calls filter for each item", () => {
-      from([1, 2])
-        .filter(predicate)
-        .toArray();
-
-      expect(predicate).toBeCalledTimes(2);
-    });
-
-    it("passes item as a parameter to filter", () => {
-      from([1])
-        .filter(predicate)
-        .toArray();
-
-      expect(predicate).lastCalledWith(1);
-    });
-
-    it("filters out items for which filter returns false", () => {
-      expect(
-        from([1, 2, 3, 4])
-          .filter(x => x > 2)
-          .toArray()
-      ).toEqual([3, 4]);
-    });
-  });
-
-  describe("map", () => {
-    let mapper: jest.Mock;
-
-    beforeEach(() => (mapper = jest.fn()));
-
-    it("calls map for each item", () => {
-      from([1, 2])
-        .map(mapper)
-        .toArray();
-
-      expect(mapper).toBeCalledTimes(2);
-    });
-
-    it("passes item as a parameter to map", () => {
-      from([1])
-        .map(mapper)
-        .toArray();
-
-      expect(mapper).lastCalledWith(1);
-    });
-
-    it("maps out items for which map returns false", () => {
-      expect(
-        from([1, 2, 3, 4])
-          .map(x => x * 2)
-          .toArray()
-      ).toEqual([2, 4, 6, 8]);
-    });
-  });
-
-  describe("every", () => {
-    let predicate: jest.Mock;
-
-    beforeEach(() => (predicate = jest.fn(() => true)));
-
-    it("calls every for each item", () => {
-      from([1, 2]).every(predicate);
-
-      expect(predicate).toBeCalledTimes(2);
-    });
-
-    it("passes item as a parameter to every", () => {
-      from([1]).every(predicate);
-
-      expect(predicate).lastCalledWith(1);
-    });
-
-    it("returns true when all pass the test", () => {
-      expect(from([1, 2, 3, 4]).every(x => x > 0)).toEqual(true);
-    });
-
-    it("returns false if some don't pass the test", () => {
-      expect(from([1, 2, 3, 4]).every(x => x < 4)).toEqual(false);
-    });
-
-    it("uses the item itself if predicate is not given", () => {
-      expect(from([true, true]).every()).toEqual(true);
-    });
-  });
-
-  describe("concat", () => {
-    it("combines two arrays", () => {
-      expect(
-        from([1, 2])
-          .concat([3, 4])
-          .toArray()
-      ).toEqual([1, 2, 3, 4]);
-    });
-  });
-
   describe("find", () => {
     it("returns the found item", () => {
       expect(from([1, 2, 3, 4]).find(x => x === 3)).toEqual(3);
@@ -200,6 +129,16 @@ describe("seqenum", () => {
 
     it("returns undefined when not found", () => {
       expect(from([1, 2, 3]).find(x => x === 100)).toEqual(undefined);
+    });
+  });
+
+  describe("first", () => {
+    it("returns the first element", () => {
+      expect(from([1, 2, 3]).first()).toEqual(1);
+    });
+
+    it("returns undefined if sequence is empty", () => {
+      expect(from([]).first()).toBeUndefined();
     });
   });
 
@@ -261,6 +200,56 @@ describe("seqenum", () => {
     });
   });
 
+  describe("isEmpty", () => {
+    it("returns true for empty sequence", () => {
+      expect(from([]).isEmpty()).toEqual(true);
+    });
+
+    it("returns false for non-empty sequence", () => {
+      expect(from([1]).isEmpty()).toEqual(false);
+    });
+  });
+
+  describe("last", () => {
+    it("returns the last element", () => {
+      expect(from([1, 2, 3]).last()).toEqual(3);
+    });
+
+    it("returns undefined if sequence is empty", () => {
+      expect(from([]).last()).toBeUndefined();
+    });
+  });
+
+  describe("map", () => {
+    let mapper: jest.Mock;
+
+    beforeEach(() => (mapper = jest.fn()));
+
+    it("calls map for each item", () => {
+      from([1, 2])
+        .map(mapper)
+        .toArray();
+
+      expect(mapper).toBeCalledTimes(2);
+    });
+
+    it("passes item as a parameter to map", () => {
+      from([1])
+        .map(mapper)
+        .toArray();
+
+      expect(mapper).lastCalledWith(1);
+    });
+
+    it("maps out items for which map returns false", () => {
+      expect(
+        from([1, 2, 3, 4])
+          .map(x => x * 2)
+          .toArray()
+      ).toEqual([2, 4, 6, 8]);
+    });
+  });
+
   describe("reduce", () => {
     let callback: jest.Mock;
 
@@ -312,21 +301,33 @@ describe("seqenum", () => {
     });
   });
 
-  describe("take", () => {
-    it("takes the requested amount of items", () => {
-      expect(
-        from([1, 2, 3, 4, 5])
-          .take(2)
-          .toArray()
-      ).toEqual([1, 2]);
+  describe("some", () => {
+    let predicate: jest.Mock;
+
+    beforeEach(() => (predicate = jest.fn(() => true)));
+
+    it("calls some for each item unless one returns true", () => {
+      from([1, 2]).some(predicate);
+
+      expect(predicate).toBeCalledTimes(1);
     });
 
-    it("takes all the items", () => {
-      expect(
-        from([1, 2, 3, 4, 5])
-          .take(10)
-          .toArray()
-      ).toEqual([1, 2, 3, 4, 5]);
+    it("passes item as a parameter to some", () => {
+      from([1]).some(predicate);
+
+      expect(predicate).lastCalledWith(1);
+    });
+
+    it("returns true when one item passes the test", () => {
+      expect(from([1, 2, 3, 4]).some(x => x > 0)).toEqual(true);
+    });
+
+    it("returns false if none don't pass the test", () => {
+      expect(from([1, 2, 3, 4]).some(x => x > 4)).toEqual(false);
+    });
+
+    it("uses the item itself if predicate is not given", () => {
+      expect(from([false, true]).some()).toEqual(true);
     });
   });
 
@@ -438,6 +439,24 @@ describe("seqenum", () => {
     });
   });
 
+  describe("take", () => {
+    it("takes the requested amount of items", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .take(2)
+          .toArray()
+      ).toEqual([1, 2]);
+    });
+
+    it("takes all the items", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .take(10)
+          .toArray()
+      ).toEqual([1, 2, 3, 4, 5]);
+    });
+  });
+
   describe("thenBy", () => {
     it("sorts equal items using the thenBy comparer", () => {
       const items = [
@@ -533,6 +552,64 @@ describe("seqenum", () => {
         { name: "Mark", age: 30, sex: "male" },
         { name: "John", age: 20, sex: "male" }
       ]);
+    });
+  });
+
+  describe("toArray", () => {
+    it("returns an array", () => {
+      expect(from([1, 2]).toArray()).toEqual([1, 2]);
+    });
+
+    it("returns a copy of initial array", () => {
+      const array = [1, 2];
+
+      expect(from([array]).toArray()).not.toBe(array);
+    });
+
+    it("can be called multiple times", () => {
+      const enumerable = from([1, 2]);
+
+      expect(enumerable.toArray()).toEqual([1, 2]);
+      expect(enumerable.toArray()).toEqual([1, 2]);
+    });
+  });
+
+  describe("toMap", () => {
+    it("returns a Map", () => {
+      expect(from([]).toMap(x => x)).toEqual(new Map());
+    });
+
+    it("returns a Map with keys mapped with key selector function", () => {
+      expect(from([1, 2]).toMap(x => x * 2)).toEqual(new Map([[2, 1], [4, 2]]));
+    });
+
+    it("returns a Map with values mapped with key selector function", () => {
+      expect(from([1, 2]).toMap(x => x * 2, y => y * 3)).toEqual(
+        new Map([[2, 3], [4, 6]])
+      );
+    });
+  });
+
+  describe("toObject", () => {
+    it("returns an object", () => {
+      expect(from([]).toObject(x => x)).toEqual({});
+    });
+
+    it("returns an object with keys mapped with key selector function", () => {
+      expect(from([1, 2]).toObject(x => x * 2)).toEqual({ 2: 1, 4: 2 });
+    });
+
+    it("returns an object with values mapped with key selector function", () => {
+      expect(from([1, 2]).toObject(x => x * 2, y => y * 3)).toEqual({
+        2: 3,
+        4: 6
+      });
+    });
+  });
+
+  describe("toSet", () => {
+    it("returns a Set", () => {
+      expect(from([1, 2]).toSet()).toEqual(new Set([1, 2]));
     });
   });
 });

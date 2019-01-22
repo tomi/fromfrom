@@ -1,4 +1,5 @@
 import { from } from "./from";
+import { Dictionary, NumberDictionary } from "./ObjectIterable";
 
 export interface PredicateFn<TItem> {
   (item: TItem): boolean;
@@ -130,6 +131,18 @@ export class Enumerable<T> implements Iterable<T> {
   }
 
   /**
+   * Returns the first element of the sequence or undefined if
+   * the sequence is empty.
+   */
+  first(): T | undefined {
+    for (const item of this._iterable) {
+      return item;
+    }
+
+    return undefined;
+  }
+
+  /**
    * First maps each element of the sequence using the given mapping function,
    * then flattens the result into a new sequence.
    *
@@ -181,6 +194,23 @@ export class Enumerable<T> implements Iterable<T> {
     }
 
     return false;
+  }
+
+  /**
+   * Returns true if the sequence is empty, false otherwise.
+   */
+  isEmpty(): boolean {
+    return !this.some(() => true);
+  }
+
+  /**
+   * Returns the first element of the sequence or undefined if
+   * the sequence is empty.
+   */
+  last(): T | undefined {
+    const items = Array.from(this._iterable);
+
+    return items.length === 0 ? undefined : items[items.length - 1];
   }
 
   /**
@@ -256,6 +286,20 @@ export class Enumerable<T> implements Iterable<T> {
 
       yield item;
     }
+  }
+
+  /**
+   * Returns true if sequence contains an element for which the given
+   * predicate returns a truthy value.
+   */
+  some(predicate: PredicateFn<T> = identityFn): boolean {
+    for (const item of this._iterable) {
+      if (predicate(item)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -360,6 +404,52 @@ export class Enumerable<T> implements Iterable<T> {
     }
 
     return map;
+  }
+
+  /**
+   * Converts the sequence to an object using the given keySelectorFn and
+   * possible elementSelectorFn.
+   *
+   * @example
+   * // Returns an object:
+   * // {
+   * //   "John": { id: 1, name: "John" },
+   * //   "Jane": { id: 2, name: "Jane"}
+   * // }
+   * const users = [{ id: 1, name: "John" }, { id: 2, name: "Jane"}]
+   * from(users).toObject(u => u.name);
+   *
+   * @param keySelectorFn
+   * @param elementSelectorFn
+   */
+  toObject(keySelectorFn: SelectorFn<T, string>): Dictionary<T>;
+  toObject(keySelectorFn: SelectorFn<T, number>): NumberDictionary<T>;
+  toObject<TElement>(
+    keySelectorFn: SelectorFn<T, string>,
+    elementSelectorFn: SelectorFn<T, TElement>
+  ): Dictionary<T>;
+  toObject<TElement>(
+    keySelectorFn: SelectorFn<T, number>,
+    elementSelectorFn: SelectorFn<T, TElement>
+  ): NumberDictionary<T>;
+  toObject<TElement>(
+    keySelectorFn: SelectorFn<T, string> | SelectorFn<T, number>,
+    elementSelectorFn?: SelectorFn<T, TElement>
+  ):
+    | Dictionary<T>
+    | NumberDictionary<T>
+    | Dictionary<TElement>
+    | NumberDictionary<TElement> {
+    const object: any = {};
+
+    for (const item of this) {
+      const key = keySelectorFn(item);
+      const value = elementSelectorFn ? elementSelectorFn(item) : item;
+
+      object[key] = value;
+    }
+
+    return object;
   }
 
   /**
