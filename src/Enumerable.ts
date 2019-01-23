@@ -470,14 +470,20 @@ export class Enumerable<T> implements Iterable<T> {
  * Ordered sequence of elements
  */
 export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
-  constructor(iterable: Iterable<TItem>, private _comparer: ComparerFn<TItem>) {
-    super(iterable);
-  }
+  private _comparer: ComparerFn<TItem>;
 
-  [Symbol.iterator](): Iterator<TItem> {
-    const items = Array.from(this._iterable);
+  constructor(iterable: Iterable<TItem>, comparer: ComparerFn<TItem>) {
+    function* _sort(): IterableIterator<TItem> {
+      const items = Array.from(iterable).sort(comparer);
 
-    return items.sort(this._comparer)[Symbol.iterator]();
+      for (const item of items) {
+        yield item;
+      }
+    }
+
+    super(_sort());
+
+    this._comparer = comparer;
   }
 
   thenBy<TKey2>(
