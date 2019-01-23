@@ -15,6 +15,16 @@ describe("seqenum", () => {
     });
   });
 
+  describe("distinct", () => {
+    it("returns unique values from the sequence", () => {
+      expect(
+        from([1, 1, 1, 1])
+          .distinct()
+          .toArray()
+      ).toEqual([1]);
+    });
+  });
+
   describe("every", () => {
     let predicate: jest.Mock;
 
@@ -341,14 +351,7 @@ describe("seqenum", () => {
     });
 
     it("sorts the sequence with key selector", () => {
-      const items = [
-        { a: 5 },
-        { a: 2 },
-        { a: 1 },
-        { a: 3 },
-        { a: 1 },
-        { a: 4 }
-      ];
+      const items = [{ a: 5 }, { a: 2 }, { a: 1 }, { a: 3 }, { a: 1 }, { a: 4 }];
 
       expect(
         from(items)
@@ -375,13 +378,7 @@ describe("seqenum", () => {
               first.b === second.b ? second.a - first.a : second.b - first.b
           )
           .toArray()
-      ).toEqual([
-        { a: 4, b: 2 },
-        { a: 1, b: 2 },
-        { a: 5, b: 1 },
-        { a: 3, b: 1 },
-        { a: 2, b: 1 }
-      ]);
+      ).toEqual([{ a: 4, b: 2 }, { a: 1, b: 2 }, { a: 5, b: 1 }, { a: 3, b: 1 }, { a: 2, b: 1 }]);
     });
   });
 
@@ -395,14 +392,7 @@ describe("seqenum", () => {
     });
 
     it("sorts the sequence with key selector", () => {
-      const items = [
-        { a: 5 },
-        { a: 2 },
-        { a: 1 },
-        { a: 3 },
-        { a: 1 },
-        { a: 4 }
-      ];
+      const items = [{ a: 5 }, { a: 2 }, { a: 1 }, { a: 3 }, { a: 1 }, { a: 4 }];
 
       expect(
         from(items)
@@ -429,13 +419,7 @@ describe("seqenum", () => {
               first.b === second.b ? second.a - first.a : second.b - first.b
           )
           .toArray()
-      ).toEqual([
-        { a: 2, b: 1 },
-        { a: 3, b: 1 },
-        { a: 5, b: 1 },
-        { a: 1, b: 2 },
-        { a: 4, b: 2 }
-      ]);
+      ).toEqual([{ a: 2, b: 1 }, { a: 3, b: 1 }, { a: 5, b: 1 }, { a: 1, b: 2 }, { a: 4, b: 2 }]);
     });
   });
 
@@ -584,9 +568,7 @@ describe("seqenum", () => {
     });
 
     it("returns a Map with values mapped with key selector function", () => {
-      expect(from([1, 2]).toMap(x => x * 2, y => y * 3)).toEqual(
-        new Map([[2, 3], [4, 6]])
-      );
+      expect(from([1, 2]).toMap(x => x * 2, y => y * 3)).toEqual(new Map([[2, 3], [4, 6]]));
     });
   });
 

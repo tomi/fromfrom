@@ -39,16 +39,11 @@ const defaultComparer = <TKey>(a: TKey, b: TKey) => {
 
 const defaultKeySelector = <TItem>(item: TItem) => item;
 
-const getKeySelectorOrDefault = <TItem, TKey>(
-  keySelector?: KeySelectorFn<TItem, TKey>
-) =>
-  keySelector
-    ? keySelector
-    : ((defaultKeySelector as unknown) as KeySelectorFn<TItem, TKey>);
+const getKeySelectorOrDefault = <TItem, TKey>(keySelector?: KeySelectorFn<TItem, TKey>) =>
+  keySelector ? keySelector : ((defaultKeySelector as unknown) as KeySelectorFn<TItem, TKey>);
 
-const getComparerOrDefault = <TKey>(
-  comparer?: ComparerFn<TKey>
-): ComparerFn<TKey> => (comparer ? comparer : defaultComparer);
+const getComparerOrDefault = <TKey>(comparer?: ComparerFn<TKey>): ComparerFn<TKey> =>
+  comparer ? comparer : defaultComparer;
 
 /**
  * Enumerable sequence
@@ -79,6 +74,25 @@ export class Enumerable<T> implements Iterable<T> {
 
     for (const item of from(other)) {
       yield item;
+    }
+  }
+
+  /**
+   * Returns unique values in the sequence. Uniqueness is checked using
+   * the '===' operator.
+   */
+  distinct(): Enumerable<T> {
+    return from(this._distinct());
+  }
+
+  private *_distinct() {
+    const unique = new Set();
+
+    for (const item of this._iterable) {
+      if (!unique.has(item)) {
+        unique.add(item);
+        yield item;
+      }
     }
   }
 
@@ -225,9 +239,7 @@ export class Enumerable<T> implements Iterable<T> {
     return from(this._map(mapFn));
   }
 
-  private *_map<TResult>(
-    mapFn: SelectorFn<T, TResult>
-  ): IterableIterator<TResult> {
+  private *_map<TResult>(mapFn: SelectorFn<T, TResult>): IterableIterator<TResult> {
     for (const item of this._iterable) {
       yield mapFn(item);
     }
@@ -318,10 +330,7 @@ export class Enumerable<T> implements Iterable<T> {
     keySelector?: KeySelectorFn<T, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedEnumerable<T, TKey> {
-    return new OrderedEnumerable(
-      this._iterable,
-      createCompareFn(false, keySelector, comparer)
-    );
+    return new OrderedEnumerable(this._iterable, createCompareFn(false, keySelector, comparer));
   }
 
   /**
@@ -335,10 +344,7 @@ export class Enumerable<T> implements Iterable<T> {
     keySelector?: KeySelectorFn<T, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedEnumerable<T, TKey> {
-    return new OrderedEnumerable(
-      this._iterable,
-      createCompareFn(true, keySelector, comparer)
-    );
+    return new OrderedEnumerable(this._iterable, createCompareFn(true, keySelector, comparer));
   }
 
   /**
@@ -435,11 +441,7 @@ export class Enumerable<T> implements Iterable<T> {
   toObject<TElement>(
     keySelectorFn: SelectorFn<T, string> | SelectorFn<T, number>,
     elementSelectorFn?: SelectorFn<T, TElement>
-  ):
-    | Dictionary<T>
-    | NumberDictionary<T>
-    | Dictionary<TElement>
-    | NumberDictionary<TElement> {
+  ): Dictionary<T> | NumberDictionary<T> | Dictionary<TElement> | NumberDictionary<TElement> {
     const object: any = {};
 
     for (const item of this) {
