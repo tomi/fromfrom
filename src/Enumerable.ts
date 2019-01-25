@@ -246,6 +246,24 @@ export class Enumerable<T> implements Iterable<T> {
   }
 
   /**
+   * Maps each item in the sequence to an object composed of the picked
+   * object properties.
+   */
+  pick<TKeys extends keyof T>(...keys: TKeys[]): Enumerable<{ [P in TKeys]: T[P] }> {
+    return this.map((item: T) => {
+      const result: any = {};
+
+      for (const key of keys) {
+        if (key in item) {
+          result[key] = item[key];
+        }
+      }
+
+      return result;
+    });
+  }
+
+  /**
    * Executes a reducer function on each item in the sequence resulting
    * in a single output value.
    */

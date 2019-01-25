@@ -255,6 +255,47 @@ describe("seqenum", () => {
     });
   });
 
+  describe("pick", () => {
+    const user = Object.freeze({
+      name: {
+        first: "Bob",
+        last: "Builder"
+      },
+      age: 20,
+      email: "bob@thebuilder.com"
+    });
+
+    it("returns an empty object if no keys given", () => {
+      expect(
+        from([user])
+          .pick()
+          .first()
+      ).toEqual({});
+    });
+
+    it("picks selected keys", () => {
+      expect(
+        from([user])
+          .pick("age", "email")
+          .first()
+      ).toEqual({
+        age: 20,
+        email: "bob@thebuilder.com"
+      });
+    });
+
+    it("ignores keys the item doesn't have", () => {
+      expect(
+        from([user])
+          .pick("age", "email", "notexists" as any)
+          .first()
+      ).toEqual({
+        age: 20,
+        email: "bob@thebuilder.com"
+      });
+    });
+  });
+
   describe("reduce", () => {
     let callback: jest.Mock;
 
