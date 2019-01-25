@@ -1,29 +1,23 @@
-export interface Dictionary<T> {
+export interface StringKeyedObject<T> {
   [index: string]: T;
 }
 
-export interface NumberDictionary<T> {
+export interface NumberKeyedObject<T> {
   [index: number]: T;
 }
 
 /**
- * Creates an iterable from object, that iterates the object as key value
- * pairs.
+ * Creates an iterable from object, that iterates the object
+ * as key value pairs.
  */
-export class ObjectIterable<T> implements Iterable<[string, T]> {
-  constructor(private _object: Dictionary<T>) {}
+export function createObjectIterable<T>(object: NumberKeyedObject<T>): Iterable<[number, T]>;
+export function createObjectIterable<T>(object: StringKeyedObject<T>): Iterable<[string, T]>;
+export function* createObjectIterable<T>(object: StringKeyedObject<T> | NumberKeyedObject<T>): any {
+  for (const key in object) {
+    if (object.hasOwnProperty(key)) {
+      const value = (object as any)[key];
 
-  [Symbol.iterator](): Iterator<[string, T]> {
-    return this._getIterable();
-  }
-
-  private *_getIterable(): IterableIterator<[string, T]> {
-    for (const key in this._object) {
-      if (this._object.hasOwnProperty(key)) {
-        const value = this._object[key];
-
-        yield [key, value];
-      }
+      yield [key, value] as any;
     }
   }
 }
