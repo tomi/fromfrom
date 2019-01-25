@@ -1,5 +1,4 @@
-import { from } from "./from";
-import { Dictionary, NumberDictionary } from "./ObjectIterable";
+import { StringKeyedObject, NumberKeyedObject } from "./ObjectIterable";
 
 export interface PredicateFn<TItem> {
   (item: TItem): boolean;
@@ -23,7 +22,7 @@ export interface ComparerFn<TItem> {
 
 export type KeySelectorFn<TItem, TKey> = SelectorFn<TItem, TKey>;
 
-const identityFn = (x: any): boolean => x;
+const identityPredicateFn = (x: any): boolean => x;
 
 const defaultComparer = <TKey>(a: TKey, b: TKey) => {
   if (a === b) {
@@ -37,10 +36,10 @@ const defaultComparer = <TKey>(a: TKey, b: TKey) => {
   return 1;
 };
 
-const defaultKeySelector = <TItem>(item: TItem) => item;
+const identityKeySelector = <TItem>(item: TItem) => item;
 
 const getKeySelectorOrDefault = <TItem, TKey>(keySelector?: KeySelectorFn<TItem, TKey>) =>
-  keySelector ? keySelector : ((defaultKeySelector as unknown) as KeySelectorFn<TItem, TKey>);
+  keySelector ? keySelector : ((identityKeySelector as unknown) as KeySelectorFn<TItem, TKey>);
 
 const getComparerOrDefault = <TKey>(comparer?: ComparerFn<TKey>): ComparerFn<TKey> =>
   comparer ? comparer : defaultComparer;
@@ -48,10 +47,10 @@ const getComparerOrDefault = <TKey>(comparer?: ComparerFn<TKey>): ComparerFn<TKe
 /**
  * Enumerable sequence
  */
-export class Enumerable<T> implements Iterable<T> {
-  constructor(protected _iterable: Iterable<T>) {}
+export class Enumerable<TItem> implements Iterable<TItem> {
+  constructor(protected _iterable: Iterable<TItem>) {}
 
-  [Symbol.iterator](): Iterator<T> {
+  [Symbol.iterator](): Iterator<TItem> {
     return this._iterable[Symbol.iterator]();
   }
 
@@ -63,16 +62,16 @@ export class Enumerable<T> implements Iterable<T> {
    * // Returns sequence with values 1, 2, 3, 4
    * from([1, 2]).concat([3, 4]);
    */
-  concat<U>(other: Iterable<U>): Enumerable<T | U> {
-    return from(this._concat(other));
+  concat<TOther>(other: Iterable<TOther>): Enumerable<TItem | TOther> {
+    return new Enumerable(this._concat(other));
   }
 
-  private *_concat<U>(other: Iterable<U>): IterableIterator<T | U> {
+  private *_concat<TOther>(other: Iterable<TOther>): IterableIterator<TItem | TOther> {
     for (const item of this._iterable) {
       yield item;
     }
 
-    for (const item of from(other)) {
+    for (const item of new Enumerable(other)) {
       yield item;
     }
   }
@@ -81,8 +80,8 @@ export class Enumerable<T> implements Iterable<T> {
    * Returns unique values in the sequence. Uniqueness is checked using
    * the '===' operator.
    */
-  distinct(): Enumerable<T> {
-    return from(this._distinct());
+  distinct(): Enumerable<TItem> {
+    return new Enumerable(this._distinct());
   }
 
   private *_distinct() {
@@ -100,7 +99,7 @@ export class Enumerable<T> implements Iterable<T> {
    * Checks that all items in the sequence pass the test implemented by the
    * provided function.
    */
-  every(predicate: PredicateFn<T> = identityFn): boolean {
+  every(predicate: PredicateFn<TItem> = identityPredicateFn): boolean {
     for (const item of this._iterable) {
       if (!predicate(item)) {
         return false;
@@ -114,11 +113,11 @@ export class Enumerable<T> implements Iterable<T> {
    * Returns a new sequence where items are filtered out for which the
    * predicate function returns a falsy value.
    */
-  filter(predicate: PredicateFn<T>): Enumerable<T> {
-    return from(this._filter(predicate));
+  filter(predicate: PredicateFn<TItem>): Enumerable<TItem> {
+    return new Enumerable(this._filter(predicate));
   }
 
-  private *_filter(predicate: PredicateFn<T>): IterableIterator<T> {
+  private *_filter(predicate: PredicateFn<TItem>): IterableIterator<TItem> {
     for (const item of this._iterable) {
       if (predicate(item)) {
         yield item;
@@ -134,7 +133,7 @@ export class Enumerable<T> implements Iterable<T> {
    * // Returns 4
    * from([2, 4, 6]).find(x => x === 4);
    */
-  find(predicate: PredicateFn<T>): T | undefined {
+  find(predicate: PredicateFn<TItem>): TItem | undefined {
     for (const item of this._iterable) {
       if (predicate(item)) {
         return item;
@@ -148,7 +147,7 @@ export class Enumerable<T> implements Iterable<T> {
    * Returns the first element of the sequence or undefined if
    * the sequence is empty.
    */
-  first(): T | undefined {
+  first(): TItem | undefined {
     for (const item of this._iterable) {
       return item;
     }
@@ -164,13 +163,13 @@ export class Enumerable<T> implements Iterable<T> {
    * // Returns [1, 2, 3, 4, 5, 6]
    * from([1, 3, 5]).flatMap(x => [x, x + 1]).toArray();
    */
-  flatMap<U>(mapperFn: SelectorFn<T, U[]>): Enumerable<U> {
-    return from(this._flatMap(mapperFn));
+  flatMap<U>(mapperFn: SelectorFn<TItem, U[]>): Enumerable<U> {
+    return new Enumerable(this._flatMap(mapperFn));
   }
 
-  private *_flatMap<U>(mapperFn: SelectorFn<T, U[]>): IterableIterator<U> {
+  private *_flatMap<U>(mapperFn: SelectorFn<TItem, U[]>): IterableIterator<U> {
     for (const item of this._iterable) {
-      const sequence = from(mapperFn(item));
+      const sequence = new Enumerable(mapperFn(item));
 
       for (const mappedItem of sequence) {
         yield mappedItem;
@@ -185,7 +184,7 @@ export class Enumerable<T> implements Iterable<T> {
    * // Logs 1, 2 and 3 to console
    * from([1, 2, 3]).forEach(i => console.log(i));
    */
-  forEach(callback: Callback<T>): void {
+  forEach(callback: Callback<TItem>): void {
     for (const item of this._iterable) {
       callback(item);
     }
@@ -200,7 +199,7 @@ export class Enumerable<T> implements Iterable<T> {
    * // Returns true
    * from([1, 2, 3]).includes(3);
    */
-  includes(searchItem: T): boolean {
+  includes(searchItem: TItem): boolean {
     for (const item of this._iterable) {
       if (item === searchItem) {
         return true;
@@ -221,7 +220,7 @@ export class Enumerable<T> implements Iterable<T> {
    * Returns the first element of the sequence or undefined if
    * the sequence is empty.
    */
-  last(): T | undefined {
+  last(): TItem | undefined {
     const items = Array.from(this._iterable);
 
     return items.length === 0 ? undefined : items[items.length - 1];
@@ -235,11 +234,11 @@ export class Enumerable<T> implements Iterable<T> {
    * // Returns [2, 4, 6]
    * from([1, 2, 3]).map(x => x * 2);
    */
-  map<TResult>(mapFn: SelectorFn<T, TResult>): Enumerable<TResult> {
-    return from(this._map(mapFn));
+  map<TResult>(mapFn: SelectorFn<TItem, TResult>): Enumerable<TResult> {
+    return new Enumerable(this._map(mapFn));
   }
 
-  private *_map<TResult>(mapFn: SelectorFn<T, TResult>): IterableIterator<TResult> {
+  private *_map<TResult>(mapFn: SelectorFn<TItem, TResult>): IterableIterator<TResult> {
     for (const item of this._iterable) {
       yield mapFn(item);
     }
@@ -249,8 +248,8 @@ export class Enumerable<T> implements Iterable<T> {
    * Maps each item in the sequence to an object composed of the picked
    * object properties.
    */
-  pick<TKeys extends keyof T>(...keys: TKeys[]): Enumerable<{ [P in TKeys]: T[P] }> {
-    return this.map((item: T) => {
+  pick<TKeys extends keyof TItem>(...keys: TKeys[]): Enumerable<{ [P in TKeys]: TItem[P] }> {
+    return this.map((item: TItem) => {
       const result: any = {};
 
       for (const key of keys) {
@@ -267,7 +266,7 @@ export class Enumerable<T> implements Iterable<T> {
    * Executes a reducer function on each item in the sequence resulting
    * in a single output value.
    */
-  reduce<U>(callback: ReduceCallback<U, T>, accumulator: U): U {
+  reduce<U>(callback: ReduceCallback<U, TItem>, accumulator: U): U {
     for (const item of this._iterable) {
       accumulator = callback(accumulator, item);
     }
@@ -282,11 +281,11 @@ export class Enumerable<T> implements Iterable<T> {
    * // Returns [3, 2, 1]
    * from([1, 2, 3]).reverse().toArray();
    */
-  reverse(): Enumerable<T> {
-    return from(this._reverse());
+  reverse(): Enumerable<TItem> {
+    return new Enumerable(this._reverse());
   }
 
-  private *_reverse(): IterableIterator<T> {
+  private *_reverse(): IterableIterator<TItem> {
     const items = Array.from(this._iterable);
 
     for (let i = items.length - 1; i >= 0; i--) {
@@ -301,11 +300,11 @@ export class Enumerable<T> implements Iterable<T> {
    * // Returns [3, 4]
    * from([1, 2, 3, 4]).skip(2);
    */
-  skip(howMany: number): Enumerable<T> {
-    return from(this._skip(howMany));
+  skip(howMany: number): Enumerable<TItem> {
+    return new Enumerable(this._skip(howMany));
   }
 
-  private *_skip(howMany: number): IterableIterator<T> {
+  private *_skip(howMany: number): IterableIterator<TItem> {
     let numSkipped = 0;
 
     for (const item of this._iterable) {
@@ -322,7 +321,7 @@ export class Enumerable<T> implements Iterable<T> {
    * Returns true if sequence contains an element for which the given
    * predicate returns a truthy value.
    */
-  some(predicate: PredicateFn<T> = identityFn): boolean {
+  some(predicate: PredicateFn<TItem> = identityPredicateFn): boolean {
     for (const item of this._iterable) {
       if (predicate(item)) {
         return true;
@@ -339,15 +338,15 @@ export class Enumerable<T> implements Iterable<T> {
    * @param keySelector  A function to extract a key from an element.
    * @param comparer     A function to compare the keys
    */
-  sortBy(): OrderedEnumerable<T, T>;
+  sortBy(): OrderedEnumerable<TItem, TItem>;
   sortBy<TKey>(
-    keySelector: KeySelectorFn<T, TKey>,
+    keySelector: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedEnumerable<T, TKey>;
+  ): OrderedEnumerable<TItem, TKey>;
   sortBy<TKey>(
-    keySelector?: KeySelectorFn<T, TKey>,
+    keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedEnumerable<T, TKey> {
+  ): OrderedEnumerable<TItem, TKey> {
     return new OrderedEnumerable(this._iterable, createCompareFn(false, keySelector, comparer));
   }
 
@@ -358,10 +357,10 @@ export class Enumerable<T> implements Iterable<T> {
    * @param keySelector  A function to extract a key from an element.
    * @param comparer     A function to compare the keys
    */
-  sortByDescending<TKey = T>(
-    keySelector?: KeySelectorFn<T, TKey>,
+  sortByDescending<TKey = TItem>(
+    keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedEnumerable<T, TKey> {
+  ): OrderedEnumerable<TItem, TKey> {
     return new OrderedEnumerable(this._iterable, createCompareFn(true, keySelector, comparer));
   }
 
@@ -372,11 +371,11 @@ export class Enumerable<T> implements Iterable<T> {
    * // Returns [1, 2]
    * from([1, 2, 3, 4]).take(2);
    */
-  take(howMany: number): Enumerable<T> {
-    return from(this._take(howMany));
+  take(howMany: number): Enumerable<TItem> {
+    return new Enumerable(this._take(howMany));
   }
 
-  private *_take(howMany: number): IterableIterator<T> {
+  private *_take(howMany: number): IterableIterator<TItem> {
     let numTaken = 0;
 
     for (const item of this._iterable) {
@@ -396,7 +395,7 @@ export class Enumerable<T> implements Iterable<T> {
    * // Return [1, 2, 3]
    * from([1, 2, 3]).toArray();
    */
-  toArray(): T[] {
+  toArray(): TItem[] {
     return Array.from(this);
   }
 
@@ -414,9 +413,9 @@ export class Enumerable<T> implements Iterable<T> {
    * @param keySelectorFn
    * @param elementSelectorFn
    */
-  toMap<TKey, TElement = T>(
-    keySelectorFn: SelectorFn<T, TKey>,
-    elementSelectorFn?: SelectorFn<T, TElement>
+  toMap<TKey, TElement = TItem>(
+    keySelectorFn: SelectorFn<TItem, TKey>,
+    elementSelectorFn?: SelectorFn<TItem, TElement>
   ): Map<TKey, TElement> {
     const map = new Map<TKey, TElement>();
 
@@ -446,20 +445,24 @@ export class Enumerable<T> implements Iterable<T> {
    * @param keySelectorFn
    * @param elementSelectorFn
    */
-  toObject(keySelectorFn: SelectorFn<T, string>): Dictionary<T>;
-  toObject(keySelectorFn: SelectorFn<T, number>): NumberDictionary<T>;
+  toObject(keySelectorFn: SelectorFn<TItem, string>): StringKeyedObject<TItem>;
+  toObject(keySelectorFn: SelectorFn<TItem, number>): NumberKeyedObject<TItem>;
   toObject<TElement>(
-    keySelectorFn: SelectorFn<T, string>,
-    elementSelectorFn: SelectorFn<T, TElement>
-  ): Dictionary<T>;
+    keySelectorFn: SelectorFn<TItem, string>,
+    elementSelectorFn: SelectorFn<TItem, TElement>
+  ): StringKeyedObject<TItem>;
   toObject<TElement>(
-    keySelectorFn: SelectorFn<T, number>,
-    elementSelectorFn: SelectorFn<T, TElement>
-  ): NumberDictionary<T>;
+    keySelectorFn: SelectorFn<TItem, number>,
+    elementSelectorFn: SelectorFn<TItem, TElement>
+  ): NumberKeyedObject<TItem>;
   toObject<TElement>(
-    keySelectorFn: SelectorFn<T, string> | SelectorFn<T, number>,
-    elementSelectorFn?: SelectorFn<T, TElement>
-  ): Dictionary<T> | NumberDictionary<T> | Dictionary<TElement> | NumberDictionary<TElement> {
+    keySelectorFn: SelectorFn<TItem, string> | SelectorFn<TItem, number>,
+    elementSelectorFn?: SelectorFn<TItem, TElement>
+  ):
+    | StringKeyedObject<TItem>
+    | NumberKeyedObject<TItem>
+    | StringKeyedObject<TElement>
+    | NumberKeyedObject<TElement> {
     const object: any = {};
 
     for (const item of this) {
@@ -479,7 +482,7 @@ export class Enumerable<T> implements Iterable<T> {
    * // Return a Set with elements 1, 2, 3
    * from([1, 1, 2, 3]).toSet();
    */
-  toSet(): Set<T> {
+  toSet(): Set<TItem> {
     return new Set(this);
   }
 }
@@ -504,10 +507,10 @@ export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
     this._comparer = comparer;
   }
 
-  thenBy<TKey2>(
-    keySelector: KeySelectorFn<TItem, TKey2>,
-    comparer?: ComparerFn<TKey2>
-  ): OrderedEnumerable<TItem, TKey2> {
+  thenBy<TOtherKey>(
+    keySelector: KeySelectorFn<TItem, TOtherKey>,
+    comparer?: ComparerFn<TOtherKey>
+  ): OrderedEnumerable<TItem, TOtherKey> {
     const thenComparer = createCompareFn(false, keySelector, comparer);
 
     return new OrderedEnumerable(
@@ -516,10 +519,10 @@ export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
     );
   }
 
-  thenByDescending<TKey2>(
-    keySelector: KeySelectorFn<TItem, TKey2>,
-    comparer?: ComparerFn<TKey2>
-  ): OrderedEnumerable<TItem, TKey2> {
+  thenByDescending<TOtherKey>(
+    keySelector: KeySelectorFn<TItem, TOtherKey>,
+    comparer?: ComparerFn<TOtherKey>
+  ): OrderedEnumerable<TItem, TOtherKey> {
     const thenComparer = createCompareFn(true, keySelector, comparer);
 
     return new OrderedEnumerable(
