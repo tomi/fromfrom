@@ -1,2 +1,11 @@
-- better typings
 - group by
+- Candidates for new methods:
+  - append
+  - prepend
+  - skipWhile
+  - takeWhile
+  - zip
+  - Set operations:
+    - except
+    - intersect
+    - union
