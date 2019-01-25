@@ -1,5 +1,4 @@
 import { from } from "../src/seqenum";
-import { Enumerable } from "../src/Enumerable";
 
 /**
  * Tests for the library
@@ -86,10 +85,6 @@ describe("seqenum", () => {
   });
 
   describe("from", () => {
-    it("returns an enumerable", () => {
-      expect(from([])).toBeInstanceOf(Enumerable);
-    });
-
     it("returns the same enumerable if called with enumerable", () => {
       const enumerable = from([]);
 
