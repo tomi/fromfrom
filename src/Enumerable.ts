@@ -1,31 +1,23 @@
-import { StringKeyedObject, NumberKeyedObject } from "./ObjectIterable";
-
-export interface PredicateFn<TItem> {
-  (item: TItem): boolean;
-}
-
-export interface SelectorFn<TItem, TResult> {
-  (item: TItem): TResult;
-}
-
-export interface Callback<TItem> {
-  (item: TItem): void;
-}
-
-export interface ReduceCallback<TPrevious, TCurrent> {
-  (previousValue: TPrevious, currentValue: TCurrent): TPrevious;
-}
-
-export interface ComparerFn<TItem> {
-  (a: TItem, b: TItem): number;
-}
-
-export interface Grouping<TKey, TElement> {
-  key: TKey;
-  items: TElement[];
-}
-
-export type KeySelectorFn<TItem, TKey> = SelectorFn<TItem, TKey>;
+import {
+  KeySelectorFn,
+  ComparerFn,
+  PredicateFn,
+  SelectorFn,
+  Callback,
+  Grouping,
+  ReduceCallback,
+  NumberKeyedObject,
+  StringKeyedObject
+} from "./types";
+import { concat } from "./transforms/concat";
+import { distinct } from "./transforms/distinct";
+import { filter } from "./transforms/filter";
+import { flatMap } from "./transforms/flatMap";
+import { groupBy } from "./transforms/groupBy";
+import { map } from "./transforms/map";
+import { reverse } from "./transforms/reverse";
+import { skip } from "./transforms/skip";
+import { take } from "./transforms/take";
 
 const identityPredicateFn = (x: any): boolean => x;
 
@@ -68,17 +60,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2]).concat([3, 4]);
    */
   concat<TOther>(other: Iterable<TOther>): Enumerable<TItem | TOther> {
-    return new Enumerable(this._concat(other));
-  }
-
-  private *_concat<TOther>(other: Iterable<TOther>): IterableIterator<TItem | TOther> {
-    for (const item of this._iterable) {
-      yield item;
-    }
-
-    for (const item of new Enumerable(other)) {
-      yield item;
-    }
+    return new Enumerable(concat(this._iterable, other));
   }
 
   /**
@@ -86,18 +68,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * the '===' operator.
    */
   distinct(): Enumerable<TItem> {
-    return new Enumerable(this._distinct());
-  }
-
-  private *_distinct() {
-    const unique = new Set();
-
-    for (const item of this._iterable) {
-      if (!unique.has(item)) {
-        unique.add(item);
-        yield item;
-      }
-    }
+    return new Enumerable(distinct(this._iterable));
   }
 
   /**
@@ -119,15 +90,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * predicate function returns a falsy value.
    */
   filter(predicate: PredicateFn<TItem>): Enumerable<TItem> {
-    return new Enumerable(this._filter(predicate));
-  }
-
-  private *_filter(predicate: PredicateFn<TItem>): IterableIterator<TItem> {
-    for (const item of this._iterable) {
-      if (predicate(item)) {
-        yield item;
-      }
-    }
+    return new Enumerable(filter(this._iterable, predicate));
   }
 
   /**
@@ -169,17 +132,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 3, 5]).flatMap(x => [x, x + 1]).toArray();
    */
   flatMap<U>(mapperFn: SelectorFn<TItem, U[]>): Enumerable<U> {
-    return new Enumerable(this._flatMap(mapperFn));
-  }
-
-  private *_flatMap<U>(mapperFn: SelectorFn<TItem, U[]>): IterableIterator<U> {
-    for (const item of this._iterable) {
-      const sequence = new Enumerable(mapperFn(item));
-
-      for (const mappedItem of sequence) {
-        yield mappedItem;
-      }
-    }
+    return new Enumerable(flatMap(this._iterable, mapperFn));
   }
 
   /**
@@ -319,34 +272,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
       keySelector = createSelectByKey<TItem>(keySelector);
     }
 
-    return new Enumerable(this._groupBy(keySelector, elementSelector));
-  }
-
-  private *_groupBy<TKey, TElement>(
-    keySelector: KeySelectorFn<TItem, TKey>,
-    elementSelector?: SelectorFn<TItem, TElement>
-  ): IterableIterator<Grouping<TKey, TElement>> {
-    const groups = new Map<TKey, TElement[]>();
-
-    for (const item of this._iterable) {
-      const key = keySelector(item);
-      const value = elementSelector ? elementSelector(item) : ((item as unknown) as TElement);
-
-      let group = groups.get(key);
-      if (!group) {
-        group = [];
-        groups.set(key, group);
-      }
-
-      group.push(value);
-    }
-
-    for (const keyItemsPair of groups.entries()) {
-      yield {
-        key: keyItemsPair[0],
-        items: keyItemsPair[1]
-      };
-    }
+    return new Enumerable(groupBy(this._iterable, keySelector, elementSelector));
   }
 
   /**
@@ -394,13 +320,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3]).map(x => x * 2);
    */
   map<TResult>(mapFn: SelectorFn<TItem, TResult>): Enumerable<TResult> {
-    return new Enumerable(this._map(mapFn));
-  }
-
-  private *_map<TResult>(mapFn: SelectorFn<TItem, TResult>): IterableIterator<TResult> {
-    for (const item of this._iterable) {
-      yield mapFn(item);
-    }
+    return new Enumerable(map(this._iterable, mapFn));
   }
 
   /**
@@ -441,15 +361,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3]).reverse().toArray();
    */
   reverse(): Enumerable<TItem> {
-    return new Enumerable(this._reverse());
-  }
-
-  private *_reverse(): IterableIterator<TItem> {
-    const items = Array.from(this._iterable);
-
-    for (let i = items.length - 1; i >= 0; i--) {
-      yield items[i];
-    }
+    return new Enumerable(reverse(this._iterable));
   }
 
   /**
@@ -460,20 +372,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3, 4]).skip(2);
    */
   skip(howMany: number): Enumerable<TItem> {
-    return new Enumerable(this._skip(howMany));
-  }
-
-  private *_skip(howMany: number): IterableIterator<TItem> {
-    let numSkipped = 0;
-
-    for (const item of this._iterable) {
-      if (numSkipped < howMany) {
-        numSkipped++;
-        continue;
-      }
-
-      yield item;
-    }
+    return new Enumerable(skip(this._iterable, howMany));
   }
 
   /**
@@ -531,20 +430,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3, 4]).take(2);
    */
   take(howMany: number): Enumerable<TItem> {
-    return new Enumerable(this._take(howMany));
-  }
-
-  private *_take(howMany: number): IterableIterator<TItem> {
-    let numTaken = 0;
-
-    for (const item of this._iterable) {
-      if (numTaken < howMany) {
-        numTaken++;
-        yield item;
-      } else {
-        break;
-      }
-    }
+    return new Enumerable(take(this._iterable, howMany));
   }
 
   /**

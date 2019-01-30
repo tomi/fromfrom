@@ -2,7 +2,8 @@
  * Entrypoint of the library
  */
 import { Enumerable } from "./Enumerable";
-import { StringKeyedObject, NumberKeyedObject, createObjectIterable } from "./ObjectIterable";
+import { createObjectIterable } from "./ObjectIterable";
+import { StringKeyedObject, NumberKeyedObject } from "./types";
 
 export function from<T>(iterable: Iterable<T>): Enumerable<T>;
 export function from<T>(object: StringKeyedObject<T>): Enumerable<[string, T]>;

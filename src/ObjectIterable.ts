@@ -1,10 +1,4 @@
-export interface StringKeyedObject<T> {
-  [index: string]: T;
-}
-
-export interface NumberKeyedObject<T> {
-  [index: number]: T;
-}
+import { NumberKeyedObject, StringKeyedObject } from "./types";
 
 /**
  * Creates an iterable from object, that iterates the object
