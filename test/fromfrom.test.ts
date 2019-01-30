@@ -195,6 +195,59 @@ describe("fromfrom", () => {
     });
   });
 
+  describe("groupBy", () => {
+    const users = [
+      { name: "John", gender: "M" },
+      { name: "Mike", gender: "M" },
+      { name: "Lisa", gender: "F" },
+      { name: "Mary", gender: "F" }
+    ];
+
+    it("groups by the given key", () => {
+      expect(
+        from(users)
+          .groupBy("gender")
+          .toArray()
+      ).toEqual([
+        { key: "M", items: [users[0], users[1]] },
+        { key: "F", items: [users[2], users[3]] }
+      ]);
+    });
+
+    it("groups by the given key selector", () => {
+      expect(
+        from(users)
+          .groupBy(u => u.gender)
+          .toArray()
+      ).toEqual([
+        { key: "M", items: [users[0], users[1]] },
+        { key: "F", items: [users[2], users[3]] }
+      ]);
+    });
+
+    it("groups by the given key and element selector", () => {
+      expect(
+        from(users)
+          .groupBy("gender", u => u.name)
+          .toArray()
+      ).toEqual([
+        { key: "M", items: [users[0].name, users[1].name] },
+        { key: "F", items: [users[2].name, users[3].name] }
+      ]);
+    });
+
+    it("groups by the given key selector and element selector", () => {
+      expect(
+        from(users)
+          .groupBy(u => u.gender, u => u.name)
+          .toArray()
+      ).toEqual([
+        { key: "M", items: [users[0].name, users[1].name] },
+        { key: "F", items: [users[2].name, users[3].name] }
+      ]);
+    });
+  });
+
   describe("includes", () => {
     it("returns true when sequence contains the item", () => {
       expect(from([1, 2, 3]).includes(2)).toEqual(true);

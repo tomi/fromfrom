@@ -1,4 +1,3 @@
-- group by
 - Candidates for new methods:
   - append
   - prepend

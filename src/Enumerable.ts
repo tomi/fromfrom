@@ -20,6 +20,11 @@ export interface ComparerFn<TItem> {
   (a: TItem, b: TItem): number;
 }
 
+export interface Grouping<TKey, TElement> {
+  key: TKey;
+  items: TElement[];
+}
+
 export type KeySelectorFn<TItem, TKey> = SelectorFn<TItem, TKey>;
 
 const identityPredicateFn = (x: any): boolean => x;
@@ -187,6 +192,160 @@ export class Enumerable<TItem> implements Iterable<TItem> {
   forEach(callback: Callback<TItem>): void {
     for (const item of this._iterable) {
       callback(item);
+    }
+  }
+
+  /**
+   * Groups the items in the sequence using the given item's key
+   *
+   * @param key Key to be used for the grouping
+   *
+   * @example
+   * from([
+   *   { name: "John", gender: "M" },
+   *   { name: "Mike", gender: "M" },
+   *   { name: "Lisa", gender: "F" },
+   *   { name: "Mary", gender: "F" }
+   * ]).groupBy("gender");
+   * // Returns an enumerable with two groupings:
+   * // {
+   * //   key: "M",
+   * //   items: [
+   * //     { name: "John", gender: "M" },
+   * //     { name: "Mike", gender: "M" }
+   * //   ]
+   * // },
+   * // {
+   * //   key: "F",
+   * //   items: [
+   * //     { name: "Lisa", gender: "F" },
+   * //     { name: "Mary", gender: "F" }
+   * //   ]
+   * // }
+   */
+  groupBy<TKey extends keyof TItem>(key: TKey): Enumerable<Grouping<TItem[TKey], TItem>>;
+  /**
+   * Groups the items in the sequence by keys returned by the given
+   * keySelector function.
+   *
+   * @param keySelector A function to extract the key for each element.
+   *
+   * @example
+   * from([
+   *   { name: "John", gender: "M" },
+   *   { name: "Mike", gender: "M" },
+   *   { name: "Lisa", gender: "F" },
+   *   { name: "Mary", gender: "F" }
+   * ]).groupBy(user => user.gender);
+   * // Returns an enumerable with two groupings:
+   * // {
+   * //   key: "M",
+   * //   items: [
+   * //     { name: "John", gender: "M" },
+   * //     { name: "Mike", gender: "M" }
+   * //   ]
+   * // },
+   * // {
+   * //   key: "F",
+   * //   items: [
+   * //     { name: "Lisa", gender: "F" },
+   * //     { name: "Mary", gender: "F" }
+   * //   ]
+   * // }
+   */
+  groupBy<TKey>(keySelector: KeySelectorFn<TItem, TKey>): Enumerable<Grouping<TKey, TItem>>;
+  /**
+   * Groups the items of a sequence according to a specified key and
+   * projects the elements for each group by using a specified function.
+   *
+   * @param key Key to be used for the grouping
+   * @param elementSelector A function to map each source element to an element in an Grouping<TKey,TElement>.
+   *
+   * @example
+   * from([
+   *   { name: "John", gender: "M" },
+   *   { name: "Mike", gender: "M" },
+   *   { name: "Lisa", gender: "F" },
+   *   { name: "Mary", gender: "F" }
+   * ]).groupBy("gender", user => user.name);
+   * // Returns an enumerable with two groupings:
+   * // {
+   * //   key: "M",
+   * //   items: ["John", "Mike"]
+   * // },
+   * // {
+   * //   key: "F",
+   * //   items: ["Lisa", "Mary"]
+   * // }
+   */
+  groupBy<TKey extends keyof TItem, TElement>(
+    key: TKey,
+    elementSelector: SelectorFn<TItem, TElement>
+  ): Enumerable<Grouping<TItem[TKey], TItem>>;
+  /**
+   * Groups the elements of a sequence according to a specified key selector
+   * function and projects the elements for each group by using a specified
+   * function.
+   *
+   * @param keySelector A function to extract the key for each element.
+   * @param elementSelector A function to map each source element to an element in an Grouping<TKey,TElement>.
+   *
+   * @example
+   * from([
+   *   { name: "John", gender: "M" },
+   *   { name: "Mike", gender: "M" },
+   *   { name: "Lisa", gender: "F" },
+   *   { name: "Mary", gender: "F" }
+   * ]).groupBy("gender", user => user.name);
+   * // Returns an enumerable with two groupings:
+   * // {
+   * //   key: "M",
+   * //   items: ["John", "Mike"]
+   * // },
+   * // {
+   * //   key: "F",
+   * //   items: ["Lisa", "Mary"]
+   * // }
+   */
+  groupBy<TKey, TElement>(
+    keySelector: KeySelectorFn<TItem, TKey>,
+    elementSelector: SelectorFn<TItem, TElement>
+  ): Enumerable<Grouping<TKey, TElement>>;
+  groupBy<TKey, TElement>(
+    keySelector: KeySelectorFn<TItem, TKey> | string,
+    elementSelector?: SelectorFn<TItem, TElement>
+  ): Enumerable<Grouping<TKey, TElement>> {
+    if (typeof keySelector === "string") {
+      keySelector = createSelectByKey<TItem>(keySelector);
+    }
+
+    return new Enumerable(this._groupBy(keySelector, elementSelector));
+  }
+
+  private *_groupBy<TKey, TElement>(
+    keySelector: KeySelectorFn<TItem, TKey>,
+    elementSelector?: SelectorFn<TItem, TElement>
+  ): IterableIterator<Grouping<TKey, TElement>> {
+    const groups = new Map<TKey, TElement[]>();
+
+    for (const item of this._iterable) {
+      const key = keySelector(item);
+      const value = elementSelector ? elementSelector(item) : ((item as unknown) as TElement);
+
+      let group = groups.get(key);
+      if (!group) {
+        group = [];
+        groups.set(key, group);
+      }
+
+      group.push(value);
+    }
+
+    for (const keyItemsPair of groups.entries()) {
+      yield {
+        key: keyItemsPair[0],
+        items: keyItemsPair[1]
+      };
     }
   }
 
@@ -569,3 +728,6 @@ const createChainedCompareFn = <TItem>(
 
   return firstResult === 0 ? secondCompare(a, b) : firstResult;
 };
+
+const createSelectByKey = <TItem>(key: string) => (item: TItem) =>
+  key in item ? (item as any)[key] : undefined;
