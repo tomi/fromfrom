@@ -1,8 +1,13 @@
 {
   "name": "fromfrom",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "LINQ inspired library to transform sequences of data",
+  "keywords": [
+    "LINQ",
+    "sequence",
+    "collection",
+    "transform"
+  ],
   "main": "dist/fromfrom.umd.js",
   "module": "dist/fromfrom.es5.js",
   "typings": "dist/types/fromfrom.d.ts",
@@ -12,7 +17,7 @@
   "author": "Tomi Turtiainen <tomi.turtiainen@gmail.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git@github.com:tomi/fromfrom.git"
   },
   "license": "MIT",
   "engines": {
