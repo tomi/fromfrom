@@ -9,7 +9,6 @@
     "module": "es2015",
     "moduleResolution": "node",
     "outDir": "dist/lib",
-    "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
     "target": "es2015",
