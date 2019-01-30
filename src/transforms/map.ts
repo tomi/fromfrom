@@ -1,10 +1,12 @@
 import { SelectorFn } from "../types";
+import { IterableCreatorIterable } from "../IterableCreatorIterable";
 
-export function* map<TItem, TResult>(
-  iterable: Iterable<TItem>,
+export const createMapIterable = <TItem, TResult>(
+  source: Iterable<TItem>,
   mapFn: SelectorFn<TItem, TResult>
-): IterableIterator<TResult> {
-  for (const item of iterable) {
-    yield mapFn(item);
-  }
-}
+): Iterable<TResult> =>
+  new IterableCreatorIterable(function* map(): IterableIterator<TResult> {
+    for (const item of source) {
+      yield mapFn(item);
+    }
+  });

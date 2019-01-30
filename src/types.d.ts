@@ -32,3 +32,7 @@ export interface StringKeyedObject<T> {
 export interface NumberKeyedObject<T> {
   [index: number]: T;
 }
+
+export interface IteratorCreatorFn<TResult> {
+  (): Iterator<TResult>;
+}

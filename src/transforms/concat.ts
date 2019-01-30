@@ -1,12 +1,15 @@
-export function* concat<TItem, TOther>(
-  iterable: Iterable<TItem>,
-  other: Iterable<TOther>
-): IterableIterator<TItem | TOther> {
-  for (const item of iterable) {
-    yield item;
-  }
+import { IterableCreatorIterable } from "../IterableCreatorIterable";
 
-  for (const item of other) {
-    yield item;
-  }
-}
+export const createConcatIterable = <TItem, TOther>(
+  source: Iterable<TItem>,
+  other: Iterable<TOther>
+): Iterable<TItem | TOther> =>
+  new IterableCreatorIterable(function* concat(): IterableIterator<TItem | TOther> {
+    for (const item of source) {
+      yield item;
+    }
+
+    for (const item of other) {
+      yield item;
+    }
+  });

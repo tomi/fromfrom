@@ -12,6 +12,13 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([1, 2, 3, 4]);
     });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([1, 2]).concat([3, 4]);
+
+      expect(Array.from(enumerable)).toEqual([1, 2, 3, 4]);
+      expect(Array.from(enumerable)).toEqual([1, 2, 3, 4]);
+    });
   });
 
   describe("distinct", () => {
@@ -21,6 +28,13 @@ describe("fromfrom", () => {
           .distinct()
           .toArray()
       ).toEqual([1]);
+    });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([1, 1, 1, 1]).distinct();
+
+      expect(Array.from(enumerable)).toEqual([1]);
+      expect(Array.from(enumerable)).toEqual([1]);
     });
   });
 
@@ -81,6 +95,13 @@ describe("fromfrom", () => {
           .filter(x => x > 2)
           .toArray()
       ).toEqual([3, 4]);
+    });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([1, 2, 3, 4]).filter(x => x > 2);
+
+      expect(Array.from(enumerable)).toEqual([3, 4]);
+      expect(Array.from(enumerable)).toEqual([3, 4]);
     });
   });
 
@@ -175,6 +196,13 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([1, 2, 3, 4]);
     });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([1, 3]).flatMap(x => [x, x + 1]);
+
+      expect(Array.from(enumerable)).toEqual([1, 2, 3, 4]);
+      expect(Array.from(enumerable)).toEqual([1, 2, 3, 4]);
+    });
   });
 
   describe("forEach", () => {
@@ -246,6 +274,19 @@ describe("fromfrom", () => {
         { key: "F", items: [users[2].name, users[3].name] }
       ]);
     });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from(users).groupBy(u => u.gender, u => u.name);
+
+      expect(Array.from(enumerable)).toEqual([
+        { key: "M", items: [users[0].name, users[1].name] },
+        { key: "F", items: [users[2].name, users[3].name] }
+      ]);
+      expect(Array.from(enumerable)).toEqual([
+        { key: "M", items: [users[0].name, users[1].name] },
+        { key: "F", items: [users[2].name, users[3].name] }
+      ]);
+    });
   });
 
   describe("includes", () => {
@@ -306,6 +347,13 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([2, 4, 6, 8]);
     });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([1, 2, 3, 4]).map(x => x * 2);
+
+      expect(Array.from(enumerable)).toEqual([2, 4, 6, 8]);
+      expect(Array.from(enumerable)).toEqual([2, 4, 6, 8]);
+    });
   });
 
   describe("pick", () => {
@@ -347,6 +395,21 @@ describe("fromfrom", () => {
         email: "bob@thebuilder.com"
       });
     });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([user]).pick("age");
+
+      expect(Array.from(enumerable)).toEqual([
+        {
+          age: 20
+        }
+      ]);
+      expect(Array.from(enumerable)).toEqual([
+        {
+          age: 20
+        }
+      ]);
+    });
   });
 
   describe("reduce", () => {
@@ -380,6 +443,13 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([3, 2, 1]);
     });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([1, 2, 3]).reverse();
+
+      expect(Array.from(enumerable)).toEqual([3, 2, 1]);
+      expect(Array.from(enumerable)).toEqual([3, 2, 1]);
+    });
   });
 
   describe("skip", () => {
@@ -397,6 +467,13 @@ describe("fromfrom", () => {
           .skip(10)
           .toArray()
       ).toEqual([]);
+    });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([1, 2, 3, 4, 5]).skip(3);
+
+      expect(Array.from(enumerable)).toEqual([4, 5]);
+      expect(Array.from(enumerable)).toEqual([4, 5]);
     });
   });
 
@@ -478,6 +555,13 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([1, 2, 4, 5]);
     });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([5, 2, 3, 1, 4, 1]).sortBy();
+
+      expect(Array.from(enumerable)).toEqual([1, 1, 2, 3, 4, 5]);
+      expect(Array.from(enumerable)).toEqual([1, 1, 2, 3, 4, 5]);
+    });
   });
 
   describe("sortByDescending", () => {
@@ -519,6 +603,13 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([{ a: 2, b: 1 }, { a: 3, b: 1 }, { a: 5, b: 1 }, { a: 1, b: 2 }, { a: 4, b: 2 }]);
     });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([5, 2, 3, 1, 4, 1]).sortByDescending();
+
+      expect(Array.from(enumerable)).toEqual([5, 4, 3, 2, 1, 1]);
+      expect(Array.from(enumerable)).toEqual([5, 4, 3, 2, 1, 1]);
+    });
   });
 
   describe("take", () => {
@@ -536,6 +627,13 @@ describe("fromfrom", () => {
           .take(10)
           .toArray()
       ).toEqual([1, 2, 3, 4, 5]);
+    });
+
+    it("can be iterated multiple times", () => {
+      const enumerable = from([1, 2, 3, 4, 5]).take(2);
+
+      expect(Array.from(enumerable)).toEqual([1, 2]);
+      expect(Array.from(enumerable)).toEqual([1, 2]);
     });
   });
 
@@ -586,6 +684,35 @@ describe("fromfrom", () => {
         { name: "Tony", age: 30, sex: "male" }
       ]);
     });
+
+    it("can be iterated multiple times", () => {
+      const items = [
+        { name: "John", age: 20 },
+        { name: "Tony", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Jane", age: 20 },
+        { name: "Lisa", age: 30 }
+      ];
+
+      const enumerable = from(items)
+        .sortBy(item => item.age)
+        .thenBy(item => item.name);
+
+      expect(Array.from(enumerable)).toEqual([
+        { name: "Jane", age: 20 },
+        { name: "John", age: 20 },
+        { name: "Lisa", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Tony", age: 30 }
+      ]);
+      expect(Array.from(enumerable)).toEqual([
+        { name: "Jane", age: 20 },
+        { name: "John", age: 20 },
+        { name: "Lisa", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Tony", age: 30 }
+      ]);
+    });
   });
 
   describe("thenByDescending", () => {
@@ -633,6 +760,35 @@ describe("fromfrom", () => {
         { name: "Tony", age: 30, sex: "male" },
         { name: "Mark", age: 30, sex: "male" },
         { name: "John", age: 20, sex: "male" }
+      ]);
+    });
+
+    it("can be iterated multiple times", () => {
+      const items = [
+        { name: "John", age: 20 },
+        { name: "Tony", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Jane", age: 20 },
+        { name: "Lisa", age: 30 }
+      ];
+
+      const enumerable = from(items)
+        .sortBy(item => item.age)
+        .thenByDescending(item => item.name);
+
+      expect(Array.from(enumerable)).toEqual([
+        { name: "John", age: 20 },
+        { name: "Jane", age: 20 },
+        { name: "Tony", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Lisa", age: 30 }
+      ]);
+      expect(Array.from(enumerable)).toEqual([
+        { name: "John", age: 20 },
+        { name: "Jane", age: 20 },
+        { name: "Tony", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Lisa", age: 30 }
       ]);
     });
   });

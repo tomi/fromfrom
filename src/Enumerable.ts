@@ -9,15 +9,16 @@ import {
   NumberKeyedObject,
   StringKeyedObject
 } from "./types";
-import { concat } from "./transforms/concat";
-import { distinct } from "./transforms/distinct";
-import { filter } from "./transforms/filter";
-import { flatMap } from "./transforms/flatMap";
-import { groupBy } from "./transforms/groupBy";
-import { map } from "./transforms/map";
-import { reverse } from "./transforms/reverse";
-import { skip } from "./transforms/skip";
-import { take } from "./transforms/take";
+import { createConcatIterable } from "./transforms/concat";
+import { createDistinctIterable } from "./transforms/distinct";
+import { createFilterIterable } from "./transforms/filter";
+import { createFlatMapIterable } from "./transforms/flatMap";
+import { createGroupByIterable } from "./transforms/groupBy";
+import { createMapIterable } from "./transforms/map";
+import { createReverseIterable } from "./transforms/reverse";
+import { createSkipIterable } from "./transforms/skip";
+import { createTakeIterable } from "./transforms/take";
+import { createSortByIterable } from "./transforms/sortBy";
 
 const identityPredicateFn = (x: any): boolean => x;
 
@@ -60,7 +61,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2]).concat([3, 4]);
    */
   concat<TOther>(other: Iterable<TOther>): Enumerable<TItem | TOther> {
-    return new Enumerable(concat(this._iterable, other));
+    return new Enumerable(createConcatIterable(this._iterable, other));
   }
 
   /**
@@ -68,7 +69,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * the '===' operator.
    */
   distinct(): Enumerable<TItem> {
-    return new Enumerable(distinct(this._iterable));
+    return new Enumerable(createDistinctIterable(this._iterable));
   }
 
   /**
@@ -90,7 +91,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * predicate function returns a falsy value.
    */
   filter(predicate: PredicateFn<TItem>): Enumerable<TItem> {
-    return new Enumerable(filter(this._iterable, predicate));
+    return new Enumerable(createFilterIterable(this._iterable, predicate));
   }
 
   /**
@@ -132,7 +133,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 3, 5]).flatMap(x => [x, x + 1]).toArray();
    */
   flatMap<U>(mapperFn: SelectorFn<TItem, U[]>): Enumerable<U> {
-    return new Enumerable(flatMap(this._iterable, mapperFn));
+    return new Enumerable(createFlatMapIterable(this._iterable, mapperFn));
   }
 
   /**
@@ -272,7 +273,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
       keySelector = createSelectByKey<TItem>(keySelector);
     }
 
-    return new Enumerable(groupBy(this._iterable, keySelector, elementSelector));
+    return new Enumerable(createGroupByIterable(this._iterable, keySelector, elementSelector));
   }
 
   /**
@@ -320,7 +321,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3]).map(x => x * 2);
    */
   map<TResult>(mapFn: SelectorFn<TItem, TResult>): Enumerable<TResult> {
-    return new Enumerable(map(this._iterable, mapFn));
+    return new Enumerable(createMapIterable(this._iterable, mapFn));
   }
 
   /**
@@ -361,7 +362,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3]).reverse().toArray();
    */
   reverse(): Enumerable<TItem> {
-    return new Enumerable(reverse(this._iterable));
+    return new Enumerable(createReverseIterable(this._iterable));
   }
 
   /**
@@ -372,7 +373,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3, 4]).skip(2);
    */
   skip(howMany: number): Enumerable<TItem> {
-    return new Enumerable(skip(this._iterable, howMany));
+    return new Enumerable(createSkipIterable(this._iterable, howMany));
   }
 
   /**
@@ -405,7 +406,9 @@ export class Enumerable<TItem> implements Iterable<TItem> {
     keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedEnumerable<TItem, TKey> {
-    return new OrderedEnumerable(this._iterable, createCompareFn(false, keySelector, comparer));
+    const compareFn = createCompareFn(false, keySelector, comparer);
+
+    return new OrderedEnumerable(createSortByIterable(this._iterable, compareFn), compareFn);
   }
 
   /**
@@ -419,7 +422,9 @@ export class Enumerable<TItem> implements Iterable<TItem> {
     keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedEnumerable<TItem, TKey> {
-    return new OrderedEnumerable(this._iterable, createCompareFn(true, keySelector, comparer));
+    const compareFn = createCompareFn(true, keySelector, comparer);
+
+    return new OrderedEnumerable(createSortByIterable(this._iterable, compareFn), compareFn);
   }
 
   /**
@@ -430,7 +435,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3, 4]).take(2);
    */
   take(howMany: number): Enumerable<TItem> {
-    return new Enumerable(take(this._iterable, howMany));
+    return new Enumerable(createTakeIterable(this._iterable, howMany));
   }
 
   /**
@@ -539,15 +544,7 @@ export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
   private _comparer: ComparerFn<TItem>;
 
   constructor(iterable: Iterable<TItem>, comparer: ComparerFn<TItem>) {
-    function* _sort(): IterableIterator<TItem> {
-      const items = Array.from(iterable).sort(comparer);
-
-      for (const item of items) {
-        yield item;
-      }
-    }
-
-    super(_sort());
+    super(iterable);
 
     this._comparer = comparer;
   }
@@ -557,11 +554,9 @@ export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
     comparer?: ComparerFn<TOtherKey>
   ): OrderedEnumerable<TItem, TOtherKey> {
     const thenComparer = createCompareFn(false, keySelector, comparer);
+    const compareFn = createChainedCompareFn(this._comparer, thenComparer);
 
-    return new OrderedEnumerable(
-      this._iterable,
-      createChainedCompareFn(this._comparer, thenComparer)
-    );
+    return new OrderedEnumerable(createSortByIterable(this._iterable, compareFn), compareFn);
   }
 
   thenByDescending<TOtherKey>(
@@ -569,11 +564,9 @@ export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
     comparer?: ComparerFn<TOtherKey>
   ): OrderedEnumerable<TItem, TOtherKey> {
     const thenComparer = createCompareFn(true, keySelector, comparer);
+    const compareFn = createChainedCompareFn(this._comparer, thenComparer);
 
-    return new OrderedEnumerable(
-      this._iterable,
-      createChainedCompareFn(this._comparer, thenComparer)
-    );
+    return new OrderedEnumerable(createSortByIterable(this._iterable, compareFn), compareFn);
   }
 }
 
