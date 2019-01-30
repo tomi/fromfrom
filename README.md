@@ -1,12 +1,12 @@
-# Seqenum
+# fromfrom
 
 <!-- [![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
-[![Greenkeeper badge](https://badges.greenkeeper.io/tomi/seqenum.svg)](https://greenkeeper.io/)
-[![Travis](https://img.shields.io/travis/tomi/seqenum.svg)](https://travis-ci.org/tomi/seqenum)
-[![Coveralls](https://img.shields.io/coveralls/tomi/seqenum.svg)](https://coveralls.io/github/tomi/seqenum)
-[![Dev Dependencies](https://david-dm.org/tomi/seqenum/dev-status.svg)](https://david-dm.org/tomi/seqenum?type=dev) -->
+[![Greenkeeper badge](https://badges.greenkeeper.io/tomi/fromfrom.svg)](https://greenkeeper.io/)
+[![Travis](https://img.shields.io/travis/tomi/fromfrom.svg)](https://travis-ci.org/tomi/fromfrom)
+[![Coveralls](https://img.shields.io/coveralls/tomi/fromfrom.svg)](https://coveralls.io/github/tomi/fromfrom)
+[![Dev Dependencies](https://david-dm.org/tomi/fromfrom/dev-status.svg)](https://david-dm.org/tomi/fromfrom?type=dev) -->
 
-Seqenum is a [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) inspired library to transform sequences of data.
+fromfrom is a [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) inspired library to transform sequences of data.
 
 ## Usage
 
@@ -15,6 +15,8 @@ The library exports only a single function, `from`. `from` wraps the given sourc
 For example
 
 ```ts
+import { from } from "fromfrom";
+
 // Transform an array of users
 const users = [
   { id: 1, name: "John", age: 31, active: true },

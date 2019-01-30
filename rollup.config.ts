@@ -7,7 +7,7 @@ import json from 'rollup-plugin-json'
 
 const pkg = require('./package.json')
 
-const libraryName = 'seqenum'
+const libraryName = 'fromfrom'
 
 export default {
   input: `src/${libraryName}.ts`,

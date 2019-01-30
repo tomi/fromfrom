@@ -1,9 +1,9 @@
-import { from } from "../src/seqenum";
+import { from } from "../src/fromfrom";
 
 /**
  * Tests for the library
  */
-describe("seqenum", () => {
+describe("fromfrom", () => {
   describe("concat", () => {
     it("combines two arrays", () => {
       expect(

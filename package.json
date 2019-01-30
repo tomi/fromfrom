@@ -1,11 +1,11 @@
 {
-  "name": "seqenum",
+  "name": "fromfrom",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
-  "main": "dist/seqenum.umd.js",
-  "module": "dist/seqenum.es5.js",
-  "typings": "dist/types/seqenum.d.ts",
+  "main": "dist/fromfrom.umd.js",
+  "module": "dist/fromfrom.es5.js",
+  "typings": "dist/types/fromfrom.d.ts",
   "files": [
     "dist"
   ],

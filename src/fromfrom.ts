@@ -1,3 +1,6 @@
+/**
+ * Entrypoint of the library
+ */
 import { Enumerable } from "./Enumerable";
 import { StringKeyedObject, NumberKeyedObject, createObjectIterable } from "./ObjectIterable";
 
