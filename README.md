@@ -8,6 +8,12 @@
 
 fromfrom is a [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) inspired library to transform sequences of data.
 
+## Installation
+
+```bash
+npm install --save fromfrom
+```
+
 ## Usage
 
 The library exports only a single function, `from`. `from` wraps the given source data into an `Enumerable`. `Enumerable` has a wide range of chainable methods to operate and transform the sequence. The sequence can then be converted into a JS type.
@@ -46,8 +52,6 @@ from(users)
 - **Fully tested** - 100% test coverage.
 
 ## How does it work
-
-## Importing library
 
 TODO
 
