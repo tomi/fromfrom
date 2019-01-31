@@ -13,6 +13,10 @@ fromfrom is a [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) in
 npm install --save fromfrom
 ```
 
+## API Documentation
+
+Find it [here](https://tomi.github.io/fromfrom/).
+
 ## Usage
 
 The library exports only a single function, `from`. `from` wraps the given source data into an `Enumerable`. `Enumerable` has a wide range of chainable methods to operate and transform the sequence. The sequence can then be converted into a JS type.
