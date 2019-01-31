@@ -74,6 +74,6 @@ TODO
 
 Made with :heart: by [@TomiTurtiainen](https://twitter.com/TomiTurtiainen).
 
-This project is a grateful recipient of the [Futurice Open Source sponsorship program](https://spiceprogram.org). ♥
+This project is a grateful recipient of the [Futurice Open Source sponsorship program](https://spiceprogram.org). :heart:
 
 Forked from [TypeScript library starter](https://github.com/alexjoverm/typescript-library-starter)
