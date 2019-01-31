@@ -1,20 +1,50 @@
+# these are executed in order.  each must pass for the next to be run
+stages:
+  - lint # lint code and docs
+  - test # all tests
+  - coverage # Coverage report
+  - build # build the library
+  - deploy # deploy
+
 language: node_js
+node_js: "10"
+install: npm ci
 cache:
   directories:
     - ~/.npm
-notifications:
-  email: false
-node_js:
-  - '10'
-  - '11'
-  - '8'
-  - '6'
-script:
-  - npm run test:prod && npm run build
-after_success:
-  - npm run travis-deploy-once "npm run report-coverage"
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run travis-deploy-once "npm run deploy-docs"; fi
-  - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run travis-deploy-once "npm run semantic-release"; fi
+
+jobs:
+  include:
+    - stage: lint
+      script: npm run lint
+
+    - &test
+      stage: test
+      script: npm run test:prod
+
+    - <<: *test
+      node_js: node
+
+    - <<: *test
+      node_js: "8"
+
+    - stage: coverage
+      script: npm run report-coverage
+
+    - stage: build
+      script: npm run build
+
+    # - stage: deploy
+    #   script:
+    #     - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
+    #     - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run semantic-release; fi
+# after_success:
+#   - npm run report-coverage
+#   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
+#   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run semantic-release; fi
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
+
+notifications:
+  email: false
