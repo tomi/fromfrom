@@ -26,13 +26,10 @@
   "scripts": {
     "build": "tsc --module commonjs && rollup -c rollup.config.ts && npm run docs",
     "commit": "git-cz",
-    "commitmsg": "commitlint -E GIT_PARAMS",
     "deploy-docs": "ts-node tools/gh-pages-publish",
     "docs": "typedoc --options ./typedoc.js src",
     "lint": "tslint --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "precommit": "lint-staged",
-    "prepush": "npm run test:prod && npm run build",
     "report-coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
@@ -117,5 +114,12 @@
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.14.2",
     "typescript": "^3.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged",
+      "pre-push": "npm run test:prod && npm run build"
+    }
   }
 }
