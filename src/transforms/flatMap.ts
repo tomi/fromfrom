@@ -1,9 +1,9 @@
-import { SelectorFn } from "../types";
+import { MapFn } from "../types";
 import { IterableCreatorIterable } from "../IterableCreatorIterable";
 
 export const createFlatMapIterable = <TItem, TOther>(
   iterable: Iterable<TItem>,
-  mapperFn: SelectorFn<TItem, TOther[]>
+  mapperFn: MapFn<TItem, TOther[]>
 ): Iterable<TOther> =>
   new IterableCreatorIterable(function* flatMap(): IterableIterator<TOther> {
     for (const item of iterable) {

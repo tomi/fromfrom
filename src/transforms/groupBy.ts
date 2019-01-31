@@ -1,10 +1,10 @@
-import { KeySelectorFn, SelectorFn, Grouping } from "../types";
+import { KeySelectorFn, MapFn, Grouping } from "../types";
 import { IterableCreatorIterable } from "../IterableCreatorIterable";
 
 export const createGroupByIterable = <TItem, TKey, TElement>(
   iterable: Iterable<TItem>,
   keySelector: KeySelectorFn<TItem, TKey>,
-  elementSelector?: SelectorFn<TItem, TElement>
+  elementSelector?: MapFn<TItem, TElement>
 ): Iterable<Grouping<TKey, TElement>> =>
   new IterableCreatorIterable(function* groupBy(): IterableIterator<Grouping<TKey, TElement>> {
     const groups = new Map<TKey, TElement[]>();

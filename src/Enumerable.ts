@@ -2,10 +2,10 @@ import {
   KeySelectorFn,
   ComparerFn,
   PredicateFn,
-  SelectorFn,
-  Callback,
+  MapFn,
+  CallbackFn,
   Grouping,
-  ReduceCallback,
+  ReduceCallbackFn,
   NumberKeyedObject,
   StringKeyedObject
 } from "./types";
@@ -132,7 +132,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * // Returns [1, 2, 3, 4, 5, 6]
    * from([1, 3, 5]).flatMap(x => [x, x + 1]).toArray();
    */
-  flatMap<U>(mapperFn: SelectorFn<TItem, U[]>): Enumerable<U> {
+  flatMap<TResultItem>(mapperFn: MapFn<TItem, TResultItem[]>): Enumerable<TResultItem> {
     return new Enumerable(createFlatMapIterable(this._iterable, mapperFn));
   }
 
@@ -143,7 +143,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * // Logs 1, 2 and 3 to console
    * from([1, 2, 3]).forEach(i => console.log(i));
    */
-  forEach(callback: Callback<TItem>): void {
+  forEach(callback: CallbackFn<TItem>): void {
     for (const item of this._iterable) {
       callback(item);
     }
@@ -234,7 +234,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    */
   groupBy<TKey extends keyof TItem, TElement>(
     key: TKey,
-    elementSelector: SelectorFn<TItem, TElement>
+    elementSelector: MapFn<TItem, TElement>
   ): Enumerable<Grouping<TItem[TKey], TItem>>;
   /**
    * Groups the elements of a sequence according to a specified key selector
@@ -263,11 +263,11 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    */
   groupBy<TKey, TElement>(
     keySelector: KeySelectorFn<TItem, TKey>,
-    elementSelector: SelectorFn<TItem, TElement>
+    elementSelector: MapFn<TItem, TElement>
   ): Enumerable<Grouping<TKey, TElement>>;
   groupBy<TKey, TElement>(
     keySelector: KeySelectorFn<TItem, TKey> | string,
-    elementSelector?: SelectorFn<TItem, TElement>
+    elementSelector?: MapFn<TItem, TElement>
   ): Enumerable<Grouping<TKey, TElement>> {
     if (typeof keySelector === "string") {
       keySelector = createSelectByKey<TItem>(keySelector);
@@ -320,7 +320,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * // Returns [2, 4, 6]
    * from([1, 2, 3]).map(x => x * 2);
    */
-  map<TResult>(mapFn: SelectorFn<TItem, TResult>): Enumerable<TResult> {
+  map<TResultItem>(mapFn: MapFn<TItem, TResultItem>): Enumerable<TResultItem> {
     return new Enumerable(createMapIterable(this._iterable, mapFn));
   }
 
@@ -346,7 +346,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * Executes a reducer function on each item in the sequence resulting
    * in a single output value.
    */
-  reduce<U>(callback: ReduceCallback<U, TItem>, accumulator: U): U {
+  reduce<TResult>(callback: ReduceCallbackFn<TResult, TItem>, accumulator: TResult): TResult {
     for (const item of this._iterable) {
       accumulator = callback(accumulator, item);
     }
@@ -464,8 +464,8 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * @param elementSelectorFn
    */
   toMap<TKey, TElement = TItem>(
-    keySelectorFn: SelectorFn<TItem, TKey>,
-    elementSelectorFn?: SelectorFn<TItem, TElement>
+    keySelectorFn: MapFn<TItem, TKey>,
+    elementSelectorFn?: MapFn<TItem, TElement>
   ): Map<TKey, TElement> {
     const map = new Map<TKey, TElement>();
 
@@ -495,19 +495,19 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * @param keySelectorFn
    * @param elementSelectorFn
    */
-  toObject(keySelectorFn: SelectorFn<TItem, string>): StringKeyedObject<TItem>;
-  toObject(keySelectorFn: SelectorFn<TItem, number>): NumberKeyedObject<TItem>;
+  toObject(keySelectorFn: MapFn<TItem, string>): StringKeyedObject<TItem>;
+  toObject(keySelectorFn: MapFn<TItem, number>): NumberKeyedObject<TItem>;
   toObject<TElement>(
-    keySelectorFn: SelectorFn<TItem, string>,
-    elementSelectorFn: SelectorFn<TItem, TElement>
+    keySelectorFn: MapFn<TItem, string>,
+    elementSelectorFn: MapFn<TItem, TElement>
   ): StringKeyedObject<TItem>;
   toObject<TElement>(
-    keySelectorFn: SelectorFn<TItem, number>,
-    elementSelectorFn: SelectorFn<TItem, TElement>
+    keySelectorFn: MapFn<TItem, number>,
+    elementSelectorFn: MapFn<TItem, TElement>
   ): NumberKeyedObject<TItem>;
   toObject<TElement>(
-    keySelectorFn: SelectorFn<TItem, string> | SelectorFn<TItem, number>,
-    elementSelectorFn?: SelectorFn<TItem, TElement>
+    keySelectorFn: MapFn<TItem, string> | MapFn<TItem, number>,
+    elementSelectorFn?: MapFn<TItem, TElement>
   ):
     | StringKeyedObject<TItem>
     | NumberKeyedObject<TItem>
