@@ -1,7 +1,7 @@
 # fromfrom
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/tomi/fromfrom.svg)](https://greenkeeper.io/)
-[![Travis](https://img.shields.io/travis/tomi/fromfrom.svg)](https://travis-ci.org/tomi/fromfrom)
+[![Build Status](https://travis-ci.com/tomi/fromfrom.svg?branch=master)](https://travis-ci.com/tomi/fromfrom)
 [![Coveralls](https://img.shields.io/coveralls/tomi/fromfrom.svg)](https://coveralls.io/github/tomi/fromfrom)
 [![Dev Dependencies](https://david-dm.org/tomi/fromfrom/dev-status.svg)](https://david-dm.org/tomi/fromfrom?type=dev)
 
