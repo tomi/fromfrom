@@ -1,0 +1,67 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #fdfdfd;
+}
+
+#app {
+  width: 100%;
+  position: absolute;
+  top: 50px;
+}
+
+header.app-header {
+  background-color: rgb(41, 78, 128);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 4px 20px 0px;
+  display: flex;
+  height: 50px;
+  margin: 0;
+  padding: 0 32px;
+  position: fixed;
+  width: 100%;
+  z-index: 20;
+}
+
+nav.navbar {
+  flex: 1;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+ul.nav {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav > ul > li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+nav > ul > li > a {
+  color: #fff;
+  margin: 0;
+  padding: 10px 20px;
+  text-decoration: none;
+}
+
+nav > ul > li.selected {
+  background-color: #fff;
+}
+
+nav > ul > li.selected > a {
+  color: rgb(41, 78, 128);
+}

@@ -1,0 +1,87 @@
+.content {
+  width: 100%;
+}
+
+.playground {
+  width: 100%;
+}
+
+.playground-examples {
+  padding: 1rem 2rem;
+}
+
+.playgroung-example-button {
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.playgroung-example-button--selected {
+  background-color: #337ab7;
+}
+
+.playgroung-example-button:hover {
+  background-color: #dfdfdf;
+}
+
+.playgroung-example-button {
+  margin-left: 20px;
+}
+
+.playgroung-example-button:first-child {
+  margin-left: 0px;
+}
+
+.playgroung-example-button > a {
+  text-decoration: none;
+  padding: 10px 15px;
+  display: block;
+  color: #337ab7;
+}
+
+.playgroung-example-button--selected > a {
+  color: #fff;
+}
+
+.playgroung-example-button--selected:hover {
+  background-color: #23527c;
+}
+
+.playground-editors {
+  width: 100%;
+}
+
+.playground-column {
+  padding: 0 2rem;
+  float: left;
+  width: 50%;
+}
+
+.playground-editor {
+  border: 1px solid #ddd;
+}
+
+.editor-heading {
+  color: #333;
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  line-height: 20px;
+  padding: 10px 15px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  font-weight: bold;
+}
+
+#playground-input-data {
+  /* height: 640px; */
+  height: 350px;
+}
+
+#playground-input-code {
+  /* height: 640px; */
+  height: 250px;
+  margin-bottom: 20px;
+}
+
+#playground-output {
+  height: 660px;
+}
