@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" href="styles/styles.css" />
+  </head>
+
+  <body>
+    <header class="app-header">
+      <div class="logo"><a href="index.html"> fromfrom</a></div>
+      <nav class="navbar" role="navigation">
+        <ul class="nav navbar-nav">
+          <li class="selected"><a href="index.html">Introduction</a></li>
+          <li><a href="api/index.html">API documentation</a></li>
+          <li><a href="playground.html">Playground</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main id="app">
+      <div class="hero">
+        <h1>fromfrom</h1>
+        <p>LINQ inspired library to transform sequences of data.</p>
+        <p>
+          <a href="#get-started">Get started</a>
+          <span class="separator">&nbsp;</span>
+          <a href="playground.html">Try it now</a>
+        </p>
+        <iframe
+          src="https://ghbtns.com/github-btn.html?user=tomi&repo=fromfrom&type=star&size=large"
+          frameborder="0"
+          scrolling="0"
+          width="100px"
+          height="30px"
+        ></iframe>
+      </div>
+      <section class="features-container">
+        <div class="feature">
+          <h3>Simple API</h3>
+          <p>
+            The API is simple, consisting of only a single function,
+            <code>from</code>. <code>from</code> wraps your data and allows you
+            to define a set of chained operations on the data. Finally you
+            explicitly converted it back into a JS type.
+          </p>
+          <p></p>
+        </div>
+        <div class="feature">
+          <h3>Type safe</h3>
+          <p>
+            The library is written 100 % with TypeScript and it comes with type
+            definitions included. If you choose to use Typescript the whole API
+            is built for excellent typing support.
+          </p>
+        </div>
+        <div class="feature">
+          <h3>Fast</h3>
+          <p>
+            The library uses lazy evaluation and pipelining. This means that all
+            the elements of a sequence flow through the entire chain one by one,
+            which means only a minimal amount of elements need to be iterated,
+            saving precious cycles. Also there's no need for intermediary
+            arrays, saving memory.
+          </p>
+        </div>
+      </section>
+      <hr />
+      <section id="get-started">
+        <h2>Getting started</h2>
+
+        <div class="get-started-content">
+          <h4>Install the library using NPM</h4>
+
+          <pre><code>npm install --save fromfrom</code></pre>
+
+          <h4>Use it like a boss</h4>
+          <pre><code class="typescript">import { from } from "fromfrom";
+
+// Transform an array of users
+const users = [
+  { id: 1, name: "John", age: 31, active: true },
+  { id: 2, name: "Jane", age: 32, active: false },
+  { id: 3, name: "Luke", age: 33, active: false },
+  { id: 4, name: "Mary", age: 34, active: true }
+];
+
+from(users)
+  .filter(user => user.active)
+  .sortByDescending(user => user.age)
+  .toArray();
+// Returns
+// [
+//   { id: 4, name: "Mary", age: 34, active: true },
+//   { id: 1, name: "John", age: 31, active: true }
+// ]</code></pre>
+        </div>
+      </section>
+      <footer>
+        <p>
+          Released under the
+          <a href="https://opensource.org/licenses/MIT">MIT License</a>
+        </p>
+        <p>Built by <a href="https://github.com/tomi/">Tomi Turtiainen</a></p>
+      </footer>
+    </main>
+    <script src="index.bundle.js"></script>
+  </body>
+</html>

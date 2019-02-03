@@ -1,0 +1,158 @@
+.hero {
+  background-color: #2b313c;
+  padding: 5rem 3rem;
+  color: #fff;
+  text-align: center;
+}
+.hero h1 {
+  font-size: 5rem;
+}
+.hero p {
+  font-size: 1.5rem;
+  padding: 1.2rem 0;
+  color: #f8b786;
+}
+.hero p a {
+  display: inline-block;
+  padding: 7px 15px;
+  background: #eee;
+  border: none;
+  border-radius: 4px;
+  color: #22262e;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 16px;
+  white-space: nowrap;
+  text-decoration: none;
+  line-height: 2rem;
+  min-width: 12em;
+}
+.hero p a:hover {
+  background-color: #ccc;
+}
+.hero p .separator {
+  min-width: 20px;
+}
+.hero iframe {
+  margin-top: 1rem;
+}
+main > section {
+  padding: 3rem;
+}
+main h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+main h3 {
+  font-size: 1.5rem;
+}
+main > hr {
+  margin: 0 3rem;
+  height: 1px;
+  margin-bottom: -1px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+main p {
+  line-height: 1.5;
+  font-size: 16px;
+}
+.features-container {
+  display: flex;
+}
+.feature {
+  flex: 1;
+  padding: 1rem 2rem;
+}
+.feature h3 {
+  color: #2b313c;
+  margin-bottom: 10px;
+}
+main pre {
+  margin-bottom: 2rem;
+}
+#get-started h4 {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 2rem;
+}
+.get-started-content {
+  padding: 0 2rem;
+}
+
+/* Tomorrow Night Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+  color: #969896;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #cc6666;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #de935f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #f0c674;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #b5bd68;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #81a2be;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #b294bb;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2b313c;
+  color: #c5c8c6;
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}

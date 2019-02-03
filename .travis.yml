@@ -34,9 +34,9 @@ jobs:
     - stage: build
       script: npm run build
 
-    # - stage: deploy
-    #   script:
-    #     - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
+    - stage: deploy
+      script:
+        - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
     #     - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run semantic-release; fi
 # after_success:
 #   - npm run report-coverage

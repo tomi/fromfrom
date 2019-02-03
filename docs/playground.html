@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link rel="stylesheet" href="styles/styles.css" />
+  </head>
+
+  <body>
+    <header class="app-header">
+      <div class="logo"><a href="index.html"> fromfrom</a></div>
+      <nav class="navbar" role="navigation">
+        <ul class="nav navbar-nav">
+          <li><a href="index.html">Introduction</a></li>
+          <li><a href="api/index.html">API documentation</a></li>
+          <li class="selected"><a href="playground.html">Playground</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main><div id="app"></div></main>
+    <script src="playground.bundle.js"></script>
+    <script src="editor.worker.bundle.js"></script>
+    <script src="json.worker.bundle.js"></script>
+    <script src="ts.worker.bundle.js"></script>
+  </body>
+</html>
