@@ -12,6 +12,7 @@ install: npm ci
 cache:
   directories:
     - ~/.npm
+    - dist-docs
 
 jobs:
   include:
