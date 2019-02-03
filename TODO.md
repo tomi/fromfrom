@@ -1,5 +1,3 @@
-- Playground
-- Proper API documentation
 - Candidates for new methods:
   - append
   - prepend
