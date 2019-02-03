@@ -13,7 +13,7 @@ fromfrom is a [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query) in
 npm install --save fromfrom
 ```
 
-## API Documentation
+## Documentation
 
 Find it [here](https://tomi.github.io/fromfrom/).
 
