@@ -48,11 +48,12 @@
 
 .playground-editors {
   width: 100%;
+  display: flex;
+  margin-bottom: 2rem;
 }
 
 .playground-column {
   padding: 0 2rem;
-  float: left;
   width: 50%;
 }
 

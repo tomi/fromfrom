@@ -11,6 +11,7 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "strict": true,
+    "sourceMap": true,
     "target": "es6"
   },
   "include": ["src"]

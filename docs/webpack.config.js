@@ -1,5 +1,4 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const outputDir = path.resolve(__dirname, "..", "dist-docs");
@@ -8,6 +7,7 @@ module.exports = {
   context: path.resolve(__dirname),
   mode: "development",
   entry: {
+    index: "./src/introduction/index.ts",
     playground: "./src/playground/index.tsx",
     "editor.worker": "monaco-editor/esm/vs/editor/editor.worker.js",
     "json.worker": "monaco-editor/esm/vs/language/json/json.worker",
@@ -19,7 +19,7 @@ module.exports = {
     path: outputDir,
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: [".tsx", ".ts", ".js", ".css"],
   },
   module: {
     rules: [
@@ -35,10 +35,10 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./playground.html",
-      filename: "playground.html",
-    }),
-    new CopyWebpackPlugin([{ from: "styles/styles.css", to: "../dist-docs" }]),
+    new CopyWebpackPlugin([
+      { from: "styles/*", to: "../dist-docs" },
+      { from: "index.html", to: "../dist-docs" },
+      { from: "playground.html", to: "../dist-docs" },
+    ]),
   ],
 };

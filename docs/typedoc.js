@@ -1,5 +1,5 @@
 module.exports = {
-  out: "../dist-docs",
+  out: "../dist-docs/api",
   readme: "none",
   includes: "../src",
   exclude: [

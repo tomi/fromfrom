@@ -4,15 +4,38 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   background-color: #fdfdfd;
 }
 
-#app {
+main {
   width: 100%;
   position: absolute;
   top: 50px;
+}
+
+main footer {
+  width: 100%;
+  background-color: #2b313c;
+  color: #ddd;
+  padding: 3rem;
+  text-align: center;
+  font-size: 1rem;
+}
+main footer p {
+  margin-bottom: 0.5rem;
+}
+main footer a {
+  color: #71d3ff;
+  text-decoration: none;
+}
+main footer a:hover {
+  text-decoration: underline;
 }
 
 header.app-header {
@@ -25,6 +48,24 @@ header.app-header {
   position: fixed;
   width: 100%;
   z-index: 20;
+}
+
+.logo {
+  display: block;
+  float: left;
+  color: #fff;
+  font-size: 20px;
+  flex: 0;
+  line-height: 50px;
+}
+
+.logo > a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.logo > a:hover {
+  text-decoration: underline;
 }
 
 nav.navbar {
@@ -43,7 +84,7 @@ ul.nav {
   padding: 0;
 }
 
-nav > ul > li {
+nav > ul.nav > li {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,17 +92,25 @@ nav > ul > li {
   padding: 0;
 }
 
-nav > ul > li > a {
+nav > ul.nav > li:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+nav > ul.nav > li > a {
   color: #fff;
   margin: 0;
   padding: 10px 20px;
   text-decoration: none;
 }
 
-nav > ul > li.selected {
+nav > ul.nav > li > a:hover {
+  text-decoration: none;
+}
+
+nav > ul.nav > li.selected {
   background-color: #fff;
 }
 
-nav > ul > li.selected > a {
+nav > ul.nav > li.selected > a {
   color: rgb(41, 78, 128);
 }

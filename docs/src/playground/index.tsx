@@ -7,11 +7,7 @@ interface AppState {
 
 class App extends Component<{}, AppState> {
   render() {
-    return (
-      <main class="content">
-        <Playground />
-      </main>
-    );
+    return <Playground />;
   }
 }
 
