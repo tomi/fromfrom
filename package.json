@@ -132,7 +132,7 @@
     "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.14.2",
     "typescript": "^3.0.3",
-    "webpack": "4.20.2",
+    "webpack": "4.29.1",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14"
   },
