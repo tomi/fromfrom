@@ -113,7 +113,7 @@
     "prettier": "^1.14.3",
     "prompt": "^1.0.0",
     "raw-loader": "^1.0.0",
-    "replace-in-file": "^3.4.2",
+    "replace-in-file": "3.4.3",
     "rimraf": "^2.6.2",
     "rollup": "^1.1.2",
     "rollup-plugin-commonjs": "^9.1.8",
