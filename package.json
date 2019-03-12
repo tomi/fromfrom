@@ -81,6 +81,12 @@
     },
     "collectCoverageFrom": [
       "src/*.{js,ts}"
+    ],
+    "watchPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/dist/",
+      "<rootDir>/dist-docs/",
+      "<rootDir>/coverage/"
     ]
   },
   "commitlint": {
