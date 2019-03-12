@@ -8,20 +8,34 @@ import {
 
 const examples: Example[] = [
   {
-    name: "SortBy",
+    name: "find",
     code: `import { from } from "fromfrom";
 import data from "data";
 
 from(data)
-  .filter(u => u.country === "FI")
-  .sortByDescending(u => u.score)
-  .pick("id", "first_name", "gender", "score")
-  .take(5)
-  .toArray();
+  .find(u => u.country === "FI" && u.score > 1000);
 `,
   },
   {
-    name: "GroupBy",
+    name: "first",
+    code: `import { from } from "fromfrom";
+import data from "data";
+
+from(data)
+  .first();
+`,
+  },
+  {
+    name: "every",
+    code: `import { from } from "fromfrom";
+import data from "data";
+
+from(data)
+  .every(u => u.score > 1000);
+`,
+  },
+  {
+    name: "groupBy",
     code: `import { from } from "fromfrom";
 import data from "data";
 
@@ -31,6 +45,65 @@ from(data)
     group => group.key,
     group => group.items
   );
+`,
+  },
+  {
+    name: "last",
+    code: `import { from } from "fromfrom";
+import data from "data";
+
+from(data)
+  .last();
+`,
+  },
+  {
+    name: "pick",
+    code: `import { from } from "fromfrom";
+import data from "data";
+
+from(data)
+  .pick("id", "email", "country", "score")
+  .toArray();
+`,
+  },
+  {
+    name: "some",
+    code: `import { from } from "fromfrom";
+import data from "data";
+
+from(data)
+  .some(u => u.score > 1000);
+`,
+  },
+  {
+    name: "sortBy",
+    code: `import { from } from "fromfrom";
+import data from "data";
+
+from(data)
+  .pick("country", "score")
+  .sortBy(u => u.country)
+  .thenByDescending(u => u.score)
+  .toArray();
+`,
+  },
+  {
+    name: "toObject",
+    code: `import { from } from "fromfrom";
+import data from "data";
+
+from(data)
+  .toObject(u => u.id);
+`,
+  },
+  {
+    name: "toSet",
+    code: `import { from } from "fromfrom";
+import data from "data";
+
+from(data)
+  .map(u => u.country)
+  .toSet();
 `,
   },
 ];
