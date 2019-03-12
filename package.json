@@ -17,7 +17,7 @@
   "author": "Tomi Turtiainen <tomi.turtiainen@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git@github.com:tomi/fromfrom.git"
+    "url": "https://github.com/tomi/fromfrom.git"
   },
   "license": "MIT",
   "engines": {
