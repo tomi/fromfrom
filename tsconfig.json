@@ -3,8 +3,6 @@
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationDir": "dist/types",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "lib": ["es2015"],
     "module": "es2015",
     "moduleResolution": "node",
