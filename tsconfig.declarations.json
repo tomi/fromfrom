@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "lib": ["es2015"],
+    "module": "es2015",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "target": "es2015",
+    "outFile": "dist/fromfrom.d.ts"
+  },
+  "exclude": ["node_modules"],
+  "include": ["src/fromfrom.ts"]
+}
