@@ -24,9 +24,6 @@ jobs:
       script: npm run test:prod
 
     - <<: *test
-      node_js: node
-
-    - <<: *test
       node_js: "8"
 
     - stage: coverage
@@ -38,11 +35,7 @@ jobs:
     - stage: deploy
       script:
         - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
-    #     - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run semantic-release; fi
-# after_success:
-#   - npm run report-coverage
-#   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
-#   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run semantic-release; fi
+
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/

@@ -5,13 +5,17 @@ export const createTakeIterable = <TItem>(
   howMany: number
 ): Iterable<TItem> =>
   new IterableCreatorIterable(function* take(): IterableIterator<TItem> {
+    if (howMany < 1) {
+      return;
+    }
+
     let numTaken = 0;
 
     for (const item of iterable) {
-      if (numTaken < howMany) {
-        numTaken++;
-        yield item;
-      } else {
+      numTaken++;
+      yield item;
+
+      if (numTaken >= howMany) {
         break;
       }
     }

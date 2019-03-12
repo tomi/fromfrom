@@ -117,7 +117,7 @@ describe("fromfrom", () => {
         expect(
           from({
             a: 1,
-            b: 2
+            b: 2,
           }).toArray()
         ).toEqual([["a", 1], ["b", 2]]);
       });
@@ -127,7 +127,7 @@ describe("fromfrom", () => {
           from({
             a: 1,
             b: 2,
-            [Symbol()]: 3
+            [Symbol()]: 3,
           }).toArray()
         ).toEqual([["a", 1], ["b", 2]]);
       });
@@ -135,12 +135,12 @@ describe("fromfrom", () => {
       it("skips non-enumerable properties", () => {
         const obj = {
           a: 1,
-          b: 2
+          b: 2,
         };
 
         Object.defineProperty(obj, "c", {
           value: 3,
-          enumerable: false
+          enumerable: false,
         });
 
         expect(from(obj).toArray()).toEqual([["a", 1], ["b", 2]]);
@@ -228,7 +228,7 @@ describe("fromfrom", () => {
       { name: "John", gender: "M" },
       { name: "Mike", gender: "M" },
       { name: "Lisa", gender: "F" },
-      { name: "Mary", gender: "F" }
+      { name: "Mary", gender: "F" },
     ];
 
     it("groups by the given key", () => {
@@ -238,7 +238,7 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([
         { key: "M", items: [users[0], users[1]] },
-        { key: "F", items: [users[2], users[3]] }
+        { key: "F", items: [users[2], users[3]] },
       ]);
     });
 
@@ -249,7 +249,7 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([
         { key: "M", items: [users[0], users[1]] },
-        { key: "F", items: [users[2], users[3]] }
+        { key: "F", items: [users[2], users[3]] },
       ]);
     });
 
@@ -260,7 +260,7 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([
         { key: "M", items: [users[0].name, users[1].name] },
-        { key: "F", items: [users[2].name, users[3].name] }
+        { key: "F", items: [users[2].name, users[3].name] },
       ]);
     });
 
@@ -271,7 +271,7 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([
         { key: "M", items: [users[0].name, users[1].name] },
-        { key: "F", items: [users[2].name, users[3].name] }
+        { key: "F", items: [users[2].name, users[3].name] },
       ]);
     });
 
@@ -280,11 +280,11 @@ describe("fromfrom", () => {
 
       expect(Array.from(enumerable)).toEqual([
         { key: "M", items: [users[0].name, users[1].name] },
-        { key: "F", items: [users[2].name, users[3].name] }
+        { key: "F", items: [users[2].name, users[3].name] },
       ]);
       expect(Array.from(enumerable)).toEqual([
         { key: "M", items: [users[0].name, users[1].name] },
-        { key: "F", items: [users[2].name, users[3].name] }
+        { key: "F", items: [users[2].name, users[3].name] },
       ]);
     });
   });
@@ -360,10 +360,10 @@ describe("fromfrom", () => {
     const user = Object.freeze({
       name: {
         first: "Bob",
-        last: "Builder"
+        last: "Builder",
       },
       age: 20,
-      email: "bob@thebuilder.com"
+      email: "bob@thebuilder.com",
     });
 
     it("returns an empty object if no keys given", () => {
@@ -381,7 +381,7 @@ describe("fromfrom", () => {
           .first()
       ).toEqual({
         age: 20,
-        email: "bob@thebuilder.com"
+        email: "bob@thebuilder.com",
       });
     });
 
@@ -392,7 +392,7 @@ describe("fromfrom", () => {
           .first()
       ).toEqual({
         age: 20,
-        email: "bob@thebuilder.com"
+        email: "bob@thebuilder.com",
       });
     });
 
@@ -401,13 +401,13 @@ describe("fromfrom", () => {
 
       expect(Array.from(enumerable)).toEqual([
         {
-          age: 20
-        }
+          age: 20,
+        },
       ]);
       expect(Array.from(enumerable)).toEqual([
         {
-          age: 20
-        }
+          age: 20,
+        },
       ]);
     });
   });
@@ -517,7 +517,14 @@ describe("fromfrom", () => {
     });
 
     it("sorts the sequence with key selector", () => {
-      const items = [{ a: 5 }, { a: 2 }, { a: 1 }, { a: 3 }, { a: 1 }, { a: 4 }];
+      const items = [
+        { a: 5 },
+        { a: 2 },
+        { a: 1 },
+        { a: 3 },
+        { a: 1 },
+        { a: 4 },
+      ];
 
       expect(
         from(items)
@@ -532,7 +539,7 @@ describe("fromfrom", () => {
         { a: 2, b: 1 },
         { a: 3, b: 1 },
         { a: 1, b: 2 },
-        { a: 4, b: 2 }
+        { a: 4, b: 2 },
       ];
 
       expect(
@@ -544,7 +551,13 @@ describe("fromfrom", () => {
               first.b === second.b ? second.a - first.a : second.b - first.b
           )
           .toArray()
-      ).toEqual([{ a: 4, b: 2 }, { a: 1, b: 2 }, { a: 5, b: 1 }, { a: 3, b: 1 }, { a: 2, b: 1 }]);
+      ).toEqual([
+        { a: 4, b: 2 },
+        { a: 1, b: 2 },
+        { a: 5, b: 1 },
+        { a: 3, b: 1 },
+        { a: 2, b: 1 },
+      ]);
     });
 
     it("returns correct values when chained", () => {
@@ -574,7 +587,14 @@ describe("fromfrom", () => {
     });
 
     it("sorts the sequence with key selector", () => {
-      const items = [{ a: 5 }, { a: 2 }, { a: 1 }, { a: 3 }, { a: 1 }, { a: 4 }];
+      const items = [
+        { a: 5 },
+        { a: 2 },
+        { a: 1 },
+        { a: 3 },
+        { a: 1 },
+        { a: 4 },
+      ];
 
       expect(
         from(items)
@@ -589,7 +609,7 @@ describe("fromfrom", () => {
         { a: 2, b: 1 },
         { a: 3, b: 1 },
         { a: 1, b: 2 },
-        { a: 4, b: 2 }
+        { a: 4, b: 2 },
       ];
 
       expect(
@@ -601,7 +621,13 @@ describe("fromfrom", () => {
               first.b === second.b ? second.a - first.a : second.b - first.b
           )
           .toArray()
-      ).toEqual([{ a: 2, b: 1 }, { a: 3, b: 1 }, { a: 5, b: 1 }, { a: 1, b: 2 }, { a: 4, b: 2 }]);
+      ).toEqual([
+        { a: 2, b: 1 },
+        { a: 3, b: 1 },
+        { a: 5, b: 1 },
+        { a: 1, b: 2 },
+        { a: 4, b: 2 },
+      ]);
     });
 
     it("can be iterated multiple times", () => {
@@ -635,6 +661,21 @@ describe("fromfrom", () => {
       expect(Array.from(enumerable)).toEqual([1, 2]);
       expect(Array.from(enumerable)).toEqual([1, 2]);
     });
+
+    it("pulls only taken amount of items", () => {
+      let numTaken = 0;
+      const source = function*() {
+        numTaken++;
+        yield 1;
+        numTaken++;
+        yield 2;
+      };
+
+      from(source())
+        .take(1)
+        .toArray();
+      expect(numTaken).toEqual(1);
+    });
   });
 
   describe("thenBy", () => {
@@ -644,7 +685,7 @@ describe("fromfrom", () => {
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
         { name: "Jane", age: 20 },
-        { name: "Lisa", age: 30 }
+        { name: "Lisa", age: 30 },
       ];
 
       expect(
@@ -657,7 +698,7 @@ describe("fromfrom", () => {
         { name: "John", age: 20 },
         { name: "Lisa", age: 30 },
         { name: "Mark", age: 30 },
-        { name: "Tony", age: 30 }
+        { name: "Tony", age: 30 },
       ]);
     });
 
@@ -667,7 +708,7 @@ describe("fromfrom", () => {
         { name: "Jane", age: 20, sex: "female" },
         { name: "Tony", age: 30, sex: "male" },
         { name: "Mark", age: 30, sex: "male" },
-        { name: "Lisa", age: 30, sex: "female" }
+        { name: "Lisa", age: 30, sex: "female" },
       ];
 
       expect(
@@ -681,7 +722,7 @@ describe("fromfrom", () => {
         { name: "Lisa", age: 30, sex: "female" },
         { name: "John", age: 20, sex: "male" },
         { name: "Mark", age: 30, sex: "male" },
-        { name: "Tony", age: 30, sex: "male" }
+        { name: "Tony", age: 30, sex: "male" },
       ]);
     });
 
@@ -691,7 +732,7 @@ describe("fromfrom", () => {
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
         { name: "Jane", age: 20 },
-        { name: "Lisa", age: 30 }
+        { name: "Lisa", age: 30 },
       ];
 
       const enumerable = from(items)
@@ -703,14 +744,14 @@ describe("fromfrom", () => {
         { name: "John", age: 20 },
         { name: "Lisa", age: 30 },
         { name: "Mark", age: 30 },
-        { name: "Tony", age: 30 }
+        { name: "Tony", age: 30 },
       ]);
       expect(Array.from(enumerable)).toEqual([
         { name: "Jane", age: 20 },
         { name: "John", age: 20 },
         { name: "Lisa", age: 30 },
         { name: "Mark", age: 30 },
-        { name: "Tony", age: 30 }
+        { name: "Tony", age: 30 },
       ]);
     });
   });
@@ -722,7 +763,7 @@ describe("fromfrom", () => {
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
         { name: "Jane", age: 20 },
-        { name: "Lisa", age: 30 }
+        { name: "Lisa", age: 30 },
       ];
 
       expect(
@@ -735,7 +776,7 @@ describe("fromfrom", () => {
         { name: "Jane", age: 20 },
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
-        { name: "Lisa", age: 30 }
+        { name: "Lisa", age: 30 },
       ]);
     });
 
@@ -745,7 +786,7 @@ describe("fromfrom", () => {
         { name: "Jane", age: 20, sex: "female" },
         { name: "Tony", age: 30, sex: "male" },
         { name: "Mark", age: 30, sex: "male" },
-        { name: "Lisa", age: 30, sex: "female" }
+        { name: "Lisa", age: 30, sex: "female" },
       ];
 
       expect(
@@ -759,7 +800,7 @@ describe("fromfrom", () => {
         { name: "Jane", age: 20, sex: "female" },
         { name: "Tony", age: 30, sex: "male" },
         { name: "Mark", age: 30, sex: "male" },
-        { name: "John", age: 20, sex: "male" }
+        { name: "John", age: 20, sex: "male" },
       ]);
     });
 
@@ -769,7 +810,7 @@ describe("fromfrom", () => {
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
         { name: "Jane", age: 20 },
-        { name: "Lisa", age: 30 }
+        { name: "Lisa", age: 30 },
       ];
 
       const enumerable = from(items)
@@ -781,14 +822,14 @@ describe("fromfrom", () => {
         { name: "Jane", age: 20 },
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
-        { name: "Lisa", age: 30 }
+        { name: "Lisa", age: 30 },
       ]);
       expect(Array.from(enumerable)).toEqual([
         { name: "John", age: 20 },
         { name: "Jane", age: 20 },
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
-        { name: "Lisa", age: 30 }
+        { name: "Lisa", age: 30 },
       ]);
     });
   });
@@ -822,7 +863,9 @@ describe("fromfrom", () => {
     });
 
     it("returns a Map with values mapped with key selector function", () => {
-      expect(from([1, 2]).toMap(x => x * 2, y => y * 3)).toEqual(new Map([[2, 3], [4, 6]]));
+      expect(from([1, 2]).toMap(x => x * 2, y => y * 3)).toEqual(
+        new Map([[2, 3], [4, 6]])
+      );
     });
   });
 
@@ -838,7 +881,7 @@ describe("fromfrom", () => {
     it("returns an object with values mapped with key selector function", () => {
       expect(from([1, 2]).toObject(x => x * 2, y => y * 3)).toEqual({
         2: 3,
-        4: 6
+        4: 6,
       });
     });
   });
