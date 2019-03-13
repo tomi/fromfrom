@@ -19,7 +19,7 @@ Find it [here](https://tomi.github.io/fromfrom/).
 
 ## Usage
 
-The library exports only a single function, [`from`](https://tomi.github.io/fromfrom/index.html#from). [`from`](https://tomi.github.io/fromfrom/index.html#from) wraps the given source data into an [`Enumerable`](https://tomi.github.io/fromfrom/classes/enumerable.html). [`Enumerable`](https://tomi.github.io/fromfrom/classes/enumerable.html) has a wide range of chainable methods to operate and transform the sequence. The sequence can then be converted into a JS type.
+The library exports only a single function, [`from`](https://tomi.github.io/fromfrom/api/index.html#from). [`from`](https://tomi.github.io/fromfrom/api/index.html#from) wraps the given source data into a [`Enumerable`](https://tomi.github.io/fromfrom/api/classes/enumerable.html). [`Enumerable`](https://tomi.github.io/fromfrom/api/classes/enumerable.html) has a wide range of chainable methods to operate and transform the sequence. The sequence can then be converted into a JS type.
 
 For example
 
