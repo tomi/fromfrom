@@ -14,10 +14,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([1, 2]).concat([3, 4]);
+      const sequence = from([1, 2]).concat([3, 4]);
 
-      expect(Array.from(enumerable)).toEqual([1, 2, 3, 4]);
-      expect(Array.from(enumerable)).toEqual([1, 2, 3, 4]);
+      expect(Array.from(sequence)).toEqual([1, 2, 3, 4]);
+      expect(Array.from(sequence)).toEqual([1, 2, 3, 4]);
     });
   });
 
@@ -31,10 +31,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([1, 1, 1, 1]).distinct();
+      const sequence = from([1, 1, 1, 1]).distinct();
 
-      expect(Array.from(enumerable)).toEqual([1]);
-      expect(Array.from(enumerable)).toEqual([1]);
+      expect(Array.from(sequence)).toEqual([1]);
+      expect(Array.from(sequence)).toEqual([1]);
     });
   });
 
@@ -98,18 +98,18 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([1, 2, 3, 4]).filter(x => x > 2);
+      const sequence = from([1, 2, 3, 4]).filter(x => x > 2);
 
-      expect(Array.from(enumerable)).toEqual([3, 4]);
-      expect(Array.from(enumerable)).toEqual([3, 4]);
+      expect(Array.from(sequence)).toEqual([3, 4]);
+      expect(Array.from(sequence)).toEqual([3, 4]);
     });
   });
 
   describe("from", () => {
-    it("returns the same enumerable if called with enumerable", () => {
-      const enumerable = from([]);
+    it("returns the same sequence if called with sequence", () => {
+      const sequence = from([]);
 
-      expect(from(enumerable)).toBe(enumerable);
+      expect(from(sequence)).toBe(sequence);
     });
 
     describe("object", () => {
@@ -132,7 +132,7 @@ describe("fromfrom", () => {
         ).toEqual([["a", 1], ["b", 2]]);
       });
 
-      it("skips non-enumerable properties", () => {
+      it("skips non-sequence properties", () => {
         const obj = {
           a: 1,
           b: 2,
@@ -198,10 +198,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([1, 3]).flatMap(x => [x, x + 1]);
+      const sequence = from([1, 3]).flatMap(x => [x, x + 1]);
 
-      expect(Array.from(enumerable)).toEqual([1, 2, 3, 4]);
-      expect(Array.from(enumerable)).toEqual([1, 2, 3, 4]);
+      expect(Array.from(sequence)).toEqual([1, 2, 3, 4]);
+      expect(Array.from(sequence)).toEqual([1, 2, 3, 4]);
     });
   });
 
@@ -276,13 +276,13 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from(users).groupBy(u => u.gender, u => u.name);
+      const sequence = from(users).groupBy(u => u.gender, u => u.name);
 
-      expect(Array.from(enumerable)).toEqual([
+      expect(Array.from(sequence)).toEqual([
         { key: "M", items: [users[0].name, users[1].name] },
         { key: "F", items: [users[2].name, users[3].name] },
       ]);
-      expect(Array.from(enumerable)).toEqual([
+      expect(Array.from(sequence)).toEqual([
         { key: "M", items: [users[0].name, users[1].name] },
         { key: "F", items: [users[2].name, users[3].name] },
       ]);
@@ -349,10 +349,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([1, 2, 3, 4]).map(x => x * 2);
+      const sequence = from([1, 2, 3, 4]).map(x => x * 2);
 
-      expect(Array.from(enumerable)).toEqual([2, 4, 6, 8]);
-      expect(Array.from(enumerable)).toEqual([2, 4, 6, 8]);
+      expect(Array.from(sequence)).toEqual([2, 4, 6, 8]);
+      expect(Array.from(sequence)).toEqual([2, 4, 6, 8]);
     });
   });
 
@@ -397,14 +397,14 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([user]).pick("age");
+      const sequence = from([user]).pick("age");
 
-      expect(Array.from(enumerable)).toEqual([
+      expect(Array.from(sequence)).toEqual([
         {
           age: 20,
         },
       ]);
-      expect(Array.from(enumerable)).toEqual([
+      expect(Array.from(sequence)).toEqual([
         {
           age: 20,
         },
@@ -445,10 +445,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([1, 2, 3]).reverse();
+      const sequence = from([1, 2, 3]).reverse();
 
-      expect(Array.from(enumerable)).toEqual([3, 2, 1]);
-      expect(Array.from(enumerable)).toEqual([3, 2, 1]);
+      expect(Array.from(sequence)).toEqual([3, 2, 1]);
+      expect(Array.from(sequence)).toEqual([3, 2, 1]);
     });
   });
 
@@ -470,10 +470,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([1, 2, 3, 4, 5]).skip(3);
+      const sequence = from([1, 2, 3, 4, 5]).skip(3);
 
-      expect(Array.from(enumerable)).toEqual([4, 5]);
-      expect(Array.from(enumerable)).toEqual([4, 5]);
+      expect(Array.from(sequence)).toEqual([4, 5]);
+      expect(Array.from(sequence)).toEqual([4, 5]);
     });
   });
 
@@ -570,10 +570,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([5, 2, 3, 1, 4, 1]).sortBy();
+      const sequence = from([5, 2, 3, 1, 4, 1]).sortBy();
 
-      expect(Array.from(enumerable)).toEqual([1, 1, 2, 3, 4, 5]);
-      expect(Array.from(enumerable)).toEqual([1, 1, 2, 3, 4, 5]);
+      expect(Array.from(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
+      expect(Array.from(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
     });
   });
 
@@ -631,10 +631,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([5, 2, 3, 1, 4, 1]).sortByDescending();
+      const sequence = from([5, 2, 3, 1, 4, 1]).sortByDescending();
 
-      expect(Array.from(enumerable)).toEqual([5, 4, 3, 2, 1, 1]);
-      expect(Array.from(enumerable)).toEqual([5, 4, 3, 2, 1, 1]);
+      expect(Array.from(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
+      expect(Array.from(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
     });
   });
 
@@ -656,10 +656,10 @@ describe("fromfrom", () => {
     });
 
     it("can be iterated multiple times", () => {
-      const enumerable = from([1, 2, 3, 4, 5]).take(2);
+      const sequence = from([1, 2, 3, 4, 5]).take(2);
 
-      expect(Array.from(enumerable)).toEqual([1, 2]);
-      expect(Array.from(enumerable)).toEqual([1, 2]);
+      expect(Array.from(sequence)).toEqual([1, 2]);
+      expect(Array.from(sequence)).toEqual([1, 2]);
     });
 
     it("pulls only taken amount of items", () => {
@@ -735,18 +735,18 @@ describe("fromfrom", () => {
         { name: "Lisa", age: 30 },
       ];
 
-      const enumerable = from(items)
+      const sequence = from(items)
         .sortBy(item => item.age)
         .thenBy(item => item.name);
 
-      expect(Array.from(enumerable)).toEqual([
+      expect(Array.from(sequence)).toEqual([
         { name: "Jane", age: 20 },
         { name: "John", age: 20 },
         { name: "Lisa", age: 30 },
         { name: "Mark", age: 30 },
         { name: "Tony", age: 30 },
       ]);
-      expect(Array.from(enumerable)).toEqual([
+      expect(Array.from(sequence)).toEqual([
         { name: "Jane", age: 20 },
         { name: "John", age: 20 },
         { name: "Lisa", age: 30 },
@@ -813,18 +813,18 @@ describe("fromfrom", () => {
         { name: "Lisa", age: 30 },
       ];
 
-      const enumerable = from(items)
+      const sequence = from(items)
         .sortBy(item => item.age)
         .thenByDescending(item => item.name);
 
-      expect(Array.from(enumerable)).toEqual([
+      expect(Array.from(sequence)).toEqual([
         { name: "John", age: 20 },
         { name: "Jane", age: 20 },
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
         { name: "Lisa", age: 30 },
       ]);
-      expect(Array.from(enumerable)).toEqual([
+      expect(Array.from(sequence)).toEqual([
         { name: "John", age: 20 },
         { name: "Jane", age: 20 },
         { name: "Tony", age: 30 },
@@ -846,10 +846,10 @@ describe("fromfrom", () => {
     });
 
     it("can be called multiple times", () => {
-      const enumerable = from([1, 2]);
+      const sequence = from([1, 2]);
 
-      expect(enumerable.toArray()).toEqual([1, 2]);
-      expect(enumerable.toArray()).toEqual([1, 2]);
+      expect(sequence.toArray()).toEqual([1, 2]);
+      expect(sequence.toArray()).toEqual([1, 2]);
     });
   });
 

@@ -48,9 +48,9 @@ const getComparerOrDefault = <TKey>(
 ): ComparerFn<TKey> => (comparer ? comparer : defaultComparer);
 
 /**
- * Enumerable sequence
+ * A sequence of items
  */
-export class Enumerable<TItem> implements Iterable<TItem> {
+export class Sequence<TItem> implements Iterable<TItem> {
   constructor(protected _iterable: Iterable<TItem>) {}
 
   [Symbol.iterator](): Iterator<TItem> {
@@ -67,16 +67,16 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2]).concat([3, 4]);
    * ```
    */
-  concat<TOther>(other: Iterable<TOther>): Enumerable<TItem | TOther> {
-    return new Enumerable(createConcatIterable(this._iterable, other));
+  concat<TOther>(other: Iterable<TOther>): Sequence<TItem | TOther> {
+    return new Sequence(createConcatIterable(this._iterable, other));
   }
 
   /**
    * Returns unique values in the sequence. Uniqueness is checked using
    * the '===' operator.
    */
-  distinct(): Enumerable<TItem> {
-    return new Enumerable(createDistinctIterable(this._iterable));
+  distinct(): Sequence<TItem> {
+    return new Sequence(createDistinctIterable(this._iterable));
   }
 
   /**
@@ -97,8 +97,8 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * Returns a new sequence where items are filtered out for which the
    * predicate function returns a falsy value.
    */
-  filter(predicate: PredicateFn<TItem>): Enumerable<TItem> {
-    return new Enumerable(createFilterIterable(this._iterable, predicate));
+  filter(predicate: PredicateFn<TItem>): Sequence<TItem> {
+    return new Sequence(createFilterIterable(this._iterable, predicate));
   }
 
   /**
@@ -145,8 +145,8 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    */
   flatMap<TResultItem>(
     mapperFn: MapFn<TItem, TResultItem[]>
-  ): Enumerable<TResultItem> {
-    return new Enumerable(createFlatMapIterable(this._iterable, mapperFn));
+  ): Sequence<TResultItem> {
+    return new Sequence(createFlatMapIterable(this._iterable, mapperFn));
   }
 
   /**
@@ -177,7 +177,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    *   { name: "Lisa", gender: "F" },
    *   { name: "Mary", gender: "F" }
    * ]).groupBy("gender");
-   * // Returns an enumerable with two groupings:
+   * // Returns a sequence with two groupings:
    * // {
    * //   key: "M",
    * //   items: [
@@ -196,7 +196,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    */
   groupBy<TKey extends keyof TItem>(
     key: TKey
-  ): Enumerable<Grouping<TItem[TKey], TItem>>;
+  ): Sequence<Grouping<TItem[TKey], TItem>>;
   /**
    * Groups the items in the sequence by keys returned by the given
    * keySelector function.
@@ -211,7 +211,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    *   { name: "Lisa", gender: "F" },
    *   { name: "Mary", gender: "F" }
    * ]).groupBy(user => user.gender);
-   * // Returns an enumerable with two groupings:
+   * // Returns a sequence with two groupings:
    * // {
    * //   key: "M",
    * //   items: [
@@ -230,7 +230,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    */
   groupBy<TKey>(
     keySelector: KeySelectorFn<TItem, TKey>
-  ): Enumerable<Grouping<TKey, TItem>>;
+  ): Sequence<Grouping<TKey, TItem>>;
   /**
    * Groups the items of a sequence according to a specified key and
    * projects the elements for each group by using a specified function.
@@ -246,7 +246,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    *   { name: "Lisa", gender: "F" },
    *   { name: "Mary", gender: "F" }
    * ]).groupBy("gender", user => user.name);
-   * // Returns an enumerable with two groupings:
+   * // Returns a sequence with two groupings:
    * // {
    * //   key: "M",
    * //   items: ["John", "Mike"]
@@ -260,7 +260,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
   groupBy<TKey extends keyof TItem, TElement>(
     key: TKey,
     elementSelector: MapFn<TItem, TElement>
-  ): Enumerable<Grouping<TItem[TKey], TItem>>;
+  ): Sequence<Grouping<TItem[TKey], TItem>>;
   /**
    * Groups the elements of a sequence according to a specified key selector
    * function and projects the elements for each group by using a specified
@@ -277,7 +277,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    *   { name: "Lisa", gender: "F" },
    *   { name: "Mary", gender: "F" }
    * ]).groupBy("gender", user => user.name);
-   * // Returns an enumerable with two groupings:
+   * // Returns a sequence with two groupings:
    * // {
    * //   key: "M",
    * //   items: ["John", "Mike"]
@@ -291,16 +291,16 @@ export class Enumerable<TItem> implements Iterable<TItem> {
   groupBy<TKey, TElement>(
     keySelector: KeySelectorFn<TItem, TKey>,
     elementSelector: MapFn<TItem, TElement>
-  ): Enumerable<Grouping<TKey, TElement>>;
+  ): Sequence<Grouping<TKey, TElement>>;
   groupBy<TKey, TElement>(
     keySelector: KeySelectorFn<TItem, TKey> | string,
     elementSelector?: MapFn<TItem, TElement>
-  ): Enumerable<Grouping<TKey, TElement>> {
+  ): Sequence<Grouping<TKey, TElement>> {
     if (typeof keySelector === "string") {
       keySelector = createSelectByKey<TItem>(keySelector);
     }
 
-    return new Enumerable(
+    return new Sequence(
       createGroupByIterable(this._iterable, keySelector, elementSelector)
     );
   }
@@ -353,8 +353,8 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3]).map(x => x * 2);
    * ```
    */
-  map<TResultItem>(mapFn: MapFn<TItem, TResultItem>): Enumerable<TResultItem> {
-    return new Enumerable(createMapIterable(this._iterable, mapFn));
+  map<TResultItem>(mapFn: MapFn<TItem, TResultItem>): Sequence<TResultItem> {
+    return new Sequence(createMapIterable(this._iterable, mapFn));
   }
 
   /**
@@ -363,7 +363,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    */
   pick<TKeys extends keyof TItem>(
     ...keys: TKeys[]
-  ): Enumerable<{ [P in TKeys]: TItem[P] }> {
+  ): Sequence<{ [P in TKeys]: TItem[P] }> {
     return this.map((item: TItem) => {
       const result: any = {};
 
@@ -401,8 +401,8 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3]).reverse().toArray();
    * ```
    */
-  reverse(): Enumerable<TItem> {
-    return new Enumerable(createReverseIterable(this._iterable));
+  reverse(): Sequence<TItem> {
+    return new Sequence(createReverseIterable(this._iterable));
   }
 
   /**
@@ -414,8 +414,8 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3, 4]).skip(2);
    * ```
    */
-  skip(howMany: number): Enumerable<TItem> {
-    return new Enumerable(createSkipIterable(this._iterable, howMany));
+  skip(howMany: number): Sequence<TItem> {
+    return new Sequence(createSkipIterable(this._iterable, howMany));
   }
 
   /**
@@ -439,18 +439,18 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * @param keySelector  A function to extract a key from an element.
    * @param comparer     A function to compare the keys
    */
-  sortBy(): OrderedEnumerable<TItem, TItem>;
+  sortBy(): OrderedSequence<TItem, TItem>;
   sortBy<TKey>(
     keySelector: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedEnumerable<TItem, TKey>;
+  ): OrderedSequence<TItem, TKey>;
   sortBy<TKey>(
     keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedEnumerable<TItem, TKey> {
+  ): OrderedSequence<TItem, TKey> {
     const compareFn = createCompareFn(false, keySelector, comparer);
 
-    return new OrderedEnumerable(
+    return new OrderedSequence(
       createSortByIterable(this._iterable, compareFn),
       compareFn
     );
@@ -466,10 +466,10 @@ export class Enumerable<TItem> implements Iterable<TItem> {
   sortByDescending<TKey = TItem>(
     keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedEnumerable<TItem, TKey> {
+  ): OrderedSequence<TItem, TKey> {
     const compareFn = createCompareFn(true, keySelector, comparer);
 
-    return new OrderedEnumerable(
+    return new OrderedSequence(
       createSortByIterable(this._iterable, compareFn),
       compareFn
     );
@@ -484,8 +484,8 @@ export class Enumerable<TItem> implements Iterable<TItem> {
    * from([1, 2, 3, 4]).take(2);
    * ```
    */
-  take(howMany: number): Enumerable<TItem> {
-    return new Enumerable(createTakeIterable(this._iterable, howMany));
+  take(howMany: number): Sequence<TItem> {
+    return new Sequence(createTakeIterable(this._iterable, howMany));
   }
 
   /**
@@ -598,7 +598,7 @@ export class Enumerable<TItem> implements Iterable<TItem> {
 /**
  * Ordered sequence of elements
  */
-export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
+export class OrderedSequence<TItem, TKey> extends Sequence<TItem> {
   private _comparer: ComparerFn<TItem>;
 
   constructor(iterable: Iterable<TItem>, comparer: ComparerFn<TItem>) {
@@ -610,11 +610,11 @@ export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
   thenBy<TOtherKey>(
     keySelector: KeySelectorFn<TItem, TOtherKey>,
     comparer?: ComparerFn<TOtherKey>
-  ): OrderedEnumerable<TItem, TOtherKey> {
+  ): OrderedSequence<TItem, TOtherKey> {
     const thenComparer = createCompareFn(false, keySelector, comparer);
     const compareFn = createChainedCompareFn(this._comparer, thenComparer);
 
-    return new OrderedEnumerable(
+    return new OrderedSequence(
       createSortByIterable(this._iterable, compareFn),
       compareFn
     );
@@ -623,11 +623,11 @@ export class OrderedEnumerable<TItem, TKey> extends Enumerable<TItem> {
   thenByDescending<TOtherKey>(
     keySelector: KeySelectorFn<TItem, TOtherKey>,
     comparer?: ComparerFn<TOtherKey>
-  ): OrderedEnumerable<TItem, TOtherKey> {
+  ): OrderedSequence<TItem, TOtherKey> {
     const thenComparer = createCompareFn(true, keySelector, comparer);
     const compareFn = createChainedCompareFn(this._comparer, thenComparer);
 
-    return new OrderedEnumerable(
+    return new OrderedSequence(
       createSortByIterable(this._iterable, compareFn),
       compareFn
     );

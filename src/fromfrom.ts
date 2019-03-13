@@ -1,22 +1,22 @@
 /**
  * Entrypoint of the library
  */
-import { Enumerable } from "./Enumerable";
+import { Sequence } from "./Sequence";
 import { createObjectIterable } from "./ObjectIterable";
 import { StringKeyedObject, NumberKeyedObject } from "./types";
 
-export function from<T>(iterable: Iterable<T>): Enumerable<T>;
-export function from<T>(object: StringKeyedObject<T>): Enumerable<[string, T]>;
-export function from<T>(object: NumberKeyedObject<T>): Enumerable<[number, T]>;
+export function from<T>(iterable: Iterable<T>): Sequence<T>;
+export function from<T>(object: StringKeyedObject<T>): Sequence<[string, T]>;
+export function from<T>(object: NumberKeyedObject<T>): Sequence<[number, T]>;
 export function from<T>(
   iterable: Iterable<T> | StringKeyedObject<T> | NumberKeyedObject<T>
-): Enumerable<T> | Enumerable<[string, T]> | Enumerable<[number, T]> {
-  if (iterable instanceof Enumerable) {
+): Sequence<T> | Sequence<[string, T]> | Sequence<[number, T]> {
+  if (iterable instanceof Sequence) {
     return iterable;
   } else if (_isIterable(iterable)) {
-    return new Enumerable(iterable);
+    return new Sequence(iterable);
   } else {
-    return new Enumerable(createObjectIterable(iterable));
+    return new Sequence(createObjectIterable(iterable));
   }
 }
 
