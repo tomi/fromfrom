@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import * as monaco from "../utils/monaco";
 // @ts-ignore
-import typings from "raw-loader!../../../../dist/fromfrom.d.ts";
+import typings from "raw-loader!../../fromfrom.d.ts";
 import data from "../utils/data.json";
 import { debounce } from "../utils/debounce";
 import { Example } from "./PlaygroundExampleSelector";
