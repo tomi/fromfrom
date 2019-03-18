@@ -118,7 +118,7 @@
     "preact": "^8.4.2",
     "prettier": "^1.14.3",
     "prompt": "^1.0.0",
-    "raw-loader": "^1.0.0",
+    "raw-loader": "^2.0.0",
     "replace-in-file": "^3.4.2",
     "rimraf": "^2.6.2",
     "rollup": "^1.6.0",
