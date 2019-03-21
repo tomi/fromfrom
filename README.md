@@ -57,7 +57,7 @@ from(users)
 
 ## How does it work
 
-TODO
+See "how does it work" section from the initial [release blog post](https://github.com/tomi/fromfrom/wiki/Announcing-fromfrom#how-does-it-work).
 
 ## Development
 
