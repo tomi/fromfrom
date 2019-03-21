@@ -12,3 +12,4 @@ compiled
 dist-docs
 docs/src/fromfrom.d.ts
 .env
+.npmrc
