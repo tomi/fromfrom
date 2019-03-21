@@ -242,6 +242,15 @@ describe("fromfrom", () => {
       ]);
     });
 
+    it("groups all as undefined when given non-existing key selector", () => {
+      expect(
+        from(users)
+          // @ts-ignore
+          .groupBy("non-existing")
+          .toArray()
+      ).toEqual([{ key: undefined, items: users }]);
+    });
+
     it("groups by the given key selector", () => {
       expect(
         from(users)
