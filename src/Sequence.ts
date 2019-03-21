@@ -19,6 +19,8 @@ import { createReverseIterable } from "./transforms/reverse";
 import { createSkipIterable } from "./transforms/skip";
 import { createTakeIterable } from "./transforms/take";
 import { createSortByIterable } from "./transforms/sortBy";
+import { createTakeWhileIterable } from "./transforms/takeWhile";
+import { createSkipWhileIterable } from "./transforms/skipWhile";
 
 const identityPredicateFn = (x: any): boolean => x;
 
@@ -419,6 +421,24 @@ export class Sequence<TItem> implements Iterable<TItem> {
   }
 
   /**
+   * Bypasses elements in a sequence as long as a specified condition is true
+   * and then returns the remaining elements.
+   *
+   * @param predicate  A function to test each element for a condition.
+   *
+   * @example
+   * ```ts
+   * // Returns [3, 4, 5]
+   * from([1, 2, 3, 4, 5])
+   *   .skipWhile(i => i < 3)
+   *   .toArray();
+   * ```
+   */
+  skipWhile(predicate: PredicateFn<TItem>): Sequence<TItem> {
+    return new Sequence(createSkipWhileIterable(this._iterable, predicate));
+  }
+
+  /**
    * Returns true if sequence contains an element for which the given
    * predicate returns a truthy value.
    */
@@ -486,6 +506,24 @@ export class Sequence<TItem> implements Iterable<TItem> {
    */
   take(howMany: number): Sequence<TItem> {
     return new Sequence(createTakeIterable(this._iterable, howMany));
+  }
+
+  /**
+   * Returns elements from a sequence as long as a specified condition is true,
+   * and then skips the remaining elements.
+   *
+   * @param predicate  A function to test each element for a condition.
+   *
+   * @example
+   * ```ts
+   * // Returns [1, 2]
+   * from([1, 2, 3, 4, 5])
+   *   .takeWhile(i => i < 3)
+   *   .toArray();
+   * ```
+   */
+  takeWhile(predicate: PredicateFn<TItem>) {
+    return new Sequence(createTakeWhileIterable(this._iterable, predicate));
   }
 
   /**

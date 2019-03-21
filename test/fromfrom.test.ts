@@ -477,6 +477,42 @@ describe("fromfrom", () => {
     });
   });
 
+  describe("skipWhile", () => {
+    it("skips items for which predicate returns true", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .skipWhile(i => i < 3)
+          .toArray()
+      ).toEqual([3, 4, 5]);
+    });
+
+    it("calls predicate only as long as it returns true", () => {
+      let predicate = jest.fn(i => i < 3);
+
+      from([1, 2, 3, 4, 5])
+        .skipWhile(predicate)
+        .toArray();
+
+      expect(predicate).toBeCalledTimes(3);
+    });
+
+    it("skips all when we return true", () => {
+      expect(
+        from([1, 2, 3])
+          .skipWhile(() => true)
+          .toArray()
+      ).toEqual([]);
+    });
+
+    it("skips none when we return false", () => {
+      expect(
+        from([1, 2, 3])
+          .skipWhile(() => false)
+          .toArray()
+      ).toEqual([1, 2, 3]);
+    });
+  });
+
   describe("some", () => {
     let predicate: jest.Mock;
 
@@ -675,6 +711,60 @@ describe("fromfrom", () => {
         .take(1)
         .toArray();
       expect(numTaken).toEqual(1);
+    });
+  });
+
+  describe("takeWhile", () => {
+    it("takes items until the predicate returns false", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .takeWhile(i => i < 3)
+          .toArray()
+      ).toEqual([1, 2]);
+    });
+
+    it("calls predicate only as long as it returns true", () => {
+      let predicate = jest.fn(i => i < 3);
+
+      from([1, 2, 3, 4, 5])
+        .takeWhile(predicate)
+        .toArray();
+
+      expect(predicate).toBeCalledTimes(3);
+    });
+
+    it("takes all when we return true", () => {
+      expect(
+        from([1, 2])
+          .takeWhile(() => true)
+          .toArray()
+      ).toEqual([1, 2]);
+    });
+
+    it("takes none when we return false", () => {
+      expect(
+        from([1, 2, 3, 4, 5])
+          .takeWhile(() => false)
+          .toArray()
+      ).toEqual([]);
+    });
+
+    it("pulls only items until false is returned", () => {
+      let numTaken = 0;
+
+      const source = function*() {
+        numTaken++;
+        yield 1;
+        numTaken++;
+        yield 2;
+        numTaken++;
+        yield 3;
+      };
+
+      from(source())
+        .takeWhile(i => i !== 2)
+        .toArray();
+      expect(numTaken).toEqual(2);
     });
   });
 
