@@ -1,8 +1,6 @@
 - Candidates for new methods:
   - append
   - prepend
-  - skipWhile
-  - takeWhile
   - zip
   - Set operations:
     - except
