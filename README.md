@@ -26,6 +26,7 @@ For example
 
 ```ts
 import { from } from "fromfrom";
+import assert from "assert";
 
 // Transform an array of users
 const users = [
@@ -35,15 +36,15 @@ const users = [
   { id: 4, name: "Mary", age: 34, active: true },
 ];
 
-from(users)
+const result = from(users)
   .filter(user => user.active)
   .sortByDescending(user => user.age)
   .toArray();
-// Returns
-// [
-//   { id: 4, name: "Mary", age: 34, active: true },
-//   { id: 1, name: "John", age: 31, active: true }
-// ]
+
+assert.deepEqual(result, [
+  { id: 4, name: "Mary", age: 34, active: true },
+  { id: 1, name: "John", age: 31, active: true },
+]);
 ```
 
 ## Features
