@@ -8,6 +8,7 @@ import {
   ReduceCallbackFn,
   NumberKeyedObject,
   StringKeyedObject,
+  ComparePredicate,
 } from "./types";
 import { createConcatIterable } from "./transforms/concat";
 import { createDistinctIterable } from "./transforms/distinct";
@@ -21,6 +22,7 @@ import { createTakeIterable } from "./transforms/take";
 import { createSortByIterable } from "./transforms/sortBy";
 import { createTakeWhileIterable } from "./transforms/takeWhile";
 import { createSkipWhileIterable } from "./transforms/skipWhile";
+import { createWithoutIterable } from "./transforms/without";
 
 const identityPredicateFn = (x: any): boolean => x;
 
@@ -524,6 +526,35 @@ export class Sequence<TItem> implements Iterable<TItem> {
    */
   takeWhile(predicate: PredicateFn<TItem>) {
     return new Sequence(createTakeWhileIterable(this._iterable, predicate));
+  }
+
+  /**
+   * Returns elements from a sequence as long as they don't exist in the specified iterable items.
+   *
+   * @param items     The provided set of items that should not be in the returned Sequence.
+   * @param predicate The optional predicate that determines if two TItem items are equal.
+   * @returns Sequence<TItem>
+   *
+   * @example
+   * ```ts
+   * // returns [2, 4, 6]
+   * from([1, 2, 3, 4, 5, 6])
+   *   .without([1, 3, 5])
+   *   .toArray();
+   *
+   * // returns [1, 3, 5]
+   * from([1, 2, 3, 4, 5, 6])
+   *   .without([1, 3, 5], (item, withoutItem) => item === (withoutItem + 1))
+   *   .toArray();
+   * ```
+   */
+  without(
+    items: Iterable<TItem>,
+    predicate: ComparePredicate<TItem> | void = void 0
+  ) {
+    return new Sequence(
+      createWithoutIterable(this._iterable, items, predicate)
+    );
   }
 
   /**
