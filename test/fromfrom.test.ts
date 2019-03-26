@@ -955,10 +955,7 @@ describe("fromfrom", () => {
         { id: 2, name: "", age: 0 },
       ];
 
-      const sequence = from(items).without(
-        without,
-        (value, withoutValue) => value.id === withoutValue.id
-      );
+      const sequence = from(items).without(without, (a, b) => a.id === b.id);
 
       expect(Array.from(sequence)).toStrictEqual([
         { id: 3, name: "Jane", age: 20 },

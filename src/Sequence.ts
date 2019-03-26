@@ -533,7 +533,6 @@ export class Sequence<TItem> implements Iterable<TItem> {
    *
    * @param items     The provided set of items that should not be in the returned Sequence.
    * @param predicate The optional predicate that determines if two TItem items are equal.
-   * @returns Sequence<TItem>
    *
    * @example
    * ```ts
@@ -542,7 +541,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    *   .without([1, 3, 5])
    *   .toArray();
    *
-   * // returns [{ id: 1 }, { id: 2 }]
+   * // returns [{ id: 1 }, { id: 3 }]
    * from([{ id: 1 }, { id: 2 }, { id: 3 }])
    *   .without([{ id: 2 }], (a, b) => a.id === b.id)
    *   .toArray();
