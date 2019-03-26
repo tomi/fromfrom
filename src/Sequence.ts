@@ -542,16 +542,16 @@ export class Sequence<TItem> implements Iterable<TItem> {
    *   .without([1, 3, 5])
    *   .toArray();
    *
-   * // returns [1, 3, 5]
-   * from([1, 2, 3, 4, 5, 6])
-   *   .without([1, 3, 5], (item, withoutItem) => item === (withoutItem + 1))
+   * // returns [{ id: 1 }, { id: 2 }]
+   * from([{ id: 1 }, { id: 2 }, { id: 3 }])
+   *   .without([{ id: 2 }], (a, b) => a.id === b.id)
    *   .toArray();
    * ```
    */
   without(
     items: Iterable<TItem>,
-    predicate: ComparePredicate<TItem> | void = void 0
-  ) {
+    predicate?: ComparePredicate<TItem>
+  ): Sequence<TItem> {
     return new Sequence(
       createWithoutIterable(this._iterable, items, predicate)
     );

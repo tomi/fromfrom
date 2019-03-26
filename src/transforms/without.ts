@@ -5,10 +5,9 @@ import { IterableCreatorIterable } from "../IterableCreatorIterable";
 export const createWithoutIterable = <TItem>(
   iterator: Iterable<TItem>,
   withoutItems: Iterable<TItem>,
-  comparePredicate: ComparePredicate<TItem> | void = void 0
+  comparePredicate?: ComparePredicate<TItem>
 ): Iterable<TItem> => {
   const withoutSet = new Set(withoutItems);
-
   if (!comparePredicate) {
     // fast path, create a filter iterable with the `Set.prototype.has` function call
     return createFilterIterable(iterator, item => !withoutSet.has(item));
@@ -23,7 +22,6 @@ export const createWithoutIterable = <TItem>(
       outer: for (const item of iterator) {
         // fast path, this item was already found, don't loop
         if (cache.has(item)) continue;
-
         // slow path, loop over each item in the set, determine if it matches the ComparePredicate
         for (const withoutItem of withoutSet) {
           // if the item is found, add it to the cache and skip the item
