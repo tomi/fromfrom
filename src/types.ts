@@ -15,8 +15,6 @@ export type ComparerFn<TItem> = (a: TItem, b: TItem) => number;
 
 export type IteratorCreatorFn<TResult> = () => Iterator<TResult>;
 
-export type ComparePredicate<TItem> = (a: TItem, b: TItem) => boolean;
-
 export interface Grouping<TKey, TElement> {
   key: TKey;
   items: TElement[];

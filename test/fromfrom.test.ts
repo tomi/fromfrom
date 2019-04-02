@@ -933,37 +933,6 @@ describe("fromfrom", () => {
     });
   });
 
-  describe("without", () => {
-    const numbers = [1, 2, 3, 4, 5, 6];
-    it("should return a sequence without values", () => {
-      const sequence = from(numbers).without([1, 3, 5]);
-
-      expect(Array.from(sequence)).toStrictEqual([2, 4, 6]);
-    });
-
-    it("should use a predicate function", () => {
-      const items = [
-        { id: 0, name: "John", age: 20 },
-        { id: 1, name: "Tony", age: 30 },
-        { id: 2, name: "Mark", age: 30 },
-        { id: 3, name: "Jane", age: 20 },
-        { id: 4, name: "Lisa", age: 30 },
-      ];
-      const without = [
-        { id: 0, name: "", age: 0 },
-        { id: 1, name: "", age: 0 },
-        { id: 2, name: "", age: 0 },
-      ];
-
-      const sequence = from(items).without(without, (a, b) => a.id === b.id);
-
-      expect(Array.from(sequence)).toStrictEqual([
-        { id: 3, name: "Jane", age: 20 },
-        { id: 4, name: "Lisa", age: 30 },
-      ]);
-    });
-  });
-
   describe("toArray", () => {
     it("returns an array", () => {
       expect(from([1, 2]).toArray()).toEqual([1, 2]);
