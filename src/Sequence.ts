@@ -72,8 +72,8 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * from([1, 2]).concat([3, 4]);
    * ```
    */
-  concat<TOther>(other: Iterable<TOther>): Sequence<TItem | TOther> {
-    return new Sequence(createConcatIterable(this._iterable, other));
+  concat<TOther>(...others: Iterable<TOther>[]): Sequence<TItem | TOther> {
+    return new Sequence(createConcatIterable(this._iterable, ...others));
   }
 
   /**
