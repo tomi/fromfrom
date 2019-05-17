@@ -140,7 +140,7 @@
     "typescript": "^3.3.3333",
     "webpack": "4.20.2",
     "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.2.1"
+    "webpack-dev-server": "^3.4.1"
   },
   "husky": {
     "hooks": {
