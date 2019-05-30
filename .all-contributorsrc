@@ -1,0 +1,27 @@
+{
+  "projectName": "fromfrom",
+  "projectOwner": "tomi",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "tomi",
+      "name": "Tomi Turtiainen",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/10324676?v=4",
+      "profile": "https://github.com/tomi",
+      "contributions": [
+        "code",
+        "doc",
+        "infra",
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
