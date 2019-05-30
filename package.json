@@ -19,6 +19,7 @@
     "type": "git",
     "url": "https://github.com/tomi/fromfrom.git"
   },
+  "homepage": "https://tomi.github.io/fromfrom/",
   "license": "MIT",
   "engines": {
     "node": ">=6.0.0"
