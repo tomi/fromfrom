@@ -21,6 +21,17 @@
         "infra",
         "test"
       ]
+    },
+    {
+      "login": "jtenner",
+      "name": "jtenner",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/3761339?v=4",
+      "profile": "https://github.com/jtenner",
+      "contributions": [
+        "code",
+        "test",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
