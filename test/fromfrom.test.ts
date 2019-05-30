@@ -964,6 +964,14 @@ describe("fromfrom", () => {
     });
   });
 
+  describe("prepend", () => {
+    it("should prepend values to a sequence", () => {
+      const sequence = from([1, 2, 3]).prepend([4, 5, 6]);
+
+      expect(Array.from(sequence)).toStrictEqual([4, 5, 6, 1, 2, 3]);
+    });
+  });
+
   describe("toArray", () => {
     it("returns an array", () => {
       expect(from([1, 2]).toArray()).toEqual([1, 2]);

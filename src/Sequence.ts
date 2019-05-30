@@ -23,6 +23,7 @@ import { createSortByIterable } from "./transforms/sortBy";
 import { createTakeWhileIterable } from "./transforms/takeWhile";
 import { createSkipWhileIterable } from "./transforms/skipWhile";
 import { createWithoutIterable } from "./transforms/without";
+import { createPrependIterable } from "./transforms/prepend";
 
 const identityPredicateFn = (x: any): boolean => x;
 
@@ -71,8 +72,8 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * from([1, 2]).concat([3, 4]);
    * ```
    */
-  concat<TOther>(other: Iterable<TOther>): Sequence<TItem | TOther> {
-    return new Sequence(createConcatIterable(this._iterable, other));
+  concat<TOther>(...others: Iterable<TOther>[]): Sequence<TItem | TOther> {
+    return new Sequence(createConcatIterable(this._iterable, ...others));
   }
 
   /**
@@ -554,6 +555,24 @@ export class Sequence<TItem> implements Iterable<TItem> {
     return new Sequence(
       createWithoutIterable(this._iterable, items, predicate)
     );
+  }
+
+  /**
+   * This method yields the elements from the provided items first, followed by the items in the
+   * underlying sequence.
+   *
+   * @param items The provided set of items that should be in the prepended to the Sequence.
+   *
+   * @example
+   * ```ts
+   * // returns [4, 5, 6, 1, 2, 3]
+   * from([1, 2, 3])
+   *   .prepend([4, 5, 6])
+   *   .toArray();
+   * ```
+   */
+  prepend(...items: Iterable<TItem>[]): Sequence<TItem> {
+    return new Sequence(createPrependIterable(this._iterable, ...items));
   }
 
   /**
