@@ -8,12 +8,7 @@ export const createPrependIterable = <TItem, TOther>(
     TItem | TOther
   > {
     for (const other of others) {
-      for (const item of other) {
-        yield item;
-      }
+      yield* other;
     }
-
-    for (const item of source) {
-      yield item;
-    }
+    yield* source;
   });

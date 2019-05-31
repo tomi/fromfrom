@@ -7,13 +7,8 @@ export const createConcatIterable = <TItem, TOther>(
   new IterableCreatorIterable(function* concat(): IterableIterator<
     TItem | TOther
   > {
-    for (const item of source) {
-      yield item;
-    }
-
+    yield* source;
     for (const other of others) {
-      for (const item of other) {
-        yield item;
-      }
+      yield* other;
     }
   });

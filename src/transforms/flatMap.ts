@@ -8,9 +8,6 @@ export const createFlatMapIterable = <TItem, TOther>(
   new IterableCreatorIterable(function* flatMap(): IterableIterator<TOther> {
     for (const item of iterable) {
       const sequence = mapperFn(item);
-
-      for (const mappedItem of sequence) {
-        yield mappedItem;
-      }
+      yield* sequence;
     }
   });
