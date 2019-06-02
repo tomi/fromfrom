@@ -7,8 +7,5 @@ export const createSortByIterable = <TItem>(
 ): Iterable<TItem> =>
   new IterableCreatorIterable(function* sort(): IterableIterator<TItem> {
     const items = Array.from(iterable).sort(comparer);
-
-    for (const item of items) {
-      yield item;
-    }
+    yield* items;
   });
