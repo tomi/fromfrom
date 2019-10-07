@@ -499,6 +499,75 @@ export class Sequence<TItem> implements Iterable<TItem> {
   }
 
   /**
+   * Sums the elements in the sequence.
+   * NOTE! If the sequence is empty, 0 is returned.
+   *
+   * @example
+   * ```typescript
+   * // Returns 6
+   * from([1, 2, 3]).sum();
+   * ```
+   */
+  sum<TItem extends number>(): number;
+  /**
+   * Sums the elements in the sequence
+   * NOTE! If the sequence is empty, 0 is returned.
+   *
+   * @example
+   * ```typescript
+   * // Returns "abc"
+   * from(["a", "b", "c"]).sum();
+   * ```
+   */
+  sum<TItem extends string>(): string;
+  /**
+   * Maps the elements in the sequence using the valueSelector and sums them
+   * together.
+   * NOTE! If the sequence is empty, 0 is returned.
+   *
+   * @param valueSelector  A function to select a value from an element.
+   *
+   * @example
+   * ```typescript
+   * // Returns 2
+   * from([true, false, true]).sum(x => x ? 1 : 0);
+   * ```
+   */
+  sum<TResult extends number>(valueSelector: MapFn<TItem, TResult>): number;
+  /**
+   * Maps the elements in the sequence using the valueSelector and sums them
+   * together.
+   * NOTE! If the sequence is empty, 0 is returned.
+   *
+   * @param valueSelector  A function to select a value from an element.
+   *
+   * @example
+   * ```typescript
+   * // Returns "101"
+   * from([true, false, true]).sum(x => x ? "1" : "0");
+   * ```
+   */
+  sum<TResult extends string>(valueSelector: MapFn<TItem, TResult>): string;
+  sum<TResult>(valueSelector?: MapFn<TItem, TResult>): number | string {
+    let result: any | undefined = undefined;
+
+    for (const item of this._iterable) {
+      let itemToSum = valueSelector ? valueSelector(item) : item;
+
+      if (result === undefined) {
+        result = itemToSum as any;
+      } else {
+        result +=
+          typeof (itemToSum as unknown) === "number"
+            ? itemToSum
+            : String(itemToSum);
+      }
+    }
+
+    return result === undefined ? 0 : result;
+  }
+
+  /**
    * Takes the firt N items from the sequence
    *
    * @example
