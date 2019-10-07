@@ -683,6 +683,34 @@ describe("fromfrom", () => {
     });
   });
 
+  describe("sum", () => {
+    it("returns 0 for empty sequences", () => {
+      expect(from<number>([]).sum()).toEqual(0);
+    });
+
+    it("sums numbers correctly", () => {
+      expect(from([1, 2, 3]).sum()).toEqual(6);
+    });
+
+    it("sums strings correctly", () => {
+      expect(from(["1", "2", "3"]).sum()).toEqual("123");
+    });
+
+    it("sums other than numbers as strings", () => {
+      expect(from([true, false]).sum()).toEqual("truefalse");
+    });
+
+    it("sums numbers from key selector", () => {
+      expect(from([true, false, true, false]).sum(x => (x ? 1 : 0))).toEqual(2);
+    });
+
+    it("sums strings from key selector correctly", () => {
+      expect(
+        from([true, false, true, false]).sum(x => (x ? "1" : "0"))
+      ).toEqual("1010");
+    });
+  });
+
   describe("take", () => {
     it("takes the requested amount of items", () => {
       expect(
