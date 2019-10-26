@@ -401,6 +401,19 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Maps each item in the sequence to an object composed of the picked
    * object properties.
+   *
+   * @example
+   * ```typescript
+   * const users = [
+   * { id: 1, name: "John", age: 31, active: true },
+   * { id: 2, name: "Jane", age: 32, active: false },
+   * { id: 3, name: "Luke", age: 33, active: false },
+   * { id: 4, name: "Mary", age: 34, active: true },
+   * ];
+   *
+   * // Returns a Sequence of { name: 'John' }, { name: 'Jane' }, { name: 'Luke' }, { name: 'Mary' }
+   * from(users).pick("name");
+   * ```
    */
   pick<TKeys extends keyof TItem>(
     ...keys: TKeys[]
