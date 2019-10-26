@@ -79,6 +79,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns unique values in the sequence. Uniqueness is checked using
    * the '===' operator.
+   *
+   * @example
+   * ```typescript
+   * // Returns a sequence with the values 4, 5
+   * from([4, 4, 5, 4]).distinct();
+   * ```
    */
   distinct(): Sequence<TItem> {
     return new Sequence(createDistinctIterable(this._iterable));
