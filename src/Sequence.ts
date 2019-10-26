@@ -499,6 +499,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns true if sequence contains an element for which the given
    * predicate returns a truthy value.
+   *
+   * @example
+   * ```typescript
+   * // Returns true
+   * from([1, 2, 3]).some(x => x === 1)
+   * ```
    */
   some(predicate: PredicateFn<TItem> = identityPredicateFn): boolean {
     for (const item of this._iterable) {
