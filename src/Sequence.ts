@@ -512,7 +512,6 @@ export class Sequence<TItem> implements Iterable<TItem> {
         return true;
       }
     }
-
     return false;
   }
 
@@ -523,11 +522,55 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * @param keySelector  A function to extract a key from an element.
    * @param comparer     A function to compare the keys
    */
+  /**
+   * @example
+   * ```typescript
+   * // Returns a Sequence of 1, 2, 3
+   * from([1, 3, 2]).sortBy()
+   * ```
+   */
   sortBy(): OrderedSequence<TItem, TItem>;
+   /**
+   * @example
+   * ```typescript
+   * const users = [
+   * { id: 2, name: "Jane" },
+   * { id: 4, name: "Mary" },
+   * { id: 1, name: "John" },
+   * { id: 3, name: "Luke" },
+   * ];
+   *
+   * // Returns a Sequence of
+   * //  { id: 1, name: 'John' },
+   * //  { id: 2, name: 'Jane' },
+   * //  { id: 3, name: 'Luke' },
+   * //  { id: 4, name: 'Mary' }
+   * from(users).sortBy(user => user.id)
+   * ```
+   */
   sortBy<TKey>(
     keySelector: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedSequence<TItem, TKey>;
+   /**
+   * @example
+   * ```typescript
+   * const users = [
+   * { id: 2, name: "Jane" },
+   * { id: 4, name: "Mary" },
+   * { id: 1, name: "John" },
+   * { id: 3, name: "Luke" },
+   * ];
+   *
+   * // Returns a Sequence of
+   * // Returns a Sequence of
+   * // { id: 4, name: 'Mary' },
+   * // { id: 3, name: 'Luke' },
+   * // { id: 2, name: 'Jane' },
+   * // { id: 1, name: 'John' }
+   * from(users).sortBy(user => user.id)
+   * ```
+   */
   sortBy<TKey>(
     keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
