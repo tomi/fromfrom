@@ -113,6 +113,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns a new sequence where items are filtered out for which the
    * predicate function returns a falsy value.
+   *
+   * @example
+   * ```typescript
+   * // Returns a squence with the value -1
+   * from([-1, 4, 5, 6]).filter(x => x < 0);
+   * ```
    */
   filter(predicate: PredicateFn<TItem>): Sequence<TItem> {
     return new Sequence(createFilterIterable(this._iterable, predicate));
