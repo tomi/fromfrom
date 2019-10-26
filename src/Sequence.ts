@@ -147,6 +147,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns the first element of the sequence or undefined if
    * the sequence is empty.
+   *
+   * @example
+   * ```typescript
+   * // Returns 1
+   * from([1, 3, 5]).first();
+   * ```
    */
   first(): TItem | undefined {
     for (const item of this._iterable) {
