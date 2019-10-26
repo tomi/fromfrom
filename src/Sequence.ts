@@ -530,7 +530,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   sortBy(): OrderedSequence<TItem, TItem>;
-   /**
+  /**
    * @example
    * ```typescript
    * const users = [
@@ -552,7 +552,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
     keySelector: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedSequence<TItem, TKey>;
-   /**
+  /**
    * @example
    * ```typescript
    * const users = [
@@ -589,6 +589,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
    *
    * @param keySelector  A function to extract a key from an element.
    * @param comparer     A function to compare the keys
+   *
+   * @example
+   * ```typescript
+   * // Returns a Sequence of 3, 2, 1
+   * from([1, 3, 2]).sortByDescending()
+   * ```
    */
   sortByDescending<TKey = TItem>(
     keySelector?: KeySelectorFn<TItem, TKey>,
@@ -879,7 +885,6 @@ export class OrderedSequence<TItem, TKey> extends Sequence<TItem> {
       compareFn
     );
   }
-
   thenByDescending<TOtherKey>(
     keySelector: KeySelectorFn<TItem, TOtherKey>,
     comparer?: ComparerFn<TOtherKey>
