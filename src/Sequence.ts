@@ -79,6 +79,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns unique values in the sequence. Uniqueness is checked using
    * the '===' operator.
+   *
+   * @example
+   * ```typescript
+   * // Returns a sequence with the values 4, 5
+   * from([4, 4, 5, 4]).distinct();
+   * ```
    */
   distinct(): Sequence<TItem> {
     return new Sequence(createDistinctIterable(this._iterable));
@@ -87,6 +93,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Checks that all items in the sequence pass the test implemented by the
    * provided function.
+   *
+   * @example
+   * ```typescript
+   * // Returns false
+   * from([-1, 4, 5, 6]).every(x => x >= 0);
+   * ```
    */
   every(predicate: PredicateFn<TItem> = identityPredicateFn): boolean {
     for (const item of this._iterable) {
@@ -101,6 +113,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns a new sequence where items are filtered out for which the
    * predicate function returns a falsy value.
+   *
+   * @example
+   * ```typescript
+   * // Returns a squence with the value -1
+   * from([-1, 4, 5, 6]).filter(x => x < 0);
+   * ```
    */
   filter(predicate: PredicateFn<TItem>): Sequence<TItem> {
     return new Sequence(createFilterIterable(this._iterable, predicate));
@@ -129,6 +147,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns the first element of the sequence or undefined if
    * the sequence is empty.
+   *
+   * @example
+   * ```typescript
+   * // Returns 1
+   * from([1, 3, 5]).first();
+   * ```
    */
   first(): TItem | undefined {
     for (const item of this._iterable) {
@@ -333,6 +357,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
 
   /**
    * Returns true if the sequence is empty, false otherwise.
+   *
+   * @example
+   * ```typescript
+   * // Returns true
+   * from([]).isEmpty();
+   * ```
    */
   isEmpty(): boolean {
     return !this.some(() => true);
@@ -341,6 +371,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns the first element of the sequence or undefined if
    * the sequence is empty.
+   *
+   * @example
+   * ```typescript
+   * // Returns 5
+   * from([1, 3, 5]).last();
+   * ```
    */
   last(): TItem | undefined {
     const items = Array.from(this._iterable);
@@ -365,6 +401,19 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Maps each item in the sequence to an object composed of the picked
    * object properties.
+   *
+   * @example
+   * ```typescript
+   * const users = [
+   * { id: 1, name: "John", age: 31, active: true },
+   * { id: 2, name: "Jane", age: 32, active: false },
+   * { id: 3, name: "Luke", age: 33, active: false },
+   * { id: 4, name: "Mary", age: 34, active: true },
+   * ];
+   *
+   * // Returns a Sequence of { name: 'John' }, { name: 'Jane' }, { name: 'Luke' }, { name: 'Mary' }
+   * from(users).pick("name");
+   * ```
    */
   pick<TKeys extends keyof TItem>(
     ...keys: TKeys[]
@@ -385,6 +434,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Executes a reducer function on each item in the sequence resulting
    * in a single output value.
+   *
+   * @example
+   * ```typescript
+   * // Returns a 15
+   * from([1, 2, 3, 4, 5]).reduce((x, acc) => acc+x, 0)
+   * ```
    */
   reduce<TResult>(
     callback: ReduceCallbackFn<TResult, TItem>,
@@ -444,6 +499,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Returns true if sequence contains an element for which the given
    * predicate returns a truthy value.
+   *
+   * @example
+   * ```typescript
+   * // Returns true
+   * from([1, 2, 3]).some(x => x === 1)
+   * ```
    */
   some(predicate: PredicateFn<TItem> = identityPredicateFn): boolean {
     for (const item of this._iterable) {
@@ -451,7 +512,6 @@ export class Sequence<TItem> implements Iterable<TItem> {
         return true;
       }
     }
-
     return false;
   }
 
@@ -462,11 +522,55 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * @param keySelector  A function to extract a key from an element.
    * @param comparer     A function to compare the keys
    */
+  /**
+   * @example
+   * ```typescript
+   * // Returns a Sequence of 1, 2, 3
+   * from([1, 3, 2]).sortBy()
+   * ```
+   */
   sortBy(): OrderedSequence<TItem, TItem>;
+  /**
+   * @example
+   * ```typescript
+   * const users = [
+   * { id: 2, name: "Jane" },
+   * { id: 4, name: "Mary" },
+   * { id: 1, name: "John" },
+   * { id: 3, name: "Luke" },
+   * ];
+   *
+   * // Returns a Sequence of
+   * //  { id: 1, name: 'John' },
+   * //  { id: 2, name: 'Jane' },
+   * //  { id: 3, name: 'Luke' },
+   * //  { id: 4, name: 'Mary' }
+   * from(users).sortBy(user => user.id)
+   * ```
+   */
   sortBy<TKey>(
     keySelector: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
   ): OrderedSequence<TItem, TKey>;
+  /**
+   * @example
+   * ```typescript
+   * const users = [
+   * { id: 2, name: "Jane" },
+   * { id: 4, name: "Mary" },
+   * { id: 1, name: "John" },
+   * { id: 3, name: "Luke" },
+   * ];
+   *
+   * // Returns a Sequence of
+   * // Returns a Sequence of
+   * // { id: 4, name: 'Mary' },
+   * // { id: 3, name: 'Luke' },
+   * // { id: 2, name: 'Jane' },
+   * // { id: 1, name: 'John' }
+   * from(users).sortBy(user => user.id)
+   * ```
+   */
   sortBy<TKey>(
     keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
@@ -485,6 +589,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
    *
    * @param keySelector  A function to extract a key from an element.
    * @param comparer     A function to compare the keys
+   *
+   * @example
+   * ```typescript
+   * // Returns a Sequence of 3, 2, 1
+   * from([1, 3, 2]).sortByDescending()
+   * ```
    */
   sortByDescending<TKey = TItem>(
     keySelector?: KeySelectorFn<TItem, TKey>,
@@ -775,7 +885,6 @@ export class OrderedSequence<TItem, TKey> extends Sequence<TItem> {
       compareFn
     );
   }
-
   thenByDescending<TOtherKey>(
     keySelector: KeySelectorFn<TItem, TOtherKey>,
     comparer?: ComparerFn<TOtherKey>
