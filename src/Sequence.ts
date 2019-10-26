@@ -434,6 +434,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Executes a reducer function on each item in the sequence resulting
    * in a single output value.
+   *
+   * @example
+   * ```typescript
+   * // Returns a 15
+   * from([1, 2, 3, 4, 5]).reduce((x, acc) => acc+x, 0)
+   * ```
    */
   reduce<TResult>(
     callback: ReduceCallbackFn<TResult, TItem>,
