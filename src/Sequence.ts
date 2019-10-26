@@ -87,6 +87,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
   /**
    * Checks that all items in the sequence pass the test implemented by the
    * provided function.
+   *
+   * @example
+   * ```typescript
+   * // Returns false
+   * from([-1, 4, 5, 6]).every(x => x >= 0);
+   * ```
    */
   every(predicate: PredicateFn<TItem> = identityPredicateFn): boolean {
     for (const item of this._iterable) {
