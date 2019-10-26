@@ -357,6 +357,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
 
   /**
    * Returns true if the sequence is empty, false otherwise.
+   *
+   * @example
+   * ```typescript
+   * // Returns true
+   * from([]).isEmpty();
+   * ```
    */
   isEmpty(): boolean {
     return !this.some(() => true);
