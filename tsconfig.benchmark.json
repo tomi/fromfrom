@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "lib": ["es2018"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "target": "es6",
+    "typeRoots": ["node_modules/@types"]
+  }
+}
