@@ -39,19 +39,6 @@ const defaultComparer = <TKey>(a: TKey, b: TKey) => {
   return 1;
 };
 
-const identityKeySelector = <TItem>(item: TItem) => item;
-
-const getKeySelectorOrDefault = <TItem, TKey>(
-  keySelector?: KeySelectorFn<TItem, TKey>
-) =>
-  keySelector
-    ? keySelector
-    : ((identityKeySelector as unknown) as KeySelectorFn<TItem, TKey>);
-
-const getComparerOrDefault = <TKey>(
-  comparer?: ComparerFn<TKey>
-): ComparerFn<TKey> => (comparer ? comparer : defaultComparer);
-
 /**
  * A sequence of items
  */
@@ -577,10 +564,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
   ): OrderedSequence<TItem, TKey> {
     const compareFn = createCompareFn(false, keySelector, comparer);
 
-    return new OrderedSequence(
-      createSortByIterable(this._iterable, compareFn),
-      compareFn
-    );
+    return new OrderedSequence(this._iterable, compareFn);
   }
 
   /**
@@ -602,10 +586,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
   ): OrderedSequence<TItem, TKey> {
     const compareFn = createCompareFn(true, keySelector, comparer);
 
-    return new OrderedSequence(
-      createSortByIterable(this._iterable, compareFn),
-      compareFn
-    );
+    return new OrderedSequence(this._iterable, compareFn);
   }
 
   /**
@@ -868,7 +849,7 @@ export class OrderedSequence<TItem, TKey> extends Sequence<TItem> {
   private _comparer: ComparerFn<TItem>;
 
   constructor(iterable: Iterable<TItem>, comparer: ComparerFn<TItem>) {
-    super(iterable);
+    super(createSortByIterable(iterable, comparer));
 
     this._comparer = comparer;
   }
@@ -880,11 +861,9 @@ export class OrderedSequence<TItem, TKey> extends Sequence<TItem> {
     const thenComparer = createCompareFn(false, keySelector, comparer);
     const compareFn = createChainedCompareFn(this._comparer, thenComparer);
 
-    return new OrderedSequence(
-      createSortByIterable(this._iterable, compareFn),
-      compareFn
-    );
+    return new OrderedSequence(this._iterable, compareFn);
   }
+
   thenByDescending<TOtherKey>(
     keySelector: KeySelectorFn<TItem, TOtherKey>,
     comparer?: ComparerFn<TOtherKey>
@@ -892,10 +871,7 @@ export class OrderedSequence<TItem, TKey> extends Sequence<TItem> {
     const thenComparer = createCompareFn(true, keySelector, comparer);
     const compareFn = createChainedCompareFn(this._comparer, thenComparer);
 
-    return new OrderedSequence(
-      createSortByIterable(this._iterable, compareFn),
-      compareFn
-    );
+    return new OrderedSequence(this._iterable, compareFn);
   }
 }
 
@@ -911,14 +887,16 @@ const createCompareFn = <TItem, TKey>(
   descending: boolean,
   keySelector?: KeySelectorFn<TItem, TKey>,
   comparer?: ComparerFn<TKey>
-) => (a: TItem, b: TItem) => {
-  keySelector = getKeySelectorOrDefault(keySelector);
-  comparer = getComparerOrDefault(comparer);
+) => {
+  const compareFn = comparer || defaultComparer;
 
-  const aKey = keySelector(a);
-  const bKey = keySelector(b);
-
-  return descending ? comparer(bKey, aKey) : comparer(aKey, bKey);
+  return keySelector
+    ? (a: TItem, b: TItem) =>
+        descending
+          ? compareFn(keySelector(b), keySelector(a))
+          : compareFn(keySelector(a), keySelector(b))
+    : (a: TItem, b: TItem) =>
+        descending ? defaultComparer(b, a) : defaultComparer(a, b);
 };
 
 /**
