@@ -24,6 +24,7 @@ import { createTakeWhileIterable } from "./transforms/takeWhile";
 import { createSkipWhileIterable } from "./transforms/skipWhile";
 import { createWithoutIterable } from "./transforms/without";
 import { createPrependIterable } from "./transforms/prepend";
+import { copyIntoAnArray } from "./utils";
 
 const identityPredicateFn = (x: any): boolean => x;
 
@@ -366,7 +367,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   last(): TItem | undefined {
-    const items = Array.from(this._iterable);
+    const items = copyIntoAnArray(this._iterable);
 
     return items.length === 0 ? undefined : items[items.length - 1];
   }
@@ -745,7 +746,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   toArray(): TItem[] {
-    return Array.from(this);
+    return copyIntoAnArray(this);
   }
 
   /**
