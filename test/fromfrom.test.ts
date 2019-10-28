@@ -1,4 +1,5 @@
 import { from } from "../src/fromfrom";
+import { copyIntoAnArray } from "../src/utils";
 
 /**
  * Tests for the library
@@ -16,8 +17,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([1, 2]).concat([3, 4]);
 
-      expect(Array.from(sequence)).toEqual([1, 2, 3, 4]);
-      expect(Array.from(sequence)).toEqual([1, 2, 3, 4]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 2, 3, 4]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 2, 3, 4]);
     });
   });
 
@@ -33,8 +34,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([1, 1, 1, 1]).distinct();
 
-      expect(Array.from(sequence)).toEqual([1]);
-      expect(Array.from(sequence)).toEqual([1]);
+      expect(copyIntoAnArray(sequence)).toEqual([1]);
+      expect(copyIntoAnArray(sequence)).toEqual([1]);
     });
   });
 
@@ -100,8 +101,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([1, 2, 3, 4]).filter(x => x > 2);
 
-      expect(Array.from(sequence)).toEqual([3, 4]);
-      expect(Array.from(sequence)).toEqual([3, 4]);
+      expect(copyIntoAnArray(sequence)).toEqual([3, 4]);
+      expect(copyIntoAnArray(sequence)).toEqual([3, 4]);
     });
   });
 
@@ -200,8 +201,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([1, 3]).flatMap(x => [x, x + 1]);
 
-      expect(Array.from(sequence)).toEqual([1, 2, 3, 4]);
-      expect(Array.from(sequence)).toEqual([1, 2, 3, 4]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 2, 3, 4]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 2, 3, 4]);
     });
   });
 
@@ -287,11 +288,11 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from(users).groupBy(u => u.gender, u => u.name);
 
-      expect(Array.from(sequence)).toEqual([
+      expect(copyIntoAnArray(sequence)).toEqual([
         { key: "M", items: [users[0].name, users[1].name] },
         { key: "F", items: [users[2].name, users[3].name] },
       ]);
-      expect(Array.from(sequence)).toEqual([
+      expect(copyIntoAnArray(sequence)).toEqual([
         { key: "M", items: [users[0].name, users[1].name] },
         { key: "F", items: [users[2].name, users[3].name] },
       ]);
@@ -360,8 +361,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([1, 2, 3, 4]).map(x => x * 2);
 
-      expect(Array.from(sequence)).toEqual([2, 4, 6, 8]);
-      expect(Array.from(sequence)).toEqual([2, 4, 6, 8]);
+      expect(copyIntoAnArray(sequence)).toEqual([2, 4, 6, 8]);
+      expect(copyIntoAnArray(sequence)).toEqual([2, 4, 6, 8]);
     });
   });
 
@@ -408,12 +409,12 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([user]).pick("age");
 
-      expect(Array.from(sequence)).toEqual([
+      expect(copyIntoAnArray(sequence)).toEqual([
         {
           age: 20,
         },
       ]);
-      expect(Array.from(sequence)).toEqual([
+      expect(copyIntoAnArray(sequence)).toEqual([
         {
           age: 20,
         },
@@ -456,8 +457,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([1, 2, 3]).reverse();
 
-      expect(Array.from(sequence)).toEqual([3, 2, 1]);
-      expect(Array.from(sequence)).toEqual([3, 2, 1]);
+      expect(copyIntoAnArray(sequence)).toEqual([3, 2, 1]);
+      expect(copyIntoAnArray(sequence)).toEqual([3, 2, 1]);
     });
   });
 
@@ -481,8 +482,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([1, 2, 3, 4, 5]).skip(3);
 
-      expect(Array.from(sequence)).toEqual([4, 5]);
-      expect(Array.from(sequence)).toEqual([4, 5]);
+      expect(copyIntoAnArray(sequence)).toEqual([4, 5]);
+      expect(copyIntoAnArray(sequence)).toEqual([4, 5]);
     });
   });
 
@@ -617,8 +618,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([5, 2, 3, 1, 4, 1]).sortBy();
 
-      expect(Array.from(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
-      expect(Array.from(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
     });
   });
 
@@ -678,8 +679,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([5, 2, 3, 1, 4, 1]).sortByDescending();
 
-      expect(Array.from(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
-      expect(Array.from(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
+      expect(copyIntoAnArray(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
+      expect(copyIntoAnArray(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
     });
   });
 
@@ -731,8 +732,8 @@ describe("fromfrom", () => {
     it("can be iterated multiple times", () => {
       const sequence = from([1, 2, 3, 4, 5]).take(2);
 
-      expect(Array.from(sequence)).toEqual([1, 2]);
-      expect(Array.from(sequence)).toEqual([1, 2]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 2]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 2]);
     });
 
     it("pulls only taken amount of items", () => {
@@ -866,14 +867,14 @@ describe("fromfrom", () => {
         .sortBy(item => item.age)
         .thenBy(item => item.name);
 
-      expect(Array.from(sequence)).toEqual([
+      expect(copyIntoAnArray(sequence)).toEqual([
         { name: "Jane", age: 20 },
         { name: "John", age: 20 },
         { name: "Lisa", age: 30 },
         { name: "Mark", age: 30 },
         { name: "Tony", age: 30 },
       ]);
-      expect(Array.from(sequence)).toEqual([
+      expect(copyIntoAnArray(sequence)).toEqual([
         { name: "Jane", age: 20 },
         { name: "John", age: 20 },
         { name: "Lisa", age: 30 },
@@ -944,14 +945,14 @@ describe("fromfrom", () => {
         .sortBy(item => item.age)
         .thenByDescending(item => item.name);
 
-      expect(Array.from(sequence)).toEqual([
+      expect(copyIntoAnArray(sequence)).toEqual([
         { name: "John", age: 20 },
         { name: "Jane", age: 20 },
         { name: "Tony", age: 30 },
         { name: "Mark", age: 30 },
         { name: "Lisa", age: 30 },
       ]);
-      expect(Array.from(sequence)).toEqual([
+      expect(copyIntoAnArray(sequence)).toEqual([
         { name: "John", age: 20 },
         { name: "Jane", age: 20 },
         { name: "Tony", age: 30 },
@@ -966,7 +967,7 @@ describe("fromfrom", () => {
     it("should return a sequence without values", () => {
       const sequence = from(numbers).without([1, 3, 5]);
 
-      expect(Array.from(sequence)).toStrictEqual([2, 4, 6]);
+      expect(copyIntoAnArray(sequence)).toStrictEqual([2, 4, 6]);
     });
 
     it("should use a predicate function", () => {
@@ -985,7 +986,7 @@ describe("fromfrom", () => {
 
       const sequence = from(items).without(without, (a, b) => a.id === b.id);
 
-      expect(Array.from(sequence)).toStrictEqual([
+      expect(copyIntoAnArray(sequence)).toStrictEqual([
         { id: 3, name: "Jane", age: 20 },
         { id: 4, name: "Lisa", age: 30 },
       ]);
@@ -996,7 +997,7 @@ describe("fromfrom", () => {
     it("should prepend values to a sequence", () => {
       const sequence = from([1, 2, 3]).prepend([4, 5, 6]);
 
-      expect(Array.from(sequence)).toStrictEqual([4, 5, 6, 1, 2, 3]);
+      expect(copyIntoAnArray(sequence)).toStrictEqual([4, 5, 6, 1, 2, 3]);
     });
   });
 
