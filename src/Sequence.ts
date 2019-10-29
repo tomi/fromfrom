@@ -10,20 +10,20 @@ import {
   StringKeyedObject,
   ComparePredicate,
 } from "./types";
-import { createConcatIterable } from "./transforms/concat";
-import { createDistinctIterable } from "./transforms/distinct";
-import { createFilterIterable } from "./transforms/filter";
-import { createFlatMapIterable } from "./transforms/flatMap";
-import { createGroupByIterable } from "./transforms/groupBy";
-import { createMapIterable } from "./transforms/map";
-import { createReverseIterable } from "./transforms/reverse";
-import { createSkipIterable } from "./transforms/skip";
-import { createTakeIterable } from "./transforms/take";
-import { createSortByIterable } from "./transforms/sortBy";
-import { createTakeWhileIterable } from "./transforms/takeWhile";
-import { createSkipWhileIterable } from "./transforms/skipWhile";
-import { createWithoutIterable } from "./transforms/without";
-import { createPrependIterable } from "./transforms/prepend";
+import { concat } from "./transforms/concat";
+import { distinct } from "./transforms/distinct";
+import { filter } from "./transforms/filter";
+import { flatMap } from "./transforms/flatMap";
+import { groupBy } from "./transforms/groupBy";
+import { map } from "./transforms/map";
+import { prepend } from "./transforms/prepend";
+import { reverse } from "./transforms/reverse";
+import { skip } from "./transforms/skip";
+import { skipWhile } from "./transforms/skipWhile";
+import { sortBy } from "./transforms/sortBy";
+import { take } from "./transforms/take";
+import { takeWhile } from "./transforms/takeWhile";
+import { without } from "./transforms/without";
 import { copyIntoAnArray } from "./utils";
 
 const identityPredicateFn = (x: any): boolean => x;
@@ -41,14 +41,25 @@ const defaultComparer = <TKey>(a: TKey, b: TKey) => {
 };
 
 /**
+ * Creates an iterable from given generator function
+ *
+ * @param generatorFn
+ * @param args
+ */
+const iterableFromGenerator = <TItem>(
+  generatorFn: Function,
+  args?: any
+): Iterable<TItem> => ({
+  [Symbol.iterator]: (): Iterator<TItem> => generatorFn.apply(undefined, args),
+});
+
+/**
  * A sequence of items
  */
 export class Sequence<TItem> implements Iterable<TItem> {
   constructor(protected _iterable: Iterable<TItem>) {}
 
-  [Symbol.iterator](): Iterator<TItem> {
-    return this._iterable[Symbol.iterator]();
-  }
+  [Symbol.iterator] = (): Iterator<TItem> => this._iterable[Symbol.iterator]();
 
   /**
    * Returns a new sequence that contains the items in the current sequence
@@ -61,7 +72,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   concat<TOther>(...others: Iterable<TOther>[]): Sequence<TItem | TOther> {
-    return new Sequence(createConcatIterable(this._iterable, ...others));
+    return this._sequenceFromGenerator<TItem | TOther>(concat, others);
   }
 
   /**
@@ -75,7 +86,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   distinct(): Sequence<TItem> {
-    return new Sequence(createDistinctIterable(this._iterable));
+    return this._sequenceFromGenerator<TItem>(distinct);
   }
 
   /**
@@ -109,7 +120,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   filter(predicate: PredicateFn<TItem>): Sequence<TItem> {
-    return new Sequence(createFilterIterable(this._iterable, predicate));
+    return this._sequenceFromGenerator<TItem>(filter, [predicate]);
   }
 
   /**
@@ -163,7 +174,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
   flatMap<TResultItem>(
     mapperFn: MapFn<TItem, TResultItem[]>
   ): Sequence<TResultItem> {
-    return new Sequence(createFlatMapIterable(this._iterable, mapperFn));
+    return this._sequenceFromGenerator<TResultItem>(flatMap, [mapperFn]);
   }
 
   /**
@@ -317,9 +328,10 @@ export class Sequence<TItem> implements Iterable<TItem> {
       keySelector = createSelectByKey<TItem>(keySelector);
     }
 
-    return new Sequence(
-      createGroupByIterable(this._iterable, keySelector, elementSelector)
-    );
+    return this._sequenceFromGenerator<Grouping<TKey, TElement>>(groupBy, [
+      keySelector,
+      elementSelector,
+    ]);
   }
 
   /**
@@ -367,7 +379,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   last(): TItem | undefined {
-    const items = copyIntoAnArray(this._iterable);
+    const items = this.toArray();
 
     return items.length === 0 ? undefined : items[items.length - 1];
   }
@@ -383,7 +395,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   map<TResultItem>(mapFn: MapFn<TItem, TResultItem>): Sequence<TResultItem> {
-    return new Sequence(createMapIterable(this._iterable, mapFn));
+    return this._sequenceFromGenerator<TResultItem>(map, [mapFn]);
   }
 
   /**
@@ -420,6 +432,24 @@ export class Sequence<TItem> implements Iterable<TItem> {
   }
 
   /**
+   * This method yields the elements from the provided items first, followed by the items in the
+   * underlying sequence.
+   *
+   * @param items The provided set of items that should be in the prepended to the Sequence.
+   *
+   * @example
+   * ```ts
+   * // returns [4, 5, 6, 1, 2, 3]
+   * from([1, 2, 3])
+   *   .prepend([4, 5, 6])
+   *   .toArray();
+   * ```
+   */
+  prepend(...items: Iterable<TItem>[]): Sequence<TItem> {
+    return this._sequenceFromGenerator<TItem>(prepend, items);
+  }
+
+  /**
    * Executes a reducer function on each item in the sequence resulting
    * in a single output value.
    *
@@ -450,7 +480,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   reverse(): Sequence<TItem> {
-    return new Sequence(createReverseIterable(this._iterable));
+    return this._sequenceFromGenerator<TItem>(reverse);
   }
 
   /**
@@ -463,7 +493,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   skip(howMany: number): Sequence<TItem> {
-    return new Sequence(createSkipIterable(this._iterable, howMany));
+    return this._sequenceFromGenerator<TItem>(skip, [howMany]);
   }
 
   /**
@@ -481,7 +511,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   skipWhile(predicate: PredicateFn<TItem>): Sequence<TItem> {
-    return new Sequence(createSkipWhileIterable(this._iterable, predicate));
+    return this._sequenceFromGenerator<TItem>(skipWhile, [predicate]);
   }
 
   /**
@@ -517,7 +547,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * from([1, 3, 2]).sortBy()
    * ```
    */
-  sortBy(): OrderedSequence<TItem, TItem>;
+  sortBy(): OrderedSequence<TItem>;
   /**
    * @example
    * ```typescript
@@ -539,7 +569,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
   sortBy<TKey>(
     keySelector: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedSequence<TItem, TKey>;
+  ): OrderedSequence<TItem>;
   /**
    * @example
    * ```typescript
@@ -562,7 +592,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
   sortBy<TKey>(
     keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedSequence<TItem, TKey> {
+  ): OrderedSequence<TItem> {
     const compareFn = createCompareFn(false, keySelector, comparer);
 
     return new OrderedSequence(this._iterable, compareFn);
@@ -584,7 +614,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
   sortByDescending<TKey = TItem>(
     keySelector?: KeySelectorFn<TItem, TKey>,
     comparer?: ComparerFn<TKey>
-  ): OrderedSequence<TItem, TKey> {
+  ): OrderedSequence<TItem> {
     const compareFn = createCompareFn(true, keySelector, comparer);
 
     return new OrderedSequence(this._iterable, compareFn);
@@ -669,7 +699,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   take(howMany: number): Sequence<TItem> {
-    return new Sequence(createTakeIterable(this._iterable, howMany));
+    return this._sequenceFromGenerator<TItem>(take, [howMany]);
   }
 
   /**
@@ -687,7 +717,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   takeWhile(predicate: PredicateFn<TItem>) {
-    return new Sequence(createTakeWhileIterable(this._iterable, predicate));
+    return this._sequenceFromGenerator(takeWhile, [predicate]);
   }
 
   /**
@@ -713,27 +743,12 @@ export class Sequence<TItem> implements Iterable<TItem> {
     items: Iterable<TItem>,
     predicate?: ComparePredicate<TItem>
   ): Sequence<TItem> {
-    return new Sequence(
-      createWithoutIterable(this._iterable, items, predicate)
-    );
-  }
-
-  /**
-   * This method yields the elements from the provided items first, followed by the items in the
-   * underlying sequence.
-   *
-   * @param items The provided set of items that should be in the prepended to the Sequence.
-   *
-   * @example
-   * ```ts
-   * // returns [4, 5, 6, 1, 2, 3]
-   * from([1, 2, 3])
-   *   .prepend([4, 5, 6])
-   *   .toArray();
-   * ```
-   */
-  prepend(...items: Iterable<TItem>[]): Sequence<TItem> {
-    return new Sequence(createPrependIterable(this._iterable, ...items));
+    if (!predicate) {
+      const withoutSet = new Set(items);
+      return this.filter((item: TItem) => !withoutSet.has(item));
+    } else {
+      return this._sequenceFromGenerator<TItem>(without, [items, predicate]);
+    }
   }
 
   /**
@@ -746,7 +761,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   toArray(): TItem[] {
-    return copyIntoAnArray(this);
+    return copyIntoAnArray(this._iterable);
   }
 
   /**
@@ -771,7 +786,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
   ): Map<TKey, TElement> {
     const map = new Map<TKey, TElement>();
 
-    for (const item of this) {
+    for (const item of this._iterable) {
       const key = keySelectorFn(item);
       const value = elementSelectorFn ? elementSelectorFn(item) : item;
 
@@ -819,7 +834,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
     | NumberKeyedObject<TElement> {
     const object: any = {};
 
-    for (const item of this) {
+    for (const item of this._iterable) {
       const key = keySelectorFn(item);
       const value = elementSelectorFn ? elementSelectorFn(item) : item;
 
@@ -839,18 +854,35 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   toSet(): Set<TItem> {
-    return new Set(this);
+    return new Set(this._iterable);
+  }
+
+  private _sequenceFromGenerator<TResult>(
+    factoryFn: Function,
+    restArgs?: any[]
+  ) {
+    const iterableArg = [this._iterable];
+
+    return new Sequence<TResult>(
+      iterableFromGenerator(
+        factoryFn,
+        restArgs ? iterableArg.concat(restArgs) : iterableArg
+      )
+    );
   }
 }
 
 /**
  * Ordered sequence of elements
  */
-export class OrderedSequence<TItem, TKey> extends Sequence<TItem> {
+export class OrderedSequence<TItem> extends Sequence<TItem> {
   private _comparer: ComparerFn<TItem>;
 
-  constructor(iterable: Iterable<TItem>, comparer: ComparerFn<TItem>) {
-    super(createSortByIterable(iterable, comparer));
+  constructor(
+    private _iterableToSort: Iterable<TItem>,
+    comparer: ComparerFn<TItem>
+  ) {
+    super(iterableFromGenerator(sortBy, [_iterableToSort, comparer]));
 
     this._comparer = comparer;
   }
@@ -858,21 +890,21 @@ export class OrderedSequence<TItem, TKey> extends Sequence<TItem> {
   thenBy<TOtherKey>(
     keySelector: KeySelectorFn<TItem, TOtherKey>,
     comparer?: ComparerFn<TOtherKey>
-  ): OrderedSequence<TItem, TOtherKey> {
+  ): OrderedSequence<TItem> {
     const thenComparer = createCompareFn(false, keySelector, comparer);
     const compareFn = createChainedCompareFn(this._comparer, thenComparer);
 
-    return new OrderedSequence(this._iterable, compareFn);
+    return new OrderedSequence(this._iterableToSort, compareFn);
   }
 
   thenByDescending<TOtherKey>(
     keySelector: KeySelectorFn<TItem, TOtherKey>,
     comparer?: ComparerFn<TOtherKey>
-  ): OrderedSequence<TItem, TOtherKey> {
+  ): OrderedSequence<TItem> {
     const thenComparer = createCompareFn(true, keySelector, comparer);
     const compareFn = createChainedCompareFn(this._comparer, thenComparer);
 
-    return new OrderedSequence(this._iterable, compareFn);
+    return new OrderedSequence(this._iterableToSort, compareFn);
   }
 }
 

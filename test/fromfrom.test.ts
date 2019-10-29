@@ -20,6 +20,15 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toEqual([1, 2, 3, 4]);
       expect(copyIntoAnArray(sequence)).toEqual([1, 2, 3, 4]);
     });
+
+    it("can be at the end of chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .concat([5, 6])
+          .toArray()
+      ).toEqual([1, 2, 3, 4, 5, 6]);
+    });
   });
 
   describe("distinct", () => {
@@ -36,6 +45,15 @@ describe("fromfrom", () => {
 
       expect(copyIntoAnArray(sequence)).toEqual([1]);
       expect(copyIntoAnArray(sequence)).toEqual([1]);
+    });
+
+    it("can be at the end of chain", () => {
+      expect(
+        from([1, 1, 1])
+          .concat([2])
+          .distinct()
+          .toArray()
+      ).toEqual([1, 2]);
     });
   });
 
@@ -66,6 +84,14 @@ describe("fromfrom", () => {
 
     it("uses the item itself if predicate is not given", () => {
       expect(from([true, true]).every()).toEqual(true);
+    });
+
+    it("can be at the end of chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .every(x => x < 3)
+      ).toBe(false);
     });
   });
 
@@ -103,6 +129,15 @@ describe("fromfrom", () => {
 
       expect(copyIntoAnArray(sequence)).toEqual([3, 4]);
       expect(copyIntoAnArray(sequence)).toEqual([3, 4]);
+    });
+
+    it("can be at the end of the chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .filter(x => x % 2 === 0)
+          .toArray()
+      ).toEqual([2, 4]);
     });
   });
 
@@ -204,6 +239,15 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toEqual([1, 2, 3, 4]);
       expect(copyIntoAnArray(sequence)).toEqual([1, 2, 3, 4]);
     });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .flatMap(x => [x, x + 10])
+          .toArray()
+      ).toEqual([1, 11, 2, 12, 3, 13, 4, 14]);
+    });
   });
 
   describe("forEach", () => {
@@ -297,6 +341,18 @@ describe("fromfrom", () => {
         { key: "F", items: [users[2].name, users[3].name] },
       ]);
     });
+
+    it("can be at the end of chain", () => {
+      expect(
+        from([users[0], users[2]])
+          .concat([users[1], users[3]])
+          .groupBy(x => x.gender)
+          .toArray()
+      ).toEqual([
+        { key: "M", items: [users[0], users[1]] },
+        { key: "F", items: [users[2], users[3]] },
+      ]);
+    });
   });
 
   describe("includes", () => {
@@ -306,6 +362,14 @@ describe("fromfrom", () => {
 
     it("returns false when sequence does not contain the item", () => {
       expect(from([1, 2, 3]).includes(6)).toEqual(false);
+    });
+
+    it("can be at the end of a sequence", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .includes(3)
+      ).toBe(true);
     });
   });
 
@@ -363,6 +427,15 @@ describe("fromfrom", () => {
 
       expect(copyIntoAnArray(sequence)).toEqual([2, 4, 6, 8]);
       expect(copyIntoAnArray(sequence)).toEqual([2, 4, 6, 8]);
+    });
+
+    it("can be at the end of a sequence", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .map(x => x * 2)
+          .toArray()
+      ).toEqual([2, 4, 6, 8]);
     });
   });
 
@@ -443,6 +516,14 @@ describe("fromfrom", () => {
     it("returns reduced value", () => {
       expect(from([1, 2, 3]).reduce((prev, curr) => prev + curr, 0)).toEqual(6);
     });
+
+    it("can be at the end of chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .reduce((x, y) => x + y, 0)
+      ).toBe(10);
+    });
   });
 
   describe("reverse", () => {
@@ -459,6 +540,15 @@ describe("fromfrom", () => {
 
       expect(copyIntoAnArray(sequence)).toEqual([3, 2, 1]);
       expect(copyIntoAnArray(sequence)).toEqual([3, 2, 1]);
+    });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .reverse()
+          .toArray()
+      ).toEqual([4, 3, 2, 1]);
     });
   });
 
@@ -484,6 +574,15 @@ describe("fromfrom", () => {
 
       expect(copyIntoAnArray(sequence)).toEqual([4, 5]);
       expect(copyIntoAnArray(sequence)).toEqual([4, 5]);
+    });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .skip(2)
+          .toArray()
+      ).toEqual([3, 4]);
     });
   });
 
@@ -521,6 +620,15 @@ describe("fromfrom", () => {
           .toArray()
       ).toEqual([1, 2, 3]);
     });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .skipWhile(x => x < 3)
+          .toArray()
+      ).toEqual([3, 4]);
+    });
   });
 
   describe("some", () => {
@@ -550,6 +658,14 @@ describe("fromfrom", () => {
 
     it("uses the item itself if predicate is not given", () => {
       expect(from([false, true]).some()).toEqual(true);
+    });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .some(x => x === 3)
+      ).toBe(true);
     });
   });
 
@@ -621,6 +737,24 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
       expect(copyIntoAnArray(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
     });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 4])
+          .concat([3, 2])
+          .sortBy()
+          .toArray()
+      ).toEqual([1, 2, 3, 4]);
+    });
+
+    it("works with objects", () => {
+      expect(
+        from({ john: 20, mary: 30, abraham: 10 })
+          .map(([a, b]) => [a, b + 1])
+          .sortBy(x => x[0])
+          .toArray()
+      ).toEqual([["abraham", 11], ["john", 21], ["mary", 31]]);
+    });
   });
 
   describe("sortByDescending", () => {
@@ -682,6 +816,15 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
       expect(copyIntoAnArray(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
     });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 4])
+          .concat([3, 2])
+          .sortByDescending()
+          .toArray()
+      ).toEqual([4, 3, 2, 1]);
+    });
   });
 
   describe("sum", () => {
@@ -709,6 +852,14 @@ describe("fromfrom", () => {
       expect(
         from([true, false, true, false]).sum(x => (x ? "1" : "0"))
       ).toEqual("1010");
+    });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .sum()
+      ).toBe(10);
     });
   });
 
@@ -749,6 +900,15 @@ describe("fromfrom", () => {
         .take(1)
         .toArray();
       expect(numTaken).toEqual(1);
+    });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .take(4)
+          .toArray()
+      ).toEqual([1, 2, 3, 4]);
     });
   });
 
@@ -803,6 +963,15 @@ describe("fromfrom", () => {
         .takeWhile(i => i !== 2)
         .toArray();
       expect(numTaken).toEqual(2);
+    });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .takeWhile(x => true)
+          .toArray()
+      ).toEqual([1, 2, 3, 4]);
     });
   });
 
@@ -875,6 +1044,29 @@ describe("fromfrom", () => {
         { name: "Tony", age: 30 },
       ]);
       expect(copyIntoAnArray(sequence)).toEqual([
+        { name: "Jane", age: 20 },
+        { name: "John", age: 20 },
+        { name: "Lisa", age: 30 },
+        { name: "Mark", age: 30 },
+        { name: "Tony", age: 30 },
+      ]);
+    });
+
+    it("works with iterables", () => {
+      const items = [
+        { name: "John", age: 20 },
+        { name: "Tony", age: 30 },
+        { name: "Lisa", age: 30 },
+        { name: "Jane", age: 20 },
+        { name: "Mark", age: 30 },
+      ];
+
+      expect(
+        from(new Set(items))
+          .sortBy(x => x.age)
+          .thenBy(x => x.name)
+          .toArray()
+      ).toEqual([
         { name: "Jane", age: 20 },
         { name: "John", age: 20 },
         { name: "Lisa", age: 30 },
@@ -991,6 +1183,15 @@ describe("fromfrom", () => {
         { id: 4, name: "Lisa", age: 30 },
       ]);
     });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .without([2, 3])
+          .toArray()
+      ).toEqual([1, 4]);
+    });
   });
 
   describe("prepend", () => {
@@ -998,6 +1199,15 @@ describe("fromfrom", () => {
       const sequence = from([1, 2, 3]).prepend([4, 5, 6]);
 
       expect(copyIntoAnArray(sequence)).toStrictEqual([4, 5, 6, 1, 2, 3]);
+    });
+
+    it("can be at the end of a chain", () => {
+      expect(
+        from([1, 2])
+          .concat([3, 4])
+          .prepend([0])
+          .toArray()
+      ).toEqual([0, 1, 2, 3, 4]);
     });
   });
 
