@@ -1,18 +1,12 @@
-import { IterableCreatorIterable } from "../IterableCreatorIterable";
+export function* skip<TItem>(iterable: Iterable<TItem>, howMany: number) {
+  let numSkipped = 0;
 
-export const createSkipIterable = <TItem>(
-  iterable: Iterable<TItem>,
-  howMany: number
-): Iterable<TItem> =>
-  new IterableCreatorIterable(function* skip(): IterableIterator<TItem> {
-    let numSkipped = 0;
-
-    for (const item of iterable) {
-      if (numSkipped < howMany) {
-        numSkipped++;
-        continue;
-      }
-
-      yield item;
+  for (const item of iterable) {
+    if (numSkipped < howMany) {
+      numSkipped++;
+      continue;
     }
-  });
+
+    yield item;
+  }
+}

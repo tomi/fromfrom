@@ -1,22 +1,16 @@
-import { IterableCreatorIterable } from "../IterableCreatorIterable";
+export function* take<TItem>(iterable: Iterable<TItem>, howMany: number) {
+  if (howMany < 1) {
+    return;
+  }
 
-export const createTakeIterable = <TItem>(
-  iterable: Iterable<TItem>,
-  howMany: number
-): Iterable<TItem> =>
-  new IterableCreatorIterable(function* take(): IterableIterator<TItem> {
-    if (howMany < 1) {
-      return;
+  let numTaken = 0;
+
+  for (const item of iterable) {
+    numTaken++;
+    yield item;
+
+    if (numTaken >= howMany) {
+      break;
     }
-
-    let numTaken = 0;
-
-    for (const item of iterable) {
-      numTaken++;
-      yield item;
-
-      if (numTaken >= howMany) {
-        break;
-      }
-    }
-  });
+  }
+}
