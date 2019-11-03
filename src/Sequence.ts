@@ -704,7 +704,7 @@ export class Sequence<TItem> implements Iterable<TItem> {
    * ```
    */
   takeWhile(predicate: PredicateFn<TItem>) {
-    return this._sequenceFromGenerator(takeWhile, [predicate]);
+    return this._sequenceFromGenerator<TItem>(takeWhile, [predicate]);
   }
 
   /**
@@ -844,14 +844,14 @@ export class Sequence<TItem> implements Iterable<TItem> {
     return new Set(this._iterable);
   }
 
-  private _sequenceFromGenerator<TResult>(
+  private _sequenceFromGenerator<TResult = TItem>(
     factoryFn: Function,
     restArgs?: any[]
   ) {
     const iterableArg = [this._iterable];
 
     return new Sequence<TResult>(
-      iterableFromGenerator(
+      iterableFromGenerator<TResult>(
         factoryFn,
         restArgs ? iterableArg.concat(restArgs) : iterableArg
       )
