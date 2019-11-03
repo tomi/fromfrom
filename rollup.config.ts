@@ -4,6 +4,7 @@ import sourceMaps from "rollup-plugin-sourcemaps";
 import camelCase from "lodash.camelcase";
 import typescript from "rollup-plugin-typescript2";
 import json from "rollup-plugin-json";
+import { terser } from "rollup-plugin-terser";
 
 const pkg = require("./package.json");
 
@@ -18,7 +19,14 @@ export default {
       format: "umd",
       sourcemap: true,
     },
+    {
+      file: "dist/fromfrom.umd.min.js",
+      name: "fromfrom",
+      format: "umd",
+      sourcemap: true,
+    },
     { file: pkg.module, format: "es", sourcemap: true },
+    { file: "dist/fromfrom.es5.min.js", format: "es", sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [],
@@ -36,6 +44,10 @@ export default {
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
     resolve(),
+
+    terser({
+      include: [/^.+\.min\.js$/],
+    }),
 
     // Resolve source maps to the original source
     sourceMaps(),
