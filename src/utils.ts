@@ -16,3 +16,16 @@ export function copyIntoAnArray<T>(iterable: Iterable<T>) {
 
   return result;
 }
+
+/**
+ * Creates an iterable from given generator function
+ *
+ * @param generatorFn
+ * @param args
+ */
+export const iterableFromGenerator = <TItem>(
+  generatorFn: Function,
+  args?: any[]
+): Iterable<TItem> => ({
+  [Symbol.iterator]: (): Iterator<TItem> => generatorFn.apply(undefined, args),
+});
