@@ -24,7 +24,7 @@ import { sortBy } from "./transforms/sortBy";
 import { take } from "./transforms/take";
 import { takeWhile } from "./transforms/takeWhile";
 import { without } from "./transforms/without";
-import { copyIntoAnArray } from "./utils";
+import { copyIntoAnArray, iterableFromGenerator } from "./utils";
 
 const identityPredicateFn = (x: any): boolean => x;
 
@@ -39,19 +39,6 @@ const defaultComparer = <TKey>(a: TKey, b: TKey) => {
 
   return 1;
 };
-
-/**
- * Creates an iterable from given generator function
- *
- * @param generatorFn
- * @param args
- */
-const iterableFromGenerator = <TItem>(
-  generatorFn: Function,
-  args?: any
-): Iterable<TItem> => ({
-  [Symbol.iterator]: (): Iterator<TItem> => generatorFn.apply(undefined, args),
-});
 
 /**
  * A sequence of items

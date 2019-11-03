@@ -181,6 +181,13 @@ describe("fromfrom", () => {
 
         expect(from(obj).toArray()).toEqual([["a", 1], ["b", 2]]);
       });
+
+      it("can be iterated multiple times", () => {
+        const sequence = from({ a: 1, b: 2 });
+
+        expect(sequence.toArray()).toEqual([["a", 1], ["b", 2]]);
+        expect(sequence.toArray()).toEqual([["a", 1], ["b", 2]]);
+      });
     });
   });
 
