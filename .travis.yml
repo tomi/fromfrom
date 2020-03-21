@@ -7,12 +7,13 @@ stages:
   - deploy # deploy
 
 language: node_js
-node_js: "10"
+node_js: "12"
 install: npm ci
 cache:
   directories:
     - ~/.npm
     - dist-docs
+    - dist
 
 jobs:
   include:
@@ -24,6 +25,9 @@ jobs:
       script: npm run test:prod
 
     - <<: *test
+      node_js: "10"
+
+    - <<: *test
       node_js: "8"
 
     - stage: coverage
@@ -32,9 +36,13 @@ jobs:
     - stage: build
       script: npm run build
 
-    - stage: deploy
+    - stage: deploy docs
       script:
-        - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
+        - if [ "$TRAVIS_BRANCH" = "release" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
+
+    - stage: release
+      script:
+        - if [ "$TRAVIS_BRANCH" = "release" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run semantic-release; fi
 
 branches:
   except:

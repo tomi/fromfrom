@@ -3,6 +3,7 @@ import * as faker from "faker";
 import { from } from "../src/fromfrom";
 
 type Country = "FI" | "SE" | "NO" | "DK" | "IS";
+type Gender = "M" | "F";
 
 interface IUser {
   id: number;
@@ -11,10 +12,12 @@ interface IUser {
   title: string;
   email: string;
   country: Country;
+  gender: Gender;
   score: number;
 }
 
 const countries = ["FI", "SE", "NO", "DK", "IS"] as Country[];
+const genders = ["M", "F"] as Gender[];
 
 const generateData = (howMany: number): IUser[] =>
   Array.from({ length: howMany }).map((_, id) => ({
@@ -24,6 +27,7 @@ const generateData = (howMany: number): IUser[] =>
     title: faker.name.title(),
     email: faker.internet.email(),
     country: faker.random.arrayElement(countries),
+    gender: faker.random.arrayElement(genders),
     score: faker.random.number({ min: 1000, max: 10000 }),
   }));
 
@@ -42,7 +46,15 @@ suite.add("first", () => from(data).first());
 suite.add("flatMap", () => from(data).flatMap(x => [x.firstName, x.lastName]).toArray());
 suite.add("forEach", () => from(data).forEach(x => x.firstName + x.lastName));
 suite.add("groupBy - key selector", () => from(data).groupBy(x => x.country).toArray());
-suite.add("groupBy - value selector", () => from(data).groupBy(x => x.country, x => x.score).toArray());
+suite.add("groupBy - key selector, complex key", () =>
+  from(data)
+    .groupBy(x => ({ c: x.country, g: x.gender }))
+    .toArray());
+suite.add("groupBy - value selector", () =>
+  from(data)
+    .groupBy(x => x.country, x => x.score)
+    .toArray()
+);
 suite.add("includes", () => from(data).includes(data[9823]));
 suite.add("isEmpty", () => from(data).isEmpty());
 suite.add("last", () => from(data).last());
