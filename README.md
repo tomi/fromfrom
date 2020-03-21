@@ -85,17 +85,21 @@ Forked from [TypeScript library starter](https://github.com/alexjoverm/typescrip
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/tomi"><img src="https://avatars2.githubusercontent.com/u/10324676?v=4" width="100px;" alt="Tomi Turtiainen"/><br /><sub><b>Tomi Turtiainen</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/commits?author=tomi" title="Code">💻</a> <a href="https://github.com/tomi/fromfrom/commits?author=tomi" title="Documentation">📖</a> <a href="#infra-tomi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/tomi/fromfrom/commits?author=tomi" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/jtenner"><img src="https://avatars1.githubusercontent.com/u/3761339?v=4" width="100px;" alt="jtenner"/><br /><sub><b>jtenner</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/commits?author=jtenner" title="Code">💻</a> <a href="https://github.com/tomi/fromfrom/commits?author=jtenner" title="Tests">⚠️</a> <a href="https://github.com/tomi/fromfrom/commits?author=jtenner" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://vaaralav.com"><img src="https://avatars0.githubusercontent.com/u/8571541?v=4" width="100px;" alt="Ville Vaarala"/><br /><sub><b>Ville Vaarala</b></sub></a><br /><a href="#maintenance-vaaralav" title="Maintenance">🚧</a></td>
-    <td align="center"><a href="https://github.com/dogoku"><img src="https://avatars0.githubusercontent.com/u/761999?v=4" width="100px;" alt="Theo"/><br /><sub><b>Theo</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/commits?author=dogoku" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/hollannikas"><img src="https://avatars0.githubusercontent.com/u/9109662?v=4" width="100px;" alt="Rudolf Poels"/><br /><sub><b>Rudolf Poels</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/commits?author=hollannikas" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/tomi"><img src="https://avatars2.githubusercontent.com/u/10324676?v=4" width="100px;" alt=""/><br /><sub><b>Tomi Turtiainen</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/commits?author=tomi" title="Code">💻</a> <a href="https://github.com/tomi/fromfrom/commits?author=tomi" title="Documentation">📖</a> <a href="#infra-tomi" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/tomi/fromfrom/commits?author=tomi" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/jtenner"><img src="https://avatars1.githubusercontent.com/u/3761339?v=4" width="100px;" alt=""/><br /><sub><b>jtenner</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/commits?author=jtenner" title="Code">💻</a> <a href="https://github.com/tomi/fromfrom/commits?author=jtenner" title="Tests">⚠️</a> <a href="https://github.com/tomi/fromfrom/commits?author=jtenner" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://vaaralav.com"><img src="https://avatars0.githubusercontent.com/u/8571541?v=4" width="100px;" alt=""/><br /><sub><b>Ville Vaarala</b></sub></a><br /><a href="#maintenance-vaaralav" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/dogoku"><img src="https://avatars0.githubusercontent.com/u/761999?v=4" width="100px;" alt=""/><br /><sub><b>Theo</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/commits?author=dogoku" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/hollannikas"><img src="https://avatars0.githubusercontent.com/u/9109662?v=4" width="100px;" alt=""/><br /><sub><b>Rudolf Poels</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/commits?author=hollannikas" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/andrew-w-ross"><img src="https://avatars2.githubusercontent.com/u/14924726?v=4" width="100px;" alt=""/><br /><sub><b>Andrew Ross</b></sub></a><br /><a href="https://github.com/tomi/fromfrom/issues?q=author%3Aandrew-w-ross" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
