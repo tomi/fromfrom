@@ -1,3 +1,11 @@
+# [1.5.0](https://github.com/tomi/fromfrom/compare/v1.4.3...v1.5.0) (2020-03-21)
+
+
+### Features
+
+* **groupby:** add support to use objects as keys in groupBy ([d318187](https://github.com/tomi/fromfrom/commit/d318187ce8df765a9a4b3208b965a9468d035dd5)), closes [#65](https://github.com/tomi/fromfrom/issues/65)
+* export types from the main module ([feee577](https://github.com/tomi/fromfrom/commit/feee5774e2b55c1f561fecb07d9fca36ed3948f2))
+
 ## [1.4.3](https://github.com/tomi/fromfrom/compare/v1.4.2...v1.4.3) (2020-03-21)
 
 
