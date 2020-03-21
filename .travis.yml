@@ -13,6 +13,7 @@ cache:
   directories:
     - ~/.npm
     - dist-docs
+    - dist
 
 jobs:
   include:
@@ -35,9 +36,13 @@ jobs:
     - stage: build
       script: npm run build
 
-    - stage: deploy
+    - stage: deploy docs
       script:
-        - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
+        - if [ "$TRAVIS_BRANCH" = "release" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run deploy-docs; fi
+
+    - stage: release
+      script:
+        - if [ "$TRAVIS_BRANCH" = "release" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then npm run semantic-release; fi
 
 branches:
   except:
