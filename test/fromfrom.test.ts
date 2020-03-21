@@ -1268,6 +1268,47 @@ describe("fromfrom", () => {
         4: 6,
       });
     });
+
+    it("#87 types return value correctly when element selector is not given", () => {
+      type Result = {
+        key: number;
+        val: string;
+      };
+
+      const result: { [key: number]: Result } = from([
+        { key: 1, val: "a" },
+        { key: 2, val: "b" },
+      ]).toObject(x => x.key);
+
+      expect(result).toEqual({
+        1: { key: 1, val: "a" },
+        2: { key: 2, val: "b" },
+      });
+    });
+
+    it("#87 types return value correctly for number keyd object when element selector is given", () => {
+      const result: { [key: number]: string } = from([
+        { key: 1, val: "a" },
+        { key: 2, val: "b" },
+      ]).toObject(x => x.key, x => x.val);
+
+      expect(result).toEqual({
+        1: "a",
+        2: "b",
+      });
+    });
+
+    it("#87 types return value correctly for string keyd object when element selector is given", () => {
+      const result: { [key: string]: number } = from({
+        "1": { key: 1, val: "a" },
+        "2": { key: 2, val: "b" },
+      }).toObject(x => x[0], x => x[1].key);
+
+      expect(result).toEqual({
+        "1": 1,
+        "2": 2,
+      });
+    });
   });
 
   describe("toSet", () => {

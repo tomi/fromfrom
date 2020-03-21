@@ -806,11 +806,11 @@ export class Sequence<TItem> implements Iterable<TItem> {
   toObject<TElement>(
     keySelectorFn: MapFn<TItem, string>,
     elementSelectorFn: MapFn<TItem, TElement>
-  ): StringKeyedObject<TItem>;
+  ): StringKeyedObject<TElement>;
   toObject<TElement>(
     keySelectorFn: MapFn<TItem, number>,
     elementSelectorFn: MapFn<TItem, TElement>
-  ): NumberKeyedObject<TItem>;
+  ): NumberKeyedObject<TElement>;
   toObject<TElement>(
     keySelectorFn: MapFn<TItem, string> | MapFn<TItem, number>,
     elementSelectorFn?: MapFn<TItem, TElement>
