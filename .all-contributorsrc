@@ -59,7 +59,17 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "andrew-w-ross",
+      "name": "Andrew Ross",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/14924726?v=4",
+      "profile": "https://github.com/andrew-w-ross",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }
