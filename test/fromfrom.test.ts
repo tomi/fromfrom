@@ -360,6 +360,37 @@ describe("fromfrom", () => {
         { key: "F", items: [users[2], users[3]] },
       ]);
     });
+
+    it("groups by an object when an object is given as key", () => {
+      const people = [
+        { name: "John", gender: "M", country: "fi" },
+        { name: "Mike", gender: "M", country: "fi" },
+        { name: "Lisa", gender: "F", country: "fi" },
+        { name: "Mary", gender: "F", country: "se" },
+      ];
+
+      const result = from(people)
+        .groupBy(p => ({ g: p.gender, c: p.country }))
+        .toArray();
+
+      expect(result).toEqual([
+        {
+          key: { g: "M", c: "fi" },
+          items: [
+            { name: "John", gender: "M", country: "fi" },
+            { name: "Mike", gender: "M", country: "fi" },
+          ],
+        },
+        {
+          key: { g: "F", c: "fi" },
+          items: [{ name: "Lisa", gender: "F", country: "fi" }],
+        },
+        {
+          key: { g: "F", c: "se" },
+          items: [{ name: "Mary", gender: "F", country: "se" }],
+        },
+      ]);
+    });
   });
 
   describe("includes", () => {
