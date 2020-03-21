@@ -40,7 +40,7 @@
     "playground:watch": "webpack -w --config ./docs/webpack.config.js",
     "prebuild": "rimraf dist",
     "report-coverage": "jest --coverage && cat ./coverage/lcov.info | coveralls",
-    "semantic-release": "semantic-release --no-ci",
+    "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
