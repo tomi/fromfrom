@@ -188,6 +188,15 @@ describe("fromfrom", () => {
         expect(sequence.toArray()).toEqual([["a", 1], ["b", 2]]);
         expect(sequence.toArray()).toEqual([["a", 1], ["b", 2]]);
       });
+
+      it("skips inherited properties", () => {
+        const parent = { p: 10 };
+        const obj = Object.create(parent, {
+          a: { value: 1, enumerable: true },
+        });
+
+        expect(from(obj).toArray()).toEqual([["a", 1]]);
+      });
     });
   });
 
