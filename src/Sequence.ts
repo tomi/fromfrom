@@ -326,6 +326,12 @@ export class SequenceImpl<TItem> implements Iterable<TItem>, Sequence<TItem> {
     return new Set(this._iterable);
   }
 
+  toString(separator: string = ","): string {
+    return Array.isArray(this._iterable)
+      ? this._iterable.join(separator)
+      : copyIntoAnArray(this._iterable).join(separator);
+  }
+
   private _sequenceFromGenerator<TResult = TItem>(
     factoryFn: Function,
     restArgs?: any[]
