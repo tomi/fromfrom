@@ -28,7 +28,7 @@ jobs:
       node_js: "10"
 
     - <<: *test
-      node_js: "8"
+      node_js: "14"
 
     - stage: coverage
       script: npm run report-coverage
