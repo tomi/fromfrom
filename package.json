@@ -128,7 +128,7 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
-    "semantic-release": "^15.13.30",
+    "semantic-release": "^17.2.3",
     "style-loader": "^0.23.1",
     "travis-deploy-once": "^5.0.9",
     "ts-jest": "^26.5.3",
