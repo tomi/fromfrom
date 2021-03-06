@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/tomi/fromfrom/compare/v1.5.0...v1.6.0) (2021-03-06)
+
+
+### Features
+
+* add toString ([e744b10](https://github.com/tomi/fromfrom/commit/e744b108aa1997d382bc8c4432b78f3287729d83))
+
 # [1.5.0](https://github.com/tomi/fromfrom/compare/v1.4.3...v1.5.0) (2020-03-21)
 
 
