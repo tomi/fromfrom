@@ -610,6 +610,21 @@ export interface Sequence<TItem> extends Iterable<TItem> {
    * ```
    */
   toSet(): Set<TItem>;
+  /**
+   * Converts the sequence to a string using the given separator
+   *
+   * @param separator A string used to separate one element of a sequence from the next in the resulting String. If omitted, the elements are separated with a comma.
+   *
+   * @example
+   * ```typescript
+   * // Returns a string "1,2,3"
+   * from([1, 2, 3]).toString();
+   *
+   * // Returns a string "1 - 2 - 3"
+   * from([1, 2, 3]).toString(" - ");
+   * ```
+   */
+  toString(separator?: string): string;
 }
 
 /**

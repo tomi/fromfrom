@@ -1347,4 +1347,29 @@ describe("fromfrom", () => {
       expect(from([1, 2]).toSet()).toEqual(new Set([1, 2]));
     });
   });
+
+  describe("toString", () => {
+    it("returns a string", () => {
+      expect(from([1, 2]).toString(",")).toEqual("1,2");
+    });
+
+    it("uses comma as a default separator", () => {
+      expect(from([1, 2]).toString()).toEqual("1,2");
+    });
+
+    it("can be given a custom separator", () => {
+      expect(from([1, 2]).toString("_")).toEqual("1_2");
+    });
+
+    it("works with generator input", () => {
+      function* generate() {
+        let i = 1;
+        while (i < 3) {
+          yield i;
+          i++;
+        }
+      }
+      expect(from(generate()).toString("_")).toEqual("1_2");
+    });
+  });
 });
