@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/tomi/fromfrom/compare/v1.7.0...v1.7.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* fix typings of min and max ([e1d4743](https://github.com/tomi/fromfrom/commit/e1d47437cce6ac29613768a1945500c21178bc34))
+
 # [1.7.0](https://github.com/tomi/fromfrom/compare/v1.6.0...v1.7.0) (2022-01-19)
 
 
