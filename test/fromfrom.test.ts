@@ -668,7 +668,7 @@ describe("fromfrom", () => {
       ).toEqual([1, 2, 3]);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -707,7 +707,7 @@ describe("fromfrom", () => {
       expect(from([false, true]).some()).toEqual(true);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -785,7 +785,7 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 4])
           .concat([3, 2])
@@ -864,7 +864,7 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 4])
           .concat([3, 2])
@@ -901,7 +901,7 @@ describe("fromfrom", () => {
       ).toEqual("1010");
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -949,7 +949,7 @@ describe("fromfrom", () => {
       expect(numTaken).toEqual(1);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -1012,7 +1012,7 @@ describe("fromfrom", () => {
       expect(numTaken).toEqual(2);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -1248,7 +1248,7 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toStrictEqual([4, 5, 6, 1, 2, 3]);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
