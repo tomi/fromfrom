@@ -440,6 +440,21 @@ describe("fromfrom", () => {
     });
   });
 
+  describe("max", () => {
+    it("returns the maximum value for numbers", () => {
+      expect(from([1, 2, 3]).max()).toEqual(3);
+      expect(from([3, 2, 1]).max()).toEqual(3);
+    });
+
+    it("returns maximum value for string", () => {
+      expect(from(["1", "2", "3"]).max()).toEqual("3");
+    });
+
+    it("returns undefined if sequence is empty", () => {
+      expect(from([]).max()).toBeUndefined();
+    });
+  });
+
   describe("map", () => {
     let mapper: jest.Mock;
 
@@ -483,6 +498,21 @@ describe("fromfrom", () => {
           .map(x => x * 2)
           .toArray()
       ).toEqual([2, 4, 6, 8]);
+    });
+  });
+
+  describe("min", () => {
+    it("returns the minimum value for numbers", () => {
+      expect(from([1, 2, 3]).min()).toEqual(1);
+      expect(from([3, 2, 1]).min()).toEqual(1);
+    });
+
+    it("returns minimum value for string", () => {
+      expect(from(["1", "2", "3"]).min()).toEqual("1");
+    });
+
+    it("returns undefined if sequence is empty", () => {
+      expect(from([]).min()).toBeUndefined();
     });
   });
 
@@ -668,7 +698,7 @@ describe("fromfrom", () => {
       ).toEqual([1, 2, 3]);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -707,7 +737,7 @@ describe("fromfrom", () => {
       expect(from([false, true]).some()).toEqual(true);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -785,7 +815,7 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toEqual([1, 1, 2, 3, 4, 5]);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 4])
           .concat([3, 2])
@@ -864,7 +894,7 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toEqual([5, 4, 3, 2, 1, 1]);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 4])
           .concat([3, 2])
@@ -901,7 +931,7 @@ describe("fromfrom", () => {
       ).toEqual("1010");
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -949,7 +979,7 @@ describe("fromfrom", () => {
       expect(numTaken).toEqual(1);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -1012,7 +1042,7 @@ describe("fromfrom", () => {
       expect(numTaken).toEqual(2);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])
@@ -1248,7 +1278,7 @@ describe("fromfrom", () => {
       expect(copyIntoAnArray(sequence)).toStrictEqual([4, 5, 6, 1, 2, 3]);
     });
 
-    it("can be at the end of a chain", () => {
+    it("can be at the end of a chain", () => {
       expect(
         from([1, 2])
           .concat([3, 4])

@@ -285,6 +285,16 @@ export interface Sequence<TItem> extends Iterable<TItem> {
    */
   last(): TItem | undefined;
   /**
+   * Returns the maximum value in the sequence. `undefined` is returned if the squence is empty.
+   *
+   * @example
+   * ```typescript
+   * // Returns 3
+   * from([1, 2, 3]).max();
+   * ```
+   */
+  max<TItem>(): TItem | undefined;
+  /**
    * Maps the sequence to a new sequence where each item is converted
    * to a new value using the given mapper function.
    *
@@ -295,6 +305,16 @@ export interface Sequence<TItem> extends Iterable<TItem> {
    * ```
    */
   map<TResultItem>(mapFn: MapFn<TItem, TResultItem>): Sequence<TResultItem>;
+  /**
+   * Returns the minimum value in the sequence. `undefined` is returned if the squence is empty.
+   *
+   * @example
+   * ```typescript
+   * // Returns 1
+   * from([1, 2, 3]).min();
+   * ```
+   */
+  min<TItem>(): TItem | undefined;
   /**
    * Maps each item in the sequence to an object composed of the picked
    * object properties.
