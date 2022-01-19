@@ -150,8 +150,36 @@ export class SequenceImpl<TItem> implements Iterable<TItem>, Sequence<TItem> {
     return items.length === 0 ? undefined : items[items.length - 1];
   }
 
+  max<TItem>(): TItem | undefined {
+    let result: any | undefined = undefined;
+
+    for (const item of this._iterable) {
+      if (result === undefined) {
+        result = item as any;
+      } else if (item > result) {
+        result = item;
+      }
+    }
+
+    return result;
+  }
+
   map<TResultItem>(mapFn: MapFn<TItem, TResultItem>): Sequence<TResultItem> {
     return this._sequenceFromGenerator<TResultItem>(map, [mapFn]);
+  }
+
+  min<TItem>(): TItem | undefined {
+    let result: any | undefined = undefined;
+
+    for (const item of this._iterable) {
+      if (result === undefined) {
+        result = item as any;
+      } else if (item < result) {
+        result = item;
+      }
+    }
+
+    return result;
   }
 
   pick<TKeys extends keyof TItem>(
