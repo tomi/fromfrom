@@ -440,6 +440,21 @@ describe("fromfrom", () => {
     });
   });
 
+  describe("max", () => {
+    it("returns the maximum value for numbers", () => {
+      expect(from([1, 2, 3]).max()).toEqual(3);
+      expect(from([3, 2, 1]).max()).toEqual(3);
+    });
+
+    it("returns maximum value for string", () => {
+      expect(from(["1", "2", "3"]).max()).toEqual("3");
+    });
+
+    it("returns undefined if sequence is empty", () => {
+      expect(from([]).max()).toBeUndefined();
+    });
+  });
+
   describe("map", () => {
     let mapper: jest.Mock;
 
@@ -483,6 +498,21 @@ describe("fromfrom", () => {
           .map(x => x * 2)
           .toArray()
       ).toEqual([2, 4, 6, 8]);
+    });
+  });
+
+  describe("min", () => {
+    it("returns the minimum value for numbers", () => {
+      expect(from([1, 2, 3]).min()).toEqual(1);
+      expect(from([3, 2, 1]).min()).toEqual(1);
+    });
+
+    it("returns minimum value for string", () => {
+      expect(from(["1", "2", "3"]).min()).toEqual("1");
+    });
+
+    it("returns undefined if sequence is empty", () => {
+      expect(from([]).min()).toBeUndefined();
     });
   });
 
