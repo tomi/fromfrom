@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/tomi/fromfrom/compare/v1.6.0...v1.7.0) (2022-01-19)
+
+
+### Features
+
+* add min and max ([8e9a579](https://github.com/tomi/fromfrom/commit/8e9a579a8a17fc717c0f56d511d3b4ec20634515))
+
 # [1.6.0](https://github.com/tomi/fromfrom/compare/v1.5.0...v1.6.0) (2021-03-06)
 
 
