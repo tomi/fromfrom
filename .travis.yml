@@ -7,7 +7,7 @@ stages:
   - deploy # deploy
 
 language: node_js
-node_js: "12"
+node_js: "14"
 install: npm ci
 cache:
   directories:
@@ -23,12 +23,6 @@ jobs:
     - &test
       stage: test
       script: npm run test:prod
-
-    - <<: *test
-      node_js: "10"
-
-    - <<: *test
-      node_js: "14"
 
     - stage: coverage
       script: npm run report-coverage
