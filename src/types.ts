@@ -293,7 +293,7 @@ export interface Sequence<TItem> extends Iterable<TItem> {
    * from([1, 2, 3]).max();
    * ```
    */
-  max<TItem>(): TItem | undefined;
+  max(): TItem | undefined;
   /**
    * Maps the sequence to a new sequence where each item is converted
    * to a new value using the given mapper function.
@@ -314,7 +314,7 @@ export interface Sequence<TItem> extends Iterable<TItem> {
    * from([1, 2, 3]).min();
    * ```
    */
-  min<TItem>(): TItem | undefined;
+  min(): TItem | undefined;
   /**
    * Maps each item in the sequence to an object composed of the picked
    * object properties.
