@@ -26,7 +26,7 @@ import { sortBy } from "./transforms/sortBy";
 import { take } from "./transforms/take";
 import { takeWhile } from "./transforms/takeWhile";
 import { without } from "./transforms/without";
-import { copyIntoAnArray, iterableFromGenerator } from "./utils";
+import { copyIntoAnArray, isNotNullable, iterableFromGenerator } from "./utils";
 
 const identityPredicateFn = (x: any): boolean => x;
 
@@ -166,6 +166,17 @@ export class SequenceImpl<TItem> implements Iterable<TItem>, Sequence<TItem> {
 
   map<TResultItem>(mapFn: MapFn<TItem, TResultItem>): Sequence<TResultItem> {
     return this._sequenceFromGenerator<TResultItem>(map, [mapFn]);
+  }
+
+  mapNotNullable<TResultItem>(
+    mapFn: MapFn<TItem, TResultItem>
+  ): Sequence<NonNullable<TResultItem>> {
+    return this._composeGenerators<NonNullable<TResultItem>>(
+      map,
+      [mapFn],
+      filter,
+      [isNotNullable]
+    );
   }
 
   min<TItem>(): TItem | undefined {
@@ -371,6 +382,20 @@ export class SequenceImpl<TItem> implements Iterable<TItem>, Sequence<TItem> {
         factoryFn,
         restArgs ? iterableArg.concat(restArgs) : iterableArg
       )
+    );
+  }
+
+  private _composeGenerators<TResult = TItem>(
+    first: Function,
+    firstArgs: any[],
+    second: Function,
+    secondArgs: any[]
+  ) {
+    const iterableArg = [this._iterable, ...firstArgs];
+    const intemediatery = iterableFromGenerator(first, iterableArg);
+
+    return new SequenceImpl<TResult>(
+      iterableFromGenerator<TResult>(second, [intemediatery, ...secondArgs])
     );
   }
 }

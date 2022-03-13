@@ -305,6 +305,21 @@ export interface Sequence<TItem> extends Iterable<TItem> {
    * ```
    */
   map<TResultItem>(mapFn: MapFn<TItem, TResultItem>): Sequence<TResultItem>;
+
+  /**
+   * Maps the sequence to a new sequence where each item is converted
+   * to a new value using the given mapper function and null and undefined
+   * values are removed.
+   *
+   * @example
+   * ```typescript
+   * // Returns [2, 4]
+   * from([-1, 1, 2]).mapNotNullable(x => x > 0 ? x * 2 : undefined);
+   * ```
+   */
+  mapNotNullable<TResultItem>(
+    mapFn: MapFn<TItem, TResultItem>
+  ): Sequence<NonNullable<TResultItem>>;
   /**
    * Returns the minimum value in the sequence. `undefined` is returned if the squence is empty.
    *

@@ -501,6 +501,53 @@ describe("fromfrom", () => {
     });
   });
 
+  describe("mapNotNullable", () => {
+    let mapper: jest.Mock;
+
+    beforeEach(() => (mapper = jest.fn()));
+
+    it("calls map for each item", () => {
+      from([1, 2])
+        .mapNotNullable(mapper)
+        .toArray();
+
+      expect(mapper).toBeCalledTimes(2);
+    });
+
+    it("passes item as a parameter to map", () => {
+      from([1])
+        .mapNotNullable(mapper)
+        .toArray();
+
+      expect(mapper).lastCalledWith(1);
+    });
+
+    it("filters out undefined and null values", () => {
+      expect(
+        from([undefined, 1, null, 2, undefined, 3])
+          .mapNotNullable(x => x)
+          .toArray()
+      ).toEqual([1, 2, 3]);
+    });
+
+    it("maps values with the given function", () => {
+      expect(
+        from([1, 2, 3])
+          .mapNotNullable(x => x ** 2)
+          .toArray()
+      ).toEqual([1, 4, 9]);
+    });
+
+    it("can be iterated multiple times", () => {
+      const sequence = from([1, -1, 2, 3, -5]).mapNotNullable(x =>
+        x > 0 ? x ** 2 : null
+      );
+
+      expect(copyIntoAnArray(sequence)).toEqual([1, 4, 9]);
+      expect(copyIntoAnArray(sequence)).toEqual([1, 4, 9]);
+    });
+  });
+
   describe("min", () => {
     it("returns the minimum value for numbers", () => {
       expect(from([1, 2, 3]).min()).toEqual(1);
