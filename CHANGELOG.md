@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/tomi/fromfrom/compare/v1.7.1...v1.8.0) (2022-03-13)
+
+
+### Features
+
+* add mapNotNullable ([6686f20](https://github.com/tomi/fromfrom/commit/6686f203f657d1ab1e1d00c963bc747722f5a36d))
+
 ## [1.7.1](https://github.com/tomi/fromfrom/compare/v1.7.0...v1.7.1) (2022-01-19)
 
 
