@@ -29,3 +29,8 @@ export const iterableFromGenerator = <TItem>(
 ): Iterable<TItem> => ({
   [Symbol.iterator]: (): Iterator<TItem> => generatorFn.apply(undefined, args),
 });
+
+/**
+ * Returns true if the given value is not null or undefined
+ */
+export const isNotNullable = <T>(x: T) => x !== null && x !== undefined;
